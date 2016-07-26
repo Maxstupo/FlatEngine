@@ -18,14 +18,14 @@ import com.github.maxstupo.jflatlog.JFlatLog;
  *
  * @author Maxstupo
  */
-public class Engine implements IEngine {
+public class Engine<T extends Enum<T>> implements IEngine {
 
     private final JFlatLog log;
 
     private final Canvas canvas;
     private BufferStrategy strategy;
 
-    private final GamestateManager gsm;
+    private final GamestateManager<T> gsm;
     private final AbstractGameloop loop;
 
     private final Keyboard keyboard;
@@ -38,7 +38,7 @@ public class Engine implements IEngine {
         this.log = log;
         this.loop.attachEngine(this);
         this.canvas = new Canvas();
-        this.gsm = new GamestateManager(this);
+        this.gsm = new GamestateManager<>(this);
         this.keyboard = new Keyboard(canvas);
         this.mouse = new Mouse(canvas);
     }
@@ -96,19 +96,19 @@ public class Engine implements IEngine {
      * @param gamestate
      *            the game state to add.
      */
-    public void registerState(AbstractGamestate gamestate) {
+    public void registerState(AbstractGamestate<T> gamestate) {
         if (gamestate == null)
             return;
         getGamestateManager().registerState(gamestate);
     }
 
     /**
-     * Switch to a different game state based on the gamestate key. This is a convenience method of {@link GamestateManager#switchTo(String)}
+     * Switch to a different game state based on the gamestate key. This is a convenience method of {@link GamestateManager#switchTo(Enum)}
      * 
      * @param id
      *            the key of a gamestate to switch to.
      */
-    public void switchTo(String id) {
+    public void switchTo(T id) {
         getGamestateManager().switchTo(id);
     }
 
@@ -152,7 +152,7 @@ public class Engine implements IEngine {
         return mouse;
     }
 
-    public GamestateManager getGamestateManager() {
+    public GamestateManager<T> getGamestateManager() {
         return gsm;
     }
 

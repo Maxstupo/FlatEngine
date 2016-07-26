@@ -33,7 +33,7 @@ public class Window {
 
     }
 
-    public void create(String title, int width, int height, boolean resizable, int closeOperation, Engine engine) {
+    public void create(String title, int width, int height, boolean resizable, int closeOperation, Engine<?> engine) {
         if (frame != null)
             return;
         frame = new JFrame(title);
