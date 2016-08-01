@@ -1,6 +1,7 @@
 package com.github.maxstupo.flatengine;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ComponentAdapter;
@@ -36,7 +37,16 @@ public class Window {
     public void create(String title, int width, int height, boolean resizable, int closeOperation, Engine<?> engine) {
         if (frame != null)
             return;
-        frame = new JFrame(title);
+        frame = new JFrame(title) {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void update(Graphics g) {
+                if (isShowing())
+                    paint(g);
+            }
+        };
         frame.setDefaultCloseOperation(closeOperation);
         frame.setSize(width, height);
         frame.setLocationRelativeTo(null);

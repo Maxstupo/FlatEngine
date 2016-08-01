@@ -3,6 +3,7 @@ package com.github.maxstupo.flatengine;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
@@ -37,7 +38,16 @@ public class Engine<T extends Enum<T>> implements IEngine {
         this.loop = loop;
         this.log = log;
         this.loop.attachEngine(this);
-        this.canvas = new Canvas();
+        this.canvas = new Canvas() {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void update(Graphics g) {
+                if (isShowing())
+                    paint(g);
+            }
+        };
         this.gsm = new GamestateManager<>(this);
         this.keyboard = new Keyboard(canvas);
         this.mouse = new Mouse(canvas);
