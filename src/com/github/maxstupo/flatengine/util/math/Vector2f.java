@@ -6,6 +6,8 @@ package com.github.maxstupo.flatengine.util.math;
  */
 public class Vector2f {
 
+    public static final Vector2f ZERO = new Vector2f(0f, 0f);
+
     public static final Vector2f UP = new Vector2f(0f, -1f);
     public static final Vector2f DOWN = new Vector2f(0f, 1f);
     public static final Vector2f LEFT = new Vector2f(-1f, 0f);
