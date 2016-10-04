@@ -174,20 +174,13 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
     }
 
     protected void renderItem(Graphics2D g, Vector2i pos, int index, L item) {
-
-        Color color = foregroundColor;
-        String text = item.toString();
-
-        if (item instanceof IListItem) {
-            IListItem listItem = (IListItem) item;
-            text = listItem.getListItemText();
-
-            if (listItem.getListItemTextColor() != null)
-                color = listItem.getListItemTextColor();
-        }
-
-        g.setColor(color);
+        g.setColor(getItemColor(index, item));
+        String text = (item instanceof IListItem) ? ((IListItem) item).getListItemText() : item.toString();
         UtilGraphics.drawString(g, text, pos.x + 5, pos.y);
+    }
+
+    protected Color getItemColor(int index, L item) {
+        return foregroundColor;
     }
 
     protected void renderBackground(Graphics2D g, Vector2i gpos) {
