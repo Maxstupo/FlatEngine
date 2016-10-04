@@ -29,7 +29,7 @@ public class GuiSelectionList<T extends Enum<T>, L> extends GuiList<T, L> {
     }
 
     @Override
-    protected void renderItem(Graphics2D g, Vector2i pos, int index, T item) {
+    protected void renderItem(Graphics2D g, Vector2i pos, int index, L item) {
         super.renderItem(g, pos, index, item);
 
         if (index == selected)

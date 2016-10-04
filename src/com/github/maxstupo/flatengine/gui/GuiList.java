@@ -30,7 +30,7 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
     protected Color barBackgroundColor = Color.LIGHT_GRAY;
     private Font font;
 
-    private final List<T> entires = new ArrayList<>();
+    private final List<L> entires = new ArrayList<>();
     protected final List<IEventListener<GuiList<T, L>, Integer, Integer>> listeners = new ArrayList<>();
 
     private final Vector2i scrollBarPosition = new Vector2i();
@@ -103,8 +103,8 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
 
     private int calcEntryHeight(Graphics2D g) {
         int totalHeight = Integer.MIN_VALUE;
-        for (T t : entires) {
-            Dimension r = UtilGraphics.getStringBounds(g, t.toString());
+        for (L l : entires) {
+            Dimension r = UtilGraphics.getStringBounds(g, l.toString());
             totalHeight = Math.max(totalHeight, r.height);
         }
         return totalHeight;
@@ -173,7 +173,7 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
         g.fillRect(pos.x, pos.y, size.width, size.height);
     }
 
-    protected void renderItem(Graphics2D g, Vector2i pos, int index, T item) {
+    protected void renderItem(Graphics2D g, Vector2i pos, int index, L item) {
         g.setColor(foregroundColor);
         UtilGraphics.drawString(g, item.toString(), pos.x + 5, pos.y);
     }
@@ -186,7 +186,7 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
         g.drawRect(gpos.x, gpos.y, size.x, size.y);
     }
 
-    public GuiList<T, L> addEntry(T entry) {
+    public GuiList<T, L> addEntry(L entry) {
         entires.add(entry);
         this.entryHeightDirty = true;
         return this;
@@ -223,7 +223,7 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
         return Collections.unmodifiableList(listeners);
     }
 
-    public T getEntry(int i) {
+    public L getEntry(int i) {
         if (i < 0 || i >= entires.size())
             return null;
         return entires.get(i);

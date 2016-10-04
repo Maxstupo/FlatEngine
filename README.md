@@ -1,4 +1,4 @@
-# FlatEngine v0.3
+# FlatEngine v0.3.1
 
 #### What is FlatEngine?
 FlatEngine is my attempt at creating a basic 2D game "engine".
