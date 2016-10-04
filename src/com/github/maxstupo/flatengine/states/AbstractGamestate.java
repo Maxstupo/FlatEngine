@@ -15,7 +15,7 @@ public abstract class AbstractGamestate<T extends Enum<T>> {
     protected final GamestateManager<T> gsm;
     protected final T key;
 
-    protected final AbstractGuiNode gui = new GuiNode(this);
+    protected final AbstractGuiNode<T> gui = new GuiNode<>(this);
 
     public AbstractGamestate(Engine<T> engine, T key) {
         this.gsm = engine.getGamestateManager();

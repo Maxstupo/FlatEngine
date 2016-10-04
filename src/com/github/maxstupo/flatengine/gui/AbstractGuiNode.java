@@ -15,12 +15,12 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  * @author Maxstupo
  *
  */
-public abstract class AbstractGuiNode {
+public abstract class AbstractGuiNode<T extends Enum<T>> {
 
-    protected final AbstractGamestate gamestate;
+    protected final AbstractGamestate<T> gamestate;
 
-    private AbstractGuiNode parent;
-    private final List<AbstractGuiNode> children = new ArrayList<>();
+    private AbstractGuiNode<T> parent;
+    private final List<AbstractGuiNode<T>> children = new ArrayList<>();
 
     private final Vector2i globalPosition = new Vector2i();
     protected final Vector2i localPosition = new Vector2i();
@@ -34,7 +34,7 @@ public abstract class AbstractGuiNode {
 
     private boolean isDirty = true;
 
-    public AbstractGuiNode(AbstractGamestate gamestate, Vector2i localPosition, Vector2i size) {
+    public AbstractGuiNode(AbstractGamestate<T> gamestate, Vector2i localPosition, Vector2i size) {
         this.gamestate = gamestate;
         if (localPosition != null)
             this.setLocalPosition(localPosition.x, localPosition.y);
@@ -51,14 +51,14 @@ public abstract class AbstractGuiNode {
 
     public void renderAll(Graphics2D g) {
         render(g);
-        for (AbstractGuiNode node : children)
+        for (AbstractGuiNode<T> node : children)
             node.renderAll(g);
         renderPost(g);
     }
 
     public boolean updateAll(double delta, boolean shouldHandleInput) {
         for (int i = children.size() - 1; i >= 0; i--) {
-            AbstractGuiNode node = children.get(i);
+            AbstractGuiNode<T> node = children.get(i);
 
             shouldHandleInput = node.updateAll(delta, shouldHandleInput);
         }
@@ -76,7 +76,7 @@ public abstract class AbstractGuiNode {
         return gamestate.getGamestateManager().getEngine().getKeyboard();
     }
 
-    public AbstractGuiNode addChild(AbstractGuiNode node) {
+    public AbstractGuiNode<T> addChild(AbstractGuiNode<T> node) {
         children.add(node);
 
         node.setParent(this);
@@ -84,7 +84,7 @@ public abstract class AbstractGuiNode {
         return this;
     }
 
-    public AbstractGuiNode removeChild(AbstractGuiNode node) {
+    public AbstractGuiNode<T> removeChild(AbstractGuiNode<T> node) {
         children.remove(node);
         node.setParent(null);
         node.onRemoved();
@@ -110,11 +110,11 @@ public abstract class AbstractGuiNode {
 
     public void setDirty() {
         this.isDirty = true;
-        for (AbstractGuiNode node : children)
+        for (AbstractGuiNode<T> node : children)
             node.setDirty();
     }
 
-    public synchronized void bringToFront(AbstractGuiNode node) {
+    public synchronized void bringToFront(AbstractGuiNode<T> node) {
         children.remove(node);
         children.add(node);
     }
@@ -167,7 +167,7 @@ public abstract class AbstractGuiNode {
         int width = -Integer.MAX_VALUE;
         int height = -Integer.MAX_VALUE;
 
-        for (AbstractGuiNode child : children) {
+        for (AbstractGuiNode<T> child : children) {
             Vector2i gpos = child.getGlobalPosition();
             Vector2i size = child.getSize();
 
@@ -189,19 +189,19 @@ public abstract class AbstractGuiNode {
         return totalBounds;
     }
 
-    public AbstractGamestate getGamestate() {
+    public AbstractGamestate<T> getGamestate() {
         return gamestate;
     }
 
-    protected void setParent(AbstractGuiNode parent) {
+    protected void setParent(AbstractGuiNode<T> parent) {
         this.parent = parent;
     }
 
-    public AbstractGuiNode getParent() {
+    public AbstractGuiNode<T> getParent() {
         return parent;
     }
 
-    public List<AbstractGuiNode> getChildren() {
+    public List<AbstractGuiNode<T>> getChildren() {
         return Collections.unmodifiableList(children);
     }
 

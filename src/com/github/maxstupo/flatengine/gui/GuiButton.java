@@ -17,9 +17,9 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  *
  * @author Maxstupo
  */
-public class GuiButton extends AbstractGuiNode {
+public class GuiButton<T extends Enum<T>> extends AbstractGuiNode<T> {
 
-    private final GuiText text;
+    private final GuiText<T> text;
 
     protected Color backgroundColor = Color.GRAY;
     protected Color foregroundColor = Color.WHITE;
@@ -34,15 +34,15 @@ public class GuiButton extends AbstractGuiNode {
 
     private boolean isMouseOver;
 
-    protected final List<IEventListener<GuiButton, String, Integer>> listeners = new ArrayList<>();
+    protected final List<IEventListener<GuiButton<T>, String, Integer>> listeners = new ArrayList<>();
 
-    public GuiButton(AbstractGamestate gamestate, String text, Vector2i localPosition) {
+    public GuiButton(AbstractGamestate<T> gamestate, String text, Vector2i localPosition) {
         this(gamestate, text, localPosition, new Vector2i(-1, -1));
     }
 
-    public GuiButton(AbstractGamestate gamestate, String text, Vector2i localPosition, Vector2i size) {
+    public GuiButton(AbstractGamestate<T> gamestate, String text, Vector2i localPosition, Vector2i size) {
         super(gamestate, localPosition, size);
-        this.text = new GuiText(gamestate, null, text);
+        this.text = new GuiText<>(gamestate, null, text);
         this.addChild(this.text);
 
         this.text.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
@@ -82,7 +82,7 @@ public class GuiButton extends AbstractGuiNode {
     }
 
     protected void fireActionEvent(int mouseButton) {
-        for (IEventListener<GuiButton, String, Integer> listener : listeners)
+        for (IEventListener<GuiButton<T>, String, Integer> listener : listeners)
             listener.onEvent(this, text.getText(), mouseButton);
     }
 
@@ -116,47 +116,47 @@ public class GuiButton extends AbstractGuiNode {
         }
     }
 
-    public GuiButton setText(String text) {
+    public GuiButton<T> setText(String text) {
         this.text.setText(text);
         return this;
     }
 
-    public GuiButton setFont(Font font) {
+    public GuiButton<T> setFont(Font font) {
         this.text.setFont(font);
         return this;
     }
 
-    public GuiButton setBackgroundColor(Color backgroundColor) {
+    public GuiButton<T> setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
         return this;
     }
 
-    public GuiButton setForegroundColor(Color foregroundColor) {
+    public GuiButton<T> setForegroundColor(Color foregroundColor) {
         this.foregroundColor = foregroundColor;
         return this;
     }
 
-    public GuiButton setSelectionColor(Color selectionColor) {
+    public GuiButton<T> setSelectionColor(Color selectionColor) {
         this.selectionColor = selectionColor;
         return this;
     }
 
-    public GuiButton setBoxLess(boolean boxLess) {
+    public GuiButton<T> setBoxLess(boolean boxLess) {
         this.boxLess = boxLess;
         return this;
     }
 
-    public GuiButton setAutoSizeWidth(boolean autoSizeWidth) {
+    public GuiButton<T> setAutoSizeWidth(boolean autoSizeWidth) {
         this.autoSizeWidth = autoSizeWidth;
         return this;
     }
 
-    public GuiButton setAutoSizeHeight(boolean autoSizeHeight) {
+    public GuiButton<T> setAutoSizeHeight(boolean autoSizeHeight) {
         this.autoSizeHeight = autoSizeHeight;
         return this;
     }
 
-    public GuiButton addListener(IEventListener<GuiButton, String, Integer> listener) {
+    public GuiButton<T> addListener(IEventListener<GuiButton<T>, String, Integer> listener) {
         if (listener != null)
             listeners.add(listener);
         return this;

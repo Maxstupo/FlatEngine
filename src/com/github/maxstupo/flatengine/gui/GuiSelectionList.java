@@ -12,17 +12,17 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  *
  * @author Maxstupo
  */
-public class GuiSelectionList<T> extends GuiList<T> {
+public class GuiSelectionList<T extends Enum<T>, L> extends GuiList<T, L> {
 
     protected int selected = -1;
     protected Color selectedColor = Color.WHITE;
 
-    public GuiSelectionList(AbstractGamestate gamestate, Vector2i localPosition, Vector2i size) {
+    public GuiSelectionList(AbstractGamestate<T> gamestate, Vector2i localPosition, Vector2i size) {
         super(gamestate, localPosition, size);
-        addListener(new IEventListener<GuiList<T>, Integer, Integer>() {
+        addListener(new IEventListener<GuiList<T, L>, Integer, Integer>() {
 
             @Override
-            public void onEvent(GuiList<T> executor, Integer actionItem, Integer action) {
+            public void onEvent(GuiList<T, L> executor, Integer actionItem, Integer action) {
                 selected = actionItem.intValue();
             }
         });
@@ -49,12 +49,12 @@ public class GuiSelectionList<T> extends GuiList<T> {
         this.selectedColor = selectedColor;
     }
 
-    public GuiSelectionList<T> unselect() {
+    public GuiSelectionList<T, L> unselect() {
         selected = -1;
         return this;
     }
 
-    public GuiSelectionList<T> setSelection(int i) {
+    public GuiSelectionList<T, L> setSelection(int i) {
         selected = UtilMath.clampI(i, 0, getTotalEntries() - 1);
         return this;
     }
