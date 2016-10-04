@@ -49,6 +49,12 @@ public class GuiSelectionList<T extends Enum<T>, L> extends GuiList<T, L> {
         this.selectedColor = selectedColor;
     }
 
+    @Override
+    public void clear() {
+        unselect();
+        super.clear();
+    }
+
     public GuiSelectionList<T, L> unselect() {
         selected = -1;
         return this;
