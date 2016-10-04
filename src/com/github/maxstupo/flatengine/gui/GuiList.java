@@ -175,7 +175,8 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
 
     protected void renderItem(Graphics2D g, Vector2i pos, int index, L item) {
         g.setColor(foregroundColor);
-        UtilGraphics.drawString(g, item.toString(), pos.x + 5, pos.y);
+        String text = (item instanceof IListItem) ? ((IListItem) item).getListItemText() : item.toString();
+        UtilGraphics.drawString(g, text, pos.x + 5, pos.y);
     }
 
     protected void renderBackground(Graphics2D g, Vector2i gpos) {
