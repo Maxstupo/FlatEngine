@@ -169,6 +169,8 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
     }
 
     protected void renderHover(Graphics2D g, Vector2i pos, Rectangle size) {
+        if (hoverColor == null)
+            return;
         g.setColor(hoverColor);
         g.fillRect(pos.x, pos.y, size.width, size.height);
     }
