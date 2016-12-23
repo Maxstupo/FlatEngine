@@ -26,12 +26,13 @@ public class GamestateManager<T extends Enum<T>> {
 
     public void update(double delta) {
         if (currentState != null) {
+
+            currentState.doUpdate(delta);
+
             if (onActivated && hasRendered) {
                 onActivated = false;
                 currentState.onActivated();
             }
-
-            currentState.doUpdate(delta);
 
             if (Window.get().isResized() && hasRendered)
                 currentState.onResize(engine.getWidth(), engine.getHeight());
