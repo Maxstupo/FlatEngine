@@ -2,7 +2,6 @@ package com.github.maxstupo.flatengine.screen;
 
 import java.awt.Graphics2D;
 
-import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gui.AbstractGuiNode;
 import com.github.maxstupo.flatengine.gui.GuiNode;
 
@@ -13,13 +12,11 @@ import com.github.maxstupo.flatengine.gui.GuiNode;
 public abstract class AbstractScreen {
 
     protected final ScreenManager screenManager;
-    protected final String key;
 
     protected final AbstractGuiNode gui = new GuiNode(this);
 
-    public AbstractScreen(FlatEngine engine, String key) {
-        this.screenManager = engine.getScreenManager();
-        this.key = key;
+    public AbstractScreen(ScreenManager screenManager) {
+        this.screenManager = screenManager;
     }
 
     public abstract void update(double delta);
@@ -46,8 +43,8 @@ public abstract class AbstractScreen {
         gui.dispose();
     }
 
-    public String getKey() {
-        return key;
+    public String getId() {
+        return getScreenManager().getCurrentId();
     }
 
     public ScreenManager getScreenManager() {

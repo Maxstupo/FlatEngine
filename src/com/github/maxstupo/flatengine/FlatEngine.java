@@ -270,13 +270,16 @@ public class FlatEngine implements IEngine {
     /**
      * Register a screen to the {@link ScreenManager}. This is a convenience method of {@link ScreenManager#registerScreen(AbstractScreen)}
      * 
+     * @param id
+     *            the id of the screen.
+     * 
      * @param screen
      *            the screen to add.
+     * @throws IllegalArgumentException
+     *             if id is null, screen is null or id is already registered.
      */
-    public void registerScreen(AbstractScreen screen) {
-        if (screen == null)
-            return;
-        getScreenManager().registerScreen(screen);
+    public void registerScreen(String id, Class<? extends AbstractScreen> screen) throws IllegalArgumentException {
+        getScreenManager().registerScreen(id, screen);
     }
 
     /**

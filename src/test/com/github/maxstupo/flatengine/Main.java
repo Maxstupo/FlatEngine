@@ -6,6 +6,7 @@ import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
 import com.github.maxstupo.flatengine.gui.GuiButton;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
+import com.github.maxstupo.flatengine.screen.ScreenManager;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 import com.github.maxstupo.jflatlog.JFlatLog;
 
@@ -15,8 +16,8 @@ import com.github.maxstupo.jflatlog.JFlatLog;
  */
 public class Main extends AbstractScreen {
 
-    public Main(FlatEngine engine, String key) {
-        super(engine, key);
+    public Main(ScreenManager screenManager) {
+        super(screenManager);
 
         GuiButton btn = new GuiButton(this, "Hello World", new Vector2i(50, 50), new Vector2i(300, 150));
 
@@ -30,7 +31,7 @@ public class Main extends AbstractScreen {
 
         FlatEngine engine = new FlatEngine(loop, JFlatLog.get());
 
-        engine.registerScreen(new Main(engine, "test"));
+        engine.registerScreen("test", Main.class);
         engine.switchTo("test");
 
         engine.createWindow("Test game", 800, 600, true, FlatEngine.EXIT_ON_CLOSE);
