@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.maxstupo.flatengine.IEventListener;
+import com.github.maxstupo.flatengine.gui.GuiText.TextAlignment;
 import com.github.maxstupo.flatengine.input.Mouse;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
@@ -29,16 +30,9 @@ public class GuiButton extends AbstractGuiNode {
 
     private final Stroke outlineStroke = new BasicStroke(2);
 
-    private boolean autoSizeWidth = false;
-    private boolean autoSizeHeight = false;
-
     private boolean isMouseOver;
 
     protected final List<IEventListener<GuiButton, String, Integer>> listeners = new ArrayList<>();
-
-    public GuiButton(AbstractScreen screen, String text, Vector2i localPosition) {
-        this(screen, text, localPosition, new Vector2i(-1, -1));
-    }
 
     public GuiButton(AbstractScreen screen, String text, Vector2i localPosition, Vector2i size) {
         super(screen, localPosition, size);
@@ -46,21 +40,10 @@ public class GuiButton extends AbstractGuiNode {
         this.addChild(this.text);
 
         this.text.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
-        this.autoSizeWidth = (getSize().x <= 0);
-        this.autoSizeHeight = (getSize().y <= 0);
     }
 
     @Override
     public boolean update(double delta, boolean shouldHandleInput) {
-
-        if (autoSizeWidth)
-            size.x = text.getSize().x;
-        if (autoSizeHeight)
-            size.y = text.getSize().y;
-
-        int x = size.x / 2 - (text.getSize().x - 3) / 2;
-        int y = size.y / 2 - text.getSize().y / 2;
-        text.setLocalPosition(x, y);
 
         if (!isEnabled())
             return shouldHandleInput;
@@ -146,13 +129,8 @@ public class GuiButton extends AbstractGuiNode {
         return this;
     }
 
-    public GuiButton setAutoSizeWidth(boolean autoSizeWidth) {
-        this.autoSizeWidth = autoSizeWidth;
-        return this;
-    }
-
-    public GuiButton setAutoSizeHeight(boolean autoSizeHeight) {
-        this.autoSizeHeight = autoSizeHeight;
+    public GuiButton setTextAlignment(TextAlignment alignment) {
+        text.setAlignment(alignment);
         return this;
     }
 
@@ -182,17 +160,13 @@ public class GuiButton extends AbstractGuiNode {
         return boxLess;
     }
 
-    public boolean isAutoSizeWidth() {
-        return autoSizeWidth;
-    }
-
-    public boolean isAutoSizeHeight() {
-        return autoSizeHeight;
+    public TextAlignment getTextAlignment() {
+        return text.getAlignment();
     }
 
     @Override
     public String toString() {
-        return "GuiButton [text=" + text + ", backgroundColor=" + backgroundColor + ", foregroundColor=" + foregroundColor + ", selectionColor=" + selectionColor + ", boxLess=" + boxLess + ", autoSizeWidth=" + autoSizeWidth + ", autoSizeHeight=" + autoSizeHeight + "]";
+        return String.format("GuiButton [text=%s, backgroundColor=%s, foregroundColor=%s, selectionColor=%s, boxLess=%s, outlineStroke=%s, isMouseOver=%s, listeners=%s]", text, backgroundColor, foregroundColor, selectionColor, boxLess, outlineStroke, isMouseOver, listeners);
     }
 
 }

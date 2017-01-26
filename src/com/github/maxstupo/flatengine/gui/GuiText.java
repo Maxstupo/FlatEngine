@@ -15,10 +15,25 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  */
 public class GuiText extends AbstractGuiNode {
 
+    public static enum TextAlignment {
+        TOP_LEFT,
+        TOP_MIDDLE,
+        TOP_RIGHT,
+
+        MIDDLE_LEFT,
+        CENTER,
+        MIDDLE_RIGHT,
+
+        BOTTOM_LEFT,
+        BOTTOM_MIDDLE,
+        BOTTOM_RIGHT
+    }
+
     private String text;
 
     protected Color color = Color.WHITE;
     private Font font = null;
+    private TextAlignment alignment = TextAlignment.CENTER;
 
     private boolean isTextDirty = false;
 
@@ -72,6 +87,49 @@ public class GuiText extends AbstractGuiNode {
         Dimension bounds = UtilGraphics.getStringBounds(g, text, font);
         getSize().set(bounds.width, bounds.height);
 
+        // Calculate local pos
+
+        int x = 0;
+        int y = 0;
+        Vector2i parentSize = (getParent() != null) ? getParent().getSize() : Vector2i.ZERO;
+        Vector2i size = getSize();
+
+        switch (alignment) {
+            case TOP_LEFT:
+                break;
+            case TOP_MIDDLE:
+                x = parentSize.x / 2 - size.x / 2;
+                break;
+            case TOP_RIGHT:
+                x = parentSize.x - size.x;
+                break;
+            case MIDDLE_LEFT:
+                y = parentSize.y / 2 - size.y / 2;
+                break;
+            case CENTER:
+                x = parentSize.x / 2 - size.x / 2;
+                y = parentSize.y / 2 - size.y / 2;
+                break;
+            case MIDDLE_RIGHT:
+                x = parentSize.x - size.x;
+                y = parentSize.y / 2 - size.y / 2;
+                break;
+            case BOTTOM_LEFT:
+                y = parentSize.y - size.y;
+                break;
+            case BOTTOM_MIDDLE:
+                x = parentSize.x / 2 - size.x / 2;
+                y = parentSize.y - size.y;
+                break;
+            case BOTTOM_RIGHT:
+                x = parentSize.x - size.x;
+                y = parentSize.y - size.y;
+                break;
+            default:
+                break;
+        }
+        setLocalPosition(x, y);
+
         isTextDirty = false;
     }
 
@@ -90,6 +148,15 @@ public class GuiText extends AbstractGuiNode {
         this.font = font;
         this.isTextDirty = true;
         return this;
+    }
+
+    public TextAlignment getAlignment() {
+        return alignment;
+    }
+
+    public void setAlignment(TextAlignment alignment) {
+        this.alignment = alignment;
+        this.isTextDirty = true;
     }
 
     public String getText() {

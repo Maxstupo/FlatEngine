@@ -1,11 +1,12 @@
 package test.com.github.maxstupo.flatengine;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
+import com.github.maxstupo.flatengine.gui.GuiButton;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
+import com.github.maxstupo.flatengine.util.math.Vector2i;
 import com.github.maxstupo.jflatlog.JFlatLog;
 
 /**
@@ -16,6 +17,11 @@ public class Main extends AbstractScreen {
 
     public Main(FlatEngine engine, String key) {
         super(engine, key);
+
+        GuiButton btn = new GuiButton(this, "Hello World", new Vector2i(50, 50), new Vector2i(300, 150));
+
+        gui.addChild(btn);
+
     }
 
     public static void main(String[] args) {
@@ -39,7 +45,5 @@ public class Main extends AbstractScreen {
 
     @Override
     public void render(Graphics2D g) {
-        g.setColor(Color.red);
-        g.fillRect(50, 50, 100, 100);
     }
 }
