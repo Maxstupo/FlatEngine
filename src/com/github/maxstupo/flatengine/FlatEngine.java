@@ -2,7 +2,6 @@ package com.github.maxstupo.flatengine;
 
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -10,7 +9,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
@@ -24,15 +23,16 @@ import com.github.maxstupo.flatengine.screen.ScreenManager;
 import com.github.maxstupo.jflatlog.JFlatLog;
 
 /**
- *
+ * This class is the game engine, it handles all sub-components that make a game engine such as rendering, IO and game states.
+ * 
  * @author Maxstupo
  */
 public class FlatEngine implements IEngine {
 
+    @SuppressWarnings("javadoc")
     public static final int EXIT_ON_CLOSE = JFrame.EXIT_ON_CLOSE;
+    @SuppressWarnings("javadoc")
     public static final int DO_NOTHING_ON_CLOSE = JFrame.DO_NOTHING_ON_CLOSE;
-    public static final int DISPOSE_ON_CLOSE = JFrame.DISPOSE_ON_CLOSE;
-    public static final int HIDE_ON_CLOSE = JFrame.HIDE_ON_CLOSE;
 
     private final JFlatLog log;
 
@@ -54,10 +54,17 @@ public class FlatEngine implements IEngine {
     private final GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
     private final GraphicsDevice dev = env.getDefaultScreenDevice();
 
+    /**
+     * Create a new {@link FlatEngine} object.
+     * 
+     * @param loop
+     *            the implementation of the game loop.
+     * @param log
+     *            the logger this engine will use to log information to, if null {@link JFlatLog#get()} is used.
+     */
     public FlatEngine(AbstractGameloop loop, JFlatLog log) {
-
         this.loop = loop;
-        this.log = log;
+        this.log = (log != null) ? log : JFlatLog.get();
         this.loop.attachEngine(this);
         this.canvas = new Canvas() {
 
@@ -79,8 +86,7 @@ public class FlatEngine implements IEngine {
     private void init() {
         if (hasInit)
             return;
-        if (log != null)
-            log.debug(getClass().getSimpleName(), "Initializing...");
+        log.debug(getClass().getSimpleName(), "Initializing...");
 
         initGraphics();
         canvas.requestFocusInWindow();
@@ -88,8 +94,8 @@ public class FlatEngine implements IEngine {
     }
 
     private void initGraphics() {
-        if (log != null)
-            log.debug(getClass().getSimpleName(), "Initializing: Double buffering.");
+
+        log.debug(getClass().getSimpleName(), "Initializing: Double buffering.");
 
         canvas.setIgnoreRepaint(true);
         canvas.createBufferStrategy(2);
@@ -122,9 +128,25 @@ public class FlatEngine implements IEngine {
         } while (strategy.contentsLost());
     }
 
-    public void createWindow(String title, int width, int height, boolean resizable, int closeOperation) {
+    /**
+     * Creates a window for this engine. This method can only be called once.
+     * 
+     * @param title
+     *            the title of the game window.
+     * @param width
+     *            the width of the game window.
+     * @param height
+     *            the height of the game window.
+     * @param resizable
+     *            true if the window can be resized.
+     * @param closeOperation
+     *            what occurs when the window is closed.
+     * @throws RuntimeException
+     *             if this method has already been called previously.
+     */
+    public void createWindow(String title, int width, int height, boolean resizable, int closeOperation) throws RuntimeException {
         if (frame != null)
-            return;
+            throw new RuntimeException("createWindow() has already been called!");
         frame = new JFrame(title);
         frame.setDefaultCloseOperation(closeOperation);
         frame.setSize(width, height);
@@ -137,31 +159,73 @@ public class FlatEngine implements IEngine {
                 windowResized = true;
             }
         });
-        frame.add(getRenderSurface());
+        frame.add(canvas);
         frame.setVisible(true);
 
         init();
     }
 
+    /**
+     * Returns true if the game window has been resized during this update.
+     * 
+     * @return true if the game window has been resized during this update.
+     */
     public boolean isResized() {
         return windowResized;
     }
 
-    public void setFullscreen(boolean fullscreen) {
+    /**
+     * Sets if the game window is fullscreen.
+     * <p>
+     * Note: If {@link #createWindow(String, int, int, boolean, int)} hasn't been called yet this method does nothing.
+     * 
+     * @param fullscreen
+     *            true to set the game window to fullscreen.
+     * @return this object for chaining.
+     */
+    public FlatEngine setFullscreen(boolean fullscreen) {
         if (frame != null)
             dev.setFullScreenWindow(fullscreen ? frame : null);
+        return this;
     }
 
-    public void toggleFullscreen() {
-        setFullscreen(!isFullscreen);
+    /**
+     * Toggles the game window between windowed and fullscreen.
+     * <p>
+     * Note: If {@link #createWindow(String, int, int, boolean, int)} hasn't been called yet this method does nothing.
+     * 
+     * @return this object for chaining.
+     */
+    public FlatEngine toggleFullscreen() {
+        return setFullscreen(!isFullscreen);
     }
 
+    /**
+     * Sets the title of the game window.
+     * <p>
+     * Note: If {@link #createWindow(String, int, int, boolean, int)} hasn't been called yet this method does nothing.
+     * 
+     * @param title
+     *            the title of the game window.
+     * @return this object for chaining.
+     */
     public FlatEngine setTitle(String title) {
         if (frame != null)
             frame.setTitle(title);
         return this;
     }
 
+    /**
+     * Sets the minimum size of the game window.
+     * <p>
+     * Note: If {@link #createWindow(String, int, int, boolean, int)} hasn't been called yet this method does nothing.
+     * 
+     * @param width
+     *            the minimum width.
+     * @param height
+     *            the minimum height.
+     * @return this object for chaining.
+     */
     public FlatEngine setMinimumSize(int width, int height) {
         if (frame == null)
             return this;
@@ -169,6 +233,17 @@ public class FlatEngine implements IEngine {
         return this;
     }
 
+    /**
+     * Sets the maximum size of the game window.
+     * <p>
+     * Note: If {@link #createWindow(String, int, int, boolean, int)} hasn't been called yet this method does nothing.
+     * 
+     * @param width
+     *            the maximum width.
+     * @param height
+     *            the maximum height.
+     * @return this object for chaining.
+     */
     public FlatEngine setMaximumSize(int width, int height) {
         if (frame == null)
             return this;
@@ -176,8 +251,17 @@ public class FlatEngine implements IEngine {
         return this;
     }
 
-    public FlatEngine addWindowListener(WindowAdapter w) {
-        if (frame == null || w == null)
+    /**
+     * Adds a window listener to the game window.
+     * <p>
+     * Note: If {@link #createWindow(String, int, int, boolean, int)} hasn't been called yet this method does nothing.
+     * 
+     * @param w
+     *            the listener to add.
+     * @return this object for chaining.
+     */
+    public FlatEngine addWindowListener(WindowListener w) {
+        if (frame == null)
             return this;
         frame.addWindowListener(w);
         return this;
@@ -186,13 +270,13 @@ public class FlatEngine implements IEngine {
     /**
      * Register a screen to the {@link ScreenManager}. This is a convenience method of {@link ScreenManager#registerScreen(AbstractScreen)}
      * 
-     * @param gamestate
+     * @param screen
      *            the screen to add.
      */
-    public void registerScreen(AbstractScreen gamestate) {
-        if (gamestate == null)
+    public void registerScreen(AbstractScreen screen) {
+        if (screen == null)
             return;
-        getScreenManager().registerScreen(gamestate);
+        getScreenManager().registerScreen(screen);
     }
 
     /**
@@ -206,14 +290,14 @@ public class FlatEngine implements IEngine {
     }
 
     /**
-     * Start the gameloop.
+     * Start the game loop.
      */
     public void start() {
         loop.start();
     }
 
     /**
-     * Stop the gameloop.
+     * Stop the game loop.
      */
     public void stop() {
         loop.stop();
@@ -224,6 +308,7 @@ public class FlatEngine implements IEngine {
      * 
      * @return width of the render area.
      */
+    @Override
     public int getWidth() {
         return canvas.getWidth();
     }
@@ -233,27 +318,54 @@ public class FlatEngine implements IEngine {
      * 
      * @return height of the render area.
      */
+    @Override
     public int getHeight() {
         return canvas.getHeight();
     }
 
+    /**
+     * Returns the keyboard handler, this object allows checking if keys are pressed/held.
+     * 
+     * @return the keyboard handler.
+     */
     public Keyboard getKeyboard() {
         return keyboard;
     }
 
+    /**
+     * Returns the mouse handler, this object allows checking if mouse buttons are pressed or gettting the position of the mouse cursor.
+     * 
+     * @return the mouse handler.
+     */
     public Mouse getMouse() {
         return mouse;
     }
 
+    /**
+     * The manager for all screens used within this engine.
+     * 
+     * @return the screen manager this engine uses.
+     */
     public ScreenManager getScreenManager() {
         return gsm;
     }
 
+    /**
+     * Returns the logger.
+     * 
+     * @return the logger.
+     */
+    public JFlatLog getLog() {
+        return log;
+    }
+
+    /**
+     * Returns the game loop.
+     * 
+     * @return the game loop.
+     */
     public AbstractGameloop getGameloop() {
         return loop;
     }
 
-    public Component getRenderSurface() {
-        return canvas;
-    }
 }

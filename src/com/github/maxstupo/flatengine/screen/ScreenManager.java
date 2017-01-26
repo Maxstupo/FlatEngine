@@ -59,10 +59,10 @@ public class ScreenManager {
         return true;
     }
 
-    public void registerScreen(AbstractScreen gamestate) {
-        if (gamestate == null)
+    public void registerScreen(AbstractScreen screen) {
+        if (screen == null)
             return;
-        screens.put(gamestate.getKey(), gamestate);
+        screens.put(screen.getKey(), screen);
     }
 
     public AbstractScreen getScreen(String key) {

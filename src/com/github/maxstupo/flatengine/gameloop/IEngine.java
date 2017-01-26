@@ -9,4 +9,8 @@ public interface IEngine {
     void update(double delta);
 
     void render();
+
+    int getWidth();
+
+    int getHeight();
 }
