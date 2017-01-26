@@ -25,15 +25,15 @@ public class BasicExample {
         logger.setLogLevel(JFlatLog.LEVEL_FINE); // Display ALL log messages.
 
         AbstractGameloop gameloop = new BasicGameloop(60); // Create a gameloop that runs at 60 FPS & 60 UPS.
-        Engine<State> engine = new Engine<>(gameloop, logger); // Create the game engine.
+        Engine engine = new Engine(gameloop, logger); // Create the game engine.
 
         // Register each gamestate.
-        engine.registerState(new GamestateMainmenu(engine, State.MAINMENU));
-        engine.registerState(new GamestateOptions(engine, State.OPTIONS));
-        engine.registerState(new GamestateCredits(engine, State.CREDITS));
-        engine.registerState(new GamestateIngame(engine, State.INGAME));
+        engine.registerState(new GamestateMainmenu(engine, "mainmenu"));
+        engine.registerState(new GamestateOptions(engine, "options"));
+        engine.registerState(new GamestateCredits(engine, "credits"));
+        engine.registerState(new GamestateIngame(engine, "ingame"));
 
-        engine.switchTo(State.MAINMENU); // Start on the main menu.
+        engine.switchTo("mainmenu"); // Start on the main menu.
 
         // Create the window for the game engine.
         Window.get().create("Basic example of FlatEngine", 600, 400, true, Window.EXIT_ON_CLOSE, engine);

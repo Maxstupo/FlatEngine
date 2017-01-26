@@ -13,7 +13,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  *
  * @author Maxstupo
  */
-public class GuiText<T extends Enum<T>> extends AbstractGuiNode<T> {
+public class GuiText extends AbstractGuiNode {
 
     private String text;
 
@@ -22,11 +22,11 @@ public class GuiText<T extends Enum<T>> extends AbstractGuiNode<T> {
 
     private boolean isTextDirty = false;
 
-    public GuiText(AbstractGamestate<T> gamestate, Vector2i localPosition) {
+    public GuiText(AbstractGamestate gamestate, Vector2i localPosition) {
         this(gamestate, localPosition, "");
     }
 
-    public GuiText(AbstractGamestate<T> gamestate, Vector2i localPosition, String text) {
+    public GuiText(AbstractGamestate gamestate, Vector2i localPosition, String text) {
         super(gamestate, localPosition, null);
         this.setText(text);
     }
@@ -75,18 +75,18 @@ public class GuiText<T extends Enum<T>> extends AbstractGuiNode<T> {
         isTextDirty = false;
     }
 
-    public GuiText<T> setText(String text) {
+    public GuiText setText(String text) {
         this.text = text;
         this.isTextDirty = true;
         return this;
     }
 
-    public GuiText<T> setColor(Color color) {
+    public GuiText setColor(Color color) {
         this.color = color;
         return this;
     }
 
-    public GuiText<T> setFont(Font font) {
+    public GuiText setFont(Font font) {
         this.font = font;
         this.isTextDirty = true;
         return this;

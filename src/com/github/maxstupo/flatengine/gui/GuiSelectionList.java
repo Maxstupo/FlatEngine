@@ -3,7 +3,6 @@ package com.github.maxstupo.flatengine.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import com.github.maxstupo.flatengine.IEventListener;
 import com.github.maxstupo.flatengine.states.AbstractGamestate;
 import com.github.maxstupo.flatengine.util.math.UtilMath;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
@@ -12,20 +11,14 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  *
  * @author Maxstupo
  */
-public class GuiSelectionList<T extends Enum<T>, L> extends GuiList<T, L> {
+public class GuiSelectionList<L> extends GuiList<L> {
 
     protected int selected = -1;
     protected Color selectedColor = Color.WHITE;
 
-    public GuiSelectionList(AbstractGamestate<T> gamestate, Vector2i localPosition, Vector2i size) {
+    public GuiSelectionList(AbstractGamestate gamestate, Vector2i localPosition, Vector2i size) {
         super(gamestate, localPosition, size);
-        addListener(new IEventListener<GuiList<T, L>, Integer, Integer>() {
-
-            @Override
-            public void onEvent(GuiList<T, L> executor, Integer actionItem, Integer action) {
-                selected = actionItem.intValue();
-            }
-        });
+        addListener((executor, actionItem, action) -> selected = actionItem.intValue());
     }
 
     @Override
@@ -55,12 +48,12 @@ public class GuiSelectionList<T extends Enum<T>, L> extends GuiList<T, L> {
         super.clear();
     }
 
-    public GuiSelectionList<T, L> unselect() {
+    public GuiSelectionList<L> unselect() {
         selected = -1;
         return this;
     }
 
-    public GuiSelectionList<T, L> setSelection(int i) {
+    public GuiSelectionList<L> setSelection(int i) {
         selected = UtilMath.clampI(i, 0, getTotalEntries() - 1);
         return this;
     }

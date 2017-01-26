@@ -11,16 +11,16 @@ import com.github.maxstupo.flatengine.Window;
  *
  * @author Maxstupo
  */
-public class GamestateManager<T extends Enum<T>> {
+public class GamestateManager {
 
-    private final Engine<T> engine;
-    private final Map<T, AbstractGamestate<T>> states = new HashMap<>();
+    private final Engine engine;
+    private final Map<String, AbstractGamestate> states = new HashMap<>();
 
-    private AbstractGamestate<T> currentState = null;
+    private AbstractGamestate currentState = null;
     private boolean hasRendered;
     private boolean onActivated;
 
-    public GamestateManager(Engine<T> engine) {
+    public GamestateManager(Engine engine) {
         this.engine = engine;
     }
 
@@ -46,8 +46,8 @@ public class GamestateManager<T extends Enum<T>> {
         }
     }
 
-    public boolean switchTo(T id) {
-        AbstractGamestate<T> state = states.get(id);
+    public boolean switchTo(String id) {
+        AbstractGamestate state = states.get(id);
         if (state == null)
             return false;
         hasRendered = false;
@@ -60,21 +60,21 @@ public class GamestateManager<T extends Enum<T>> {
         return true;
     }
 
-    public void registerState(AbstractGamestate<T> gamestate) {
+    public void registerState(AbstractGamestate gamestate) {
         if (gamestate == null)
             return;
         states.put(gamestate.getKey(), gamestate);
     }
 
-    public AbstractGamestate<T> getState(T key) {
+    public AbstractGamestate getState(String key) {
         return states.get(key);
     }
 
-    public AbstractGamestate<T> getCurrentState() {
+    public AbstractGamestate getCurrentState() {
         return currentState;
     }
 
-    public Engine<T> getEngine() {
+    public Engine getEngine() {
         return engine;
     }
 

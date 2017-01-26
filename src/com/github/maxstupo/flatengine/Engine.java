@@ -19,14 +19,14 @@ import com.github.maxstupo.jflatlog.JFlatLog;
  *
  * @author Maxstupo
  */
-public class Engine<T extends Enum<T>> implements IEngine {
+public class Engine implements IEngine {
 
     private final JFlatLog log;
 
     private final Canvas canvas;
     private BufferStrategy strategy;
 
-    private final GamestateManager<T> gsm;
+    private final GamestateManager gsm;
     private final AbstractGameloop loop;
 
     private final Keyboard keyboard;
@@ -35,6 +35,7 @@ public class Engine<T extends Enum<T>> implements IEngine {
     private boolean hasInit = false;
 
     public Engine(AbstractGameloop loop, JFlatLog log) {
+
         this.loop = loop;
         this.log = log;
         this.loop.attachEngine(this);
@@ -48,9 +49,11 @@ public class Engine<T extends Enum<T>> implements IEngine {
                     paint(g);
             }
         };
-        this.gsm = new GamestateManager<>(this);
+        this.gsm = new GamestateManager(this);
         this.keyboard = new Keyboard(canvas);
         this.mouse = new Mouse(canvas);
+
+        System.setProperty("sun.awt.noerasebackground", "true");
     }
 
     protected void init() {
@@ -106,7 +109,7 @@ public class Engine<T extends Enum<T>> implements IEngine {
      * @param gamestate
      *            the game state to add.
      */
-    public void registerState(AbstractGamestate<T> gamestate) {
+    public void registerState(AbstractGamestate gamestate) {
         if (gamestate == null)
             return;
         getGamestateManager().registerState(gamestate);
@@ -118,7 +121,7 @@ public class Engine<T extends Enum<T>> implements IEngine {
      * @param id
      *            the key of a gamestate to switch to.
      */
-    public void switchTo(T id) {
+    public void switchTo(String id) {
         getGamestateManager().switchTo(id);
     }
 
@@ -162,7 +165,7 @@ public class Engine<T extends Enum<T>> implements IEngine {
         return mouse;
     }
 
-    public GamestateManager<T> getGamestateManager() {
+    public GamestateManager getGamestateManager() {
         return gsm;
     }
 

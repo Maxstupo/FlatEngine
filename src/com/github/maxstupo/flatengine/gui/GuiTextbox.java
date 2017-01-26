@@ -16,7 +16,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  *
  * @author Maxstupo
  */
-public class GuiTextbox<T extends Enum<T>> extends AbstractGuiNode<T> {
+public class GuiTextbox extends AbstractGuiNode {
 
     protected boolean isSelected = false;
 
@@ -32,7 +32,7 @@ public class GuiTextbox<T extends Enum<T>> extends AbstractGuiNode<T> {
     protected Color backgroundColor = UtilGraphics.changeAlpha(Color.BLACK, 100);
     protected Color foregroundColor = Color.WHITE;
 
-    public GuiTextbox(AbstractGamestate<T> gamestate, Vector2i localPosition, Vector2i size) {
+    public GuiTextbox(AbstractGamestate gamestate, Vector2i localPosition, Vector2i size) {
         super(gamestate, localPosition, size);
 
         gamestate.getGamestateManager().getEngine().getKeyboard().addListener(new IKeyListener() {

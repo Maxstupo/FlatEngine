@@ -3,16 +3,15 @@ package com.github.maxstupo.flatengine.example;
 import java.awt.Graphics2D;
 
 import com.github.maxstupo.flatengine.Engine;
-import com.github.maxstupo.flatengine.example.BasicExample.State;
 import com.github.maxstupo.flatengine.states.AbstractGamestate;
 
 /**
  * @author Maxstupo
  *
  */
-public class GamestateIngame extends AbstractGamestate<State> {
+public class GamestateIngame extends AbstractGamestate {
 
-    public GamestateIngame(Engine<State> engine, State key) {
+    public GamestateIngame(Engine engine, String key) {
         super(engine, key);
     }
 

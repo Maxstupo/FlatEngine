@@ -10,14 +10,14 @@ import com.github.maxstupo.flatengine.gui.GuiNode;
  *
  * @author Maxstupo
  */
-public abstract class AbstractGamestate<T extends Enum<T>> {
+public abstract class AbstractGamestate {
 
-    protected final GamestateManager<T> gsm;
-    protected final T key;
+    protected final GamestateManager gsm;
+    protected final String key;
 
-    protected final AbstractGuiNode<T> gui = new GuiNode<>(this);
+    protected final AbstractGuiNode gui = new GuiNode(this);
 
-    public AbstractGamestate(Engine<T> engine, T key) {
+    public AbstractGamestate(Engine engine, String key) {
         this.gsm = engine.getGamestateManager();
         this.key = key;
     }
@@ -45,11 +45,11 @@ public abstract class AbstractGamestate<T extends Enum<T>> {
     public void onDeactivated() {
     }
 
-    public T getKey() {
+    public String getKey() {
         return key;
     }
 
-    public GamestateManager<T> getGamestateManager() {
+    public GamestateManager getGamestateManager() {
         return gsm;
     }
 }

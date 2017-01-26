@@ -20,7 +20,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  *
  * @author Maxstupo
  */
-public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
+public class GuiList<L> extends AbstractGuiNode {
 
     protected Color backgroundColor = UtilGraphics.changeAlpha(Color.BLACK, 127);
     protected Color foregroundColor = Color.BLACK;
@@ -31,7 +31,7 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
     private Font font;
 
     private final List<L> entires = new ArrayList<>();
-    protected final List<IEventListener<GuiList<T, L>, Integer, Integer>> listeners = new ArrayList<>();
+    protected final List<IEventListener<GuiList<L>, Integer, Integer>> listeners = new ArrayList<>();
 
     private final Vector2i scrollBarPosition = new Vector2i();
     private final Vector2i renderEntryPosition = new Vector2i();
@@ -48,7 +48,7 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
     protected int scrollBarWidth = 7;
     protected int scrollBarHeight = 11;
 
-    public GuiList(AbstractGamestate<T> gamestate, Vector2i localPosition, Vector2i size) {
+    public GuiList(AbstractGamestate gamestate, Vector2i localPosition, Vector2i size) {
         super(gamestate, localPosition, size);
     }
 
@@ -91,7 +91,7 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
     }
 
     private void fireClickEvent(int i, int mouseCode) {
-        for (IEventListener<GuiList<T, L>, Integer, Integer> listener : listeners)
+        for (IEventListener<GuiList<L>, Integer, Integer> listener : listeners)
             listener.onEvent(this, i, mouseCode);
     }
 
@@ -193,7 +193,7 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
         g.drawRect(gpos.x, gpos.y, size.x, size.y);
     }
 
-    public GuiList<T, L> addEntry(L entry) {
+    public GuiList<L> addEntry(L entry) {
         entires.add(entry);
         this.entryHeightDirty = true;
         return this;
@@ -217,7 +217,7 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
             scroll++;
     }
 
-    public GuiList<T, L> addListener(IEventListener<GuiList<T, L>, Integer, Integer> listener) {
+    public GuiList<L> addListener(IEventListener<GuiList<L>, Integer, Integer> listener) {
         listeners.add(listener);
         return this;
     }
@@ -226,7 +226,7 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
         entires.clear();
     }
 
-    public List<IEventListener<GuiList<T, L>, Integer, Integer>> getListeners() {
+    public List<IEventListener<GuiList<L>, Integer, Integer>> getListeners() {
         return Collections.unmodifiableList(listeners);
     }
 
@@ -236,38 +236,38 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
         return entires.get(i);
     }
 
-    public GuiList<T, L> setBackgroundColor(Color backgroundColor) {
+    public GuiList<L> setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
         return this;
     }
 
-    public GuiList<T, L> setOutlineColor(Color outlineColor) {
+    public GuiList<L> setOutlineColor(Color outlineColor) {
         this.outlineColor = outlineColor;
         return this;
     }
 
-    public GuiList<T, L> setFont(Font font) {
+    public GuiList<L> setFont(Font font) {
         this.font = font;
         this.entryHeightDirty = true;
         return this;
     }
 
-    public GuiList<T, L> setSpacing(int spacing) {
+    public GuiList<L> setSpacing(int spacing) {
         this.spacing = spacing;
         return this;
     }
 
-    public GuiList<T, L> setForegroundColor(Color foregroundColor) {
+    public GuiList<L> setForegroundColor(Color foregroundColor) {
         this.foregroundColor = foregroundColor;
         return this;
     }
 
-    public GuiList<T, L> setHoverColor(Color hoverColor) {
+    public GuiList<L> setHoverColor(Color hoverColor) {
         this.hoverColor = hoverColor;
         return this;
     }
 
-    public GuiList<T, L> setBarColor(Color barColor) {
+    public GuiList<L> setBarColor(Color barColor) {
         this.barColor = barColor;
         return this;
     }
@@ -276,22 +276,22 @@ public class GuiList<T extends Enum<T>, L> extends AbstractGuiNode<T> {
         return barBackgroundColor;
     }
 
-    public GuiList<T, L> setBarBackgroundColor(Color barBackgroundColor) {
+    public GuiList<L> setBarBackgroundColor(Color barBackgroundColor) {
         this.barBackgroundColor = barBackgroundColor;
         return this;
     }
 
-    public GuiList<T, L> setScrollBarEnabled(boolean scrollBarEnabled) {
+    public GuiList<L> setScrollBarEnabled(boolean scrollBarEnabled) {
         this.scrollBarEnabled = scrollBarEnabled;
         return this;
     }
 
-    public GuiList<T, L> setScrollBarWidth(int scrollBarWidth) {
+    public GuiList<L> setScrollBarWidth(int scrollBarWidth) {
         this.scrollBarWidth = scrollBarWidth;
         return this;
     }
 
-    public GuiList<T, L> setScrollBarHeight(int scrollBarHeight) {
+    public GuiList<L> setScrollBarHeight(int scrollBarHeight) {
         this.scrollBarHeight = scrollBarHeight;
         return this;
     }

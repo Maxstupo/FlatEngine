@@ -7,7 +7,6 @@ import java.awt.Rectangle;
 import com.github.maxstupo.flatengine.Engine;
 import com.github.maxstupo.flatengine.IEventListener;
 import com.github.maxstupo.flatengine.Window;
-import com.github.maxstupo.flatengine.example.BasicExample.State;
 import com.github.maxstupo.flatengine.gui.GuiButton;
 import com.github.maxstupo.flatengine.gui.GuiNode;
 import com.github.maxstupo.flatengine.gui.GuiText;
@@ -20,28 +19,28 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  * @author Maxstupo
  *
  */
-public class GamestateMainmenu extends AbstractGamestate<State> implements IEventListener<GuiButton<State>, String, Integer> {
+public class GamestateMainmenu extends AbstractGamestate implements IEventListener<GuiButton, String, Integer> {
 
     private static final Vector2i BUTTON_SIZE = new Vector2i(100, 25);
     private static final int BUTTON_SPACING = 3;
 
-    private final GuiNode<State> btnGroup = new GuiNode<>(this);
+    private final GuiNode btnGroup = new GuiNode(this);
 
-    private final GuiButton<State> btnPlay;
-    private final GuiButton<State> btnOptions;
-    private final GuiButton<State> btnCredits;
-    private final GuiButton<State> btnExit;
+    private final GuiButton btnPlay;
+    private final GuiButton btnOptions;
+    private final GuiButton btnCredits;
+    private final GuiButton btnExit;
 
-    private final GuiText<State> title;
+    private final GuiText title;
 
-    public GamestateMainmenu(Engine<State> engine, State key) {
+    public GamestateMainmenu(Engine engine, String key) {
         super(engine, key);
 
         // Buttons
-        btnPlay = new GuiButton<>(this, "Play", new Vector2i(0, 0), BUTTON_SIZE);
-        btnOptions = new GuiButton<>(this, "Options", new Vector2i(0, BUTTON_SIZE.y + BUTTON_SPACING), BUTTON_SIZE);
-        btnCredits = new GuiButton<>(this, "Credits", new Vector2i(0, (BUTTON_SIZE.y + BUTTON_SPACING) * 2), BUTTON_SIZE);
-        btnExit = new GuiButton<>(this, "Exit", new Vector2i(0, (BUTTON_SIZE.y + BUTTON_SPACING) * 3), BUTTON_SIZE);
+        btnPlay = new GuiButton(this, "Play", new Vector2i(0, 0), BUTTON_SIZE);
+        btnOptions = new GuiButton(this, "Options", new Vector2i(0, BUTTON_SIZE.y + BUTTON_SPACING), BUTTON_SIZE);
+        btnCredits = new GuiButton(this, "Credits", new Vector2i(0, (BUTTON_SIZE.y + BUTTON_SPACING) * 2), BUTTON_SIZE);
+        btnExit = new GuiButton(this, "Exit", new Vector2i(0, (BUTTON_SIZE.y + BUTTON_SPACING) * 3), BUTTON_SIZE);
 
         btnPlay.addListener(this);
         btnOptions.addListener(this);
@@ -54,19 +53,19 @@ public class GamestateMainmenu extends AbstractGamestate<State> implements IEven
         gui.addChild(btnGroup);
 
         // A title.
-        title = new GuiText<>(this, new Vector2i(0, 0), "The mainmenu");
+        title = new GuiText(this, new Vector2i(0, 0), "The mainmenu");
         title.setFont(new Font("", Font.BOLD, 25));
         gui.addChild(title);
     }
 
     @Override
-    public void onEvent(GuiButton<State> executor, String actionItem, Integer action) {
+    public void onEvent(GuiButton executor, String actionItem, Integer action) {
         if (executor.equals(btnPlay)) {
-            gsm.switchTo(State.INGAME);
+            gsm.switchTo("ingame");
         } else if (executor.equals(btnOptions)) {
-            gsm.switchTo(State.OPTIONS);
+            gsm.switchTo("options");
         } else if (executor.equals(btnCredits)) {
-            gsm.switchTo(State.CREDITS);
+            gsm.switchTo("credits");
         } else if (executor.equals(btnExit)) {
             System.exit(0);
         }

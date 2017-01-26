@@ -8,9 +8,9 @@ import com.github.maxstupo.flatengine.states.AbstractGamestate;
  * @author Maxstupo
  *
  */
-public class GuiNode<T extends Enum<T>> extends AbstractGuiNode<T> {
+public class GuiNode extends AbstractGuiNode {
 
-    public GuiNode(AbstractGamestate<T> gamestate) {
+    public GuiNode(AbstractGamestate gamestate) {
         super(gamestate, null, null);
     }
 
