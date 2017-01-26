@@ -28,10 +28,10 @@ public class BasicExample {
         Engine engine = new Engine(gameloop, logger); // Create the game engine.
 
         // Register each gamestate.
-        engine.registerState(new GamestateMainmenu(engine, "mainmenu"));
-        engine.registerState(new GamestateOptions(engine, "options"));
-        engine.registerState(new GamestateCredits(engine, "credits"));
-        engine.registerState(new GamestateIngame(engine, "ingame"));
+        engine.registerScreen(new GamestateMainmenu(engine, "mainmenu"));
+        engine.registerScreen(new GamestateOptions(engine, "options"));
+        engine.registerScreen(new GamestateCredits(engine, "credits"));
+        engine.registerScreen(new GamestateIngame(engine, "ingame"));
 
         engine.switchTo("mainmenu"); // Start on the main menu.
 

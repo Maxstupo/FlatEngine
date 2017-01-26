@@ -6,14 +6,14 @@ import java.awt.Graphics2D;
 import com.github.maxstupo.flatengine.Engine;
 import com.github.maxstupo.flatengine.Window;
 import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
-import com.github.maxstupo.flatengine.states.AbstractGamestate;
+import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.jflatlog.JFlatLog;
 
 /**
  * @author Maxstupo
  *
  */
-public class Main extends AbstractGamestate {
+public class Main extends AbstractScreen {
 
     public Main(Engine engine, String key) {
         super(engine, key);
@@ -29,7 +29,7 @@ public class Main extends AbstractGamestate {
 
         Engine engine = new Engine(loop, JFlatLog.get());
 
-        engine.registerState(new Main(engine, "test"));
+        engine.registerScreen(new Main(engine, "test"));
         engine.switchTo("test");
 
         Window.get().create("", 800, 600, true, Window.EXIT_ON_CLOSE, engine);

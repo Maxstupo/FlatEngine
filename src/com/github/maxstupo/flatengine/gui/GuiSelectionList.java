@@ -3,7 +3,7 @@ package com.github.maxstupo.flatengine.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import com.github.maxstupo.flatengine.states.AbstractGamestate;
+import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.math.UtilMath;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
@@ -16,8 +16,8 @@ public class GuiSelectionList<L> extends GuiList<L> {
     protected int selected = -1;
     protected Color selectedColor = Color.WHITE;
 
-    public GuiSelectionList(AbstractGamestate gamestate, Vector2i localPosition, Vector2i size) {
-        super(gamestate, localPosition, size);
+    public GuiSelectionList(AbstractScreen screen, Vector2i localPosition, Vector2i size) {
+        super(screen, localPosition, size);
         addListener((executor, actionItem, action) -> selected = actionItem.intValue());
     }
 

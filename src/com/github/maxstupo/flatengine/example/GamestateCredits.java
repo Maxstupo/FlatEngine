@@ -3,13 +3,13 @@ package com.github.maxstupo.flatengine.example;
 import java.awt.Graphics2D;
 
 import com.github.maxstupo.flatengine.Engine;
-import com.github.maxstupo.flatengine.states.AbstractGamestate;
+import com.github.maxstupo.flatengine.screen.AbstractScreen;
 
 /**
  * @author Maxstupo
  *
  */
-public class GamestateCredits extends AbstractGamestate {
+public class GamestateCredits extends AbstractScreen {
 
     public GamestateCredits(Engine engine, String key) {
         super(engine, key);

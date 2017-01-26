@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-import com.github.maxstupo.flatengine.states.AbstractGamestate;
+import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.UtilGraphics;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
@@ -22,11 +22,11 @@ public class GuiText extends AbstractGuiNode {
 
     private boolean isTextDirty = false;
 
-    public GuiText(AbstractGamestate gamestate, Vector2i localPosition) {
-        this(gamestate, localPosition, "");
+    public GuiText(AbstractScreen screen, Vector2i localPosition) {
+        this(screen, localPosition, "");
     }
 
-    public GuiText(AbstractGamestate gamestate, Vector2i localPosition, String text) {
+    public GuiText(AbstractScreen gamestate, Vector2i localPosition, String text) {
         super(gamestate, localPosition, null);
         this.setText(text);
     }

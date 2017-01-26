@@ -2,7 +2,7 @@ package com.github.maxstupo.flatengine.gui;
 
 import java.awt.Graphics2D;
 
-import com.github.maxstupo.flatengine.states.AbstractGamestate;
+import com.github.maxstupo.flatengine.screen.AbstractScreen;
 
 /**
  * @author Maxstupo
@@ -10,8 +10,8 @@ import com.github.maxstupo.flatengine.states.AbstractGamestate;
  */
 public class GuiNode extends AbstractGuiNode {
 
-    public GuiNode(AbstractGamestate gamestate) {
-        super(gamestate, null, null);
+    public GuiNode(AbstractScreen screen) {
+        super(screen, null, null);
     }
 
     @Override

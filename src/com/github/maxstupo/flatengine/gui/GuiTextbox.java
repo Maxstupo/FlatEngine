@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 import com.github.maxstupo.flatengine.input.IKeyListener;
 import com.github.maxstupo.flatengine.input.Mouse;
 import com.github.maxstupo.flatengine.input.filter.IKeycodeFilter;
-import com.github.maxstupo.flatengine.states.AbstractGamestate;
+import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.UtilGraphics;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
@@ -32,10 +32,10 @@ public class GuiTextbox extends AbstractGuiNode {
     protected Color backgroundColor = UtilGraphics.changeAlpha(Color.BLACK, 100);
     protected Color foregroundColor = Color.WHITE;
 
-    public GuiTextbox(AbstractGamestate gamestate, Vector2i localPosition, Vector2i size) {
-        super(gamestate, localPosition, size);
+    public GuiTextbox(AbstractScreen screen, Vector2i localPosition, Vector2i size) {
+        super(screen, localPosition, size);
 
-        gamestate.getGamestateManager().getEngine().getKeyboard().addListener(new IKeyListener() {
+        screen.getScreenManager().getEngine().getKeyboard().addListener(new IKeyListener() {
 
             @Override
             public void keyReleased(KeyEvent e) {
@@ -50,7 +50,7 @@ public class GuiTextbox extends AbstractGuiNode {
     }
 
     public void doInputLogic() {
-        if (gamestate.getGamestateManager().getEngine().getMouse().isMouseDown(Mouse.LEFT_CLICK))
+        if (screen.getScreenManager().getEngine().getMouse().isMouseDown(Mouse.LEFT_CLICK))
             isSelected = isMouseOver() && isEnabled();
     }
 

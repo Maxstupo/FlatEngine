@@ -1,4 +1,4 @@
-package com.github.maxstupo.flatengine.states;
+package com.github.maxstupo.flatengine.screen;
 
 import java.awt.Graphics2D;
 import java.util.HashMap;
@@ -11,67 +11,67 @@ import com.github.maxstupo.flatengine.Window;
  *
  * @author Maxstupo
  */
-public class GamestateManager {
+public class ScreenManager {
 
     private final Engine engine;
-    private final Map<String, AbstractGamestate> states = new HashMap<>();
+    private final Map<String, AbstractScreen> screens = new HashMap<>();
 
-    private AbstractGamestate currentState = null;
+    private AbstractScreen currentScreen = null;
     private boolean hasRendered;
     private boolean onActivated;
 
-    public GamestateManager(Engine engine) {
+    public ScreenManager(Engine engine) {
         this.engine = engine;
     }
 
     public void update(double delta) {
-        if (currentState != null) {
+        if (currentScreen != null) {
 
-            currentState.doUpdate(delta);
+            currentScreen.doUpdate(delta);
 
             if (onActivated && hasRendered) {
                 onActivated = false;
-                currentState.onActivated();
+                currentScreen.onActivated();
             }
 
             if (Window.get().isResized() && hasRendered)
-                currentState.onResize(engine.getWidth(), engine.getHeight());
+                currentScreen.onResize(engine.getWidth(), engine.getHeight());
         }
     }
 
     public void render(Graphics2D g) {
-        if (currentState != null) {
-            currentState.doRender(g);
+        if (currentScreen != null) {
+            currentScreen.doRender(g);
             hasRendered = true;
         }
     }
 
     public boolean switchTo(String id) {
-        AbstractGamestate state = states.get(id);
+        AbstractScreen state = screens.get(id);
         if (state == null)
             return false;
         hasRendered = false;
 
-        if (currentState != null)
-            currentState.onDeactivated();
+        if (currentScreen != null)
+            currentScreen.onDeactivated();
 
-        currentState = state;
+        currentScreen = state;
         onActivated = true;
         return true;
     }
 
-    public void registerState(AbstractGamestate gamestate) {
+    public void registerScreen(AbstractScreen gamestate) {
         if (gamestate == null)
             return;
-        states.put(gamestate.getKey(), gamestate);
+        screens.put(gamestate.getKey(), gamestate);
     }
 
-    public AbstractGamestate getState(String key) {
-        return states.get(key);
+    public AbstractScreen getScreen(String key) {
+        return screens.get(key);
     }
 
-    public AbstractGamestate getCurrentState() {
-        return currentState;
+    public AbstractScreen getCurrentScreen() {
+        return currentScreen;
     }
 
     public Engine getEngine() {

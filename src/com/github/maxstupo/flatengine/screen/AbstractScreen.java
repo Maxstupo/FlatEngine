@@ -1,4 +1,4 @@
-package com.github.maxstupo.flatengine.states;
+package com.github.maxstupo.flatengine.screen;
 
 import java.awt.Graphics2D;
 
@@ -10,15 +10,15 @@ import com.github.maxstupo.flatengine.gui.GuiNode;
  *
  * @author Maxstupo
  */
-public abstract class AbstractGamestate {
+public abstract class AbstractScreen {
 
-    protected final GamestateManager gsm;
+    protected final ScreenManager screenManager;
     protected final String key;
 
     protected final AbstractGuiNode gui = new GuiNode(this);
 
-    public AbstractGamestate(Engine engine, String key) {
-        this.gsm = engine.getGamestateManager();
+    public AbstractScreen(Engine engine, String key) {
+        this.screenManager = engine.getScreenManager();
         this.key = key;
     }
 
@@ -49,7 +49,7 @@ public abstract class AbstractGamestate {
         return key;
     }
 
-    public GamestateManager getGamestateManager() {
-        return gsm;
+    public ScreenManager getScreenManager() {
+        return screenManager;
     }
 }

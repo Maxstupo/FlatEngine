@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.github.maxstupo.flatengine.input.Keyboard;
 import com.github.maxstupo.flatengine.input.Mouse;
-import com.github.maxstupo.flatengine.states.AbstractGamestate;
+import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
@@ -17,7 +17,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  */
 public abstract class AbstractGuiNode {
 
-    protected final AbstractGamestate gamestate;
+    protected final AbstractScreen screen;
 
     private AbstractGuiNode parent;
     private final List<AbstractGuiNode> children = new ArrayList<>();
@@ -34,8 +34,8 @@ public abstract class AbstractGuiNode {
 
     private boolean isDirty = true;
 
-    public AbstractGuiNode(AbstractGamestate gamestate, Vector2i localPosition, Vector2i size) {
-        this.gamestate = gamestate;
+    public AbstractGuiNode(AbstractScreen screen, Vector2i localPosition, Vector2i size) {
+        this.screen = screen;
         if (localPosition != null)
             this.setLocalPosition(localPosition.x, localPosition.y);
         if (size != null)
@@ -69,11 +69,11 @@ public abstract class AbstractGuiNode {
     }
 
     protected Mouse getMouse() {
-        return gamestate.getGamestateManager().getEngine().getMouse();
+        return screen.getScreenManager().getEngine().getMouse();
     }
 
     protected Keyboard getKeyboard() {
-        return gamestate.getGamestateManager().getEngine().getKeyboard();
+        return screen.getScreenManager().getEngine().getKeyboard();
     }
 
     public AbstractGuiNode addChild(AbstractGuiNode node) {
@@ -189,8 +189,8 @@ public abstract class AbstractGuiNode {
         return totalBounds;
     }
 
-    public AbstractGamestate getGamestate() {
-        return gamestate;
+    public AbstractScreen getScreen() {
+        return screen;
     }
 
     protected void setParent(AbstractGuiNode parent) {

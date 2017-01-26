@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.github.maxstupo.flatengine.IEventListener;
 import com.github.maxstupo.flatengine.input.Mouse;
-import com.github.maxstupo.flatengine.states.AbstractGamestate;
+import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
@@ -36,13 +36,13 @@ public class GuiButton extends AbstractGuiNode {
 
     protected final List<IEventListener<GuiButton, String, Integer>> listeners = new ArrayList<>();
 
-    public GuiButton(AbstractGamestate gamestate, String text, Vector2i localPosition) {
-        this(gamestate, text, localPosition, new Vector2i(-1, -1));
+    public GuiButton(AbstractScreen screen, String text, Vector2i localPosition) {
+        this(screen, text, localPosition, new Vector2i(-1, -1));
     }
 
-    public GuiButton(AbstractGamestate gamestate, String text, Vector2i localPosition, Vector2i size) {
-        super(gamestate, localPosition, size);
-        this.text = new GuiText(gamestate, null, text);
+    public GuiButton(AbstractScreen screen, String text, Vector2i localPosition, Vector2i size) {
+        super(screen, localPosition, size);
+        this.text = new GuiText(screen, null, text);
         this.addChild(this.text);
 
         this.text.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));

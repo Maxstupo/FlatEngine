@@ -12,14 +12,14 @@ import com.github.maxstupo.flatengine.gui.GuiNode;
 import com.github.maxstupo.flatengine.gui.GuiText;
 import com.github.maxstupo.flatengine.input.Keyboard;
 import com.github.maxstupo.flatengine.input.Mouse;
-import com.github.maxstupo.flatengine.states.AbstractGamestate;
+import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
  * @author Maxstupo
  *
  */
-public class GamestateMainmenu extends AbstractGamestate implements IEventListener<GuiButton, String, Integer> {
+public class GamestateMainmenu extends AbstractScreen implements IEventListener<GuiButton, String, Integer> {
 
     private static final Vector2i BUTTON_SIZE = new Vector2i(100, 25);
     private static final int BUTTON_SPACING = 3;
@@ -61,11 +61,11 @@ public class GamestateMainmenu extends AbstractGamestate implements IEventListen
     @Override
     public void onEvent(GuiButton executor, String actionItem, Integer action) {
         if (executor.equals(btnPlay)) {
-            gsm.switchTo("ingame");
+            screenManager.switchTo("ingame");
         } else if (executor.equals(btnOptions)) {
-            gsm.switchTo("options");
+            screenManager.switchTo("options");
         } else if (executor.equals(btnCredits)) {
-            gsm.switchTo("credits");
+            screenManager.switchTo("credits");
         } else if (executor.equals(btnExit)) {
             System.exit(0);
         }
@@ -74,17 +74,17 @@ public class GamestateMainmenu extends AbstractGamestate implements IEventListen
     @Override
     public void update(double delta) {
         // If the space bar is pressed.
-        if (gsm.getEngine().getKeyboard().isKeyHeld(Keyboard.KEY_SPACE)) {
+        if (screenManager.getEngine().getKeyboard().isKeyHeld(Keyboard.KEY_SPACE)) {
             title.setText("Spacebar held!");
         } else {
             title.setText("The mainmenu");
         }
 
         // If left mouse button is pressed.
-        if (gsm.getEngine().getMouse().isMouseDown(Mouse.LEFT_CLICK)) {
+        if (screenManager.getEngine().getMouse().isMouseDown(Mouse.LEFT_CLICK)) {
 
             // Set mouse position in window title.
-            Window.get().setTitle(gsm.getEngine().getMouse().getPosition().x + "," + gsm.getEngine().getMouse().getPosition().y);
+            Window.get().setTitle(screenManager.getEngine().getMouse().getPosition().x + "," + screenManager.getEngine().getMouse().getPosition().y);
 
         }
     }
@@ -97,7 +97,7 @@ public class GamestateMainmenu extends AbstractGamestate implements IEventListen
     @Override
     public void onActivated() {
         super.onActivated();
-        onResize(gsm.getEngine().getWidth(), gsm.getEngine().getHeight());
+        onResize(screenManager.getEngine().getWidth(), screenManager.getEngine().getHeight());
     }
 
     @Override

@@ -11,8 +11,8 @@ import com.github.maxstupo.flatengine.gameloop.AbstractGameloop;
 import com.github.maxstupo.flatengine.gameloop.IEngine;
 import com.github.maxstupo.flatengine.input.Keyboard;
 import com.github.maxstupo.flatengine.input.Mouse;
-import com.github.maxstupo.flatengine.states.AbstractGamestate;
-import com.github.maxstupo.flatengine.states.GamestateManager;
+import com.github.maxstupo.flatengine.screen.AbstractScreen;
+import com.github.maxstupo.flatengine.screen.ScreenManager;
 import com.github.maxstupo.jflatlog.JFlatLog;
 
 /**
@@ -26,7 +26,7 @@ public class Engine implements IEngine {
     private final Canvas canvas;
     private BufferStrategy strategy;
 
-    private final GamestateManager gsm;
+    private final ScreenManager gsm;
     private final AbstractGameloop loop;
 
     private final Keyboard keyboard;
@@ -49,7 +49,7 @@ public class Engine implements IEngine {
                     paint(g);
             }
         };
-        this.gsm = new GamestateManager(this);
+        this.gsm = new ScreenManager(this);
         this.keyboard = new Keyboard(canvas);
         this.mouse = new Mouse(canvas);
 
@@ -103,26 +103,25 @@ public class Engine implements IEngine {
     }
 
     /**
-     * Register a game state to the {@link GamestateManager} (GSM). This is a convenience method of
-     * {@link GamestateManager#registerState(AbstractGamestate)}
+     * Register a screen to the {@link ScreenManager}. This is a convenience method of {@link ScreenManager#registerScreen(AbstractScreen)}
      * 
      * @param gamestate
-     *            the game state to add.
+     *            the screen to add.
      */
-    public void registerState(AbstractGamestate gamestate) {
+    public void registerScreen(AbstractScreen gamestate) {
         if (gamestate == null)
             return;
-        getGamestateManager().registerState(gamestate);
+        getScreenManager().registerScreen(gamestate);
     }
 
     /**
-     * Switch to a different game state based on the gamestate key. This is a convenience method of {@link GamestateManager#switchTo(Enum)}
+     * Switch to a different screen based on the id. This is a convenience method of {@link ScreenManager#switchTo(String)}
      * 
      * @param id
-     *            the key of a gamestate to switch to.
+     *            the key of a screen to switch to.
      */
     public void switchTo(String id) {
-        getGamestateManager().switchTo(id);
+        getScreenManager().switchTo(id);
     }
 
     /**
@@ -165,7 +164,7 @@ public class Engine implements IEngine {
         return mouse;
     }
 
-    public GamestateManager getGamestateManager() {
+    public ScreenManager getScreenManager() {
         return gsm;
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 import com.github.maxstupo.flatengine.IEventListener;
 import com.github.maxstupo.flatengine.input.Mouse;
-import com.github.maxstupo.flatengine.states.AbstractGamestate;
+import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.UtilGraphics;
 import com.github.maxstupo.flatengine.util.math.UtilMath;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
@@ -48,8 +48,8 @@ public class GuiList<L> extends AbstractGuiNode {
     protected int scrollBarWidth = 7;
     protected int scrollBarHeight = 11;
 
-    public GuiList(AbstractGamestate gamestate, Vector2i localPosition, Vector2i size) {
-        super(gamestate, localPosition, size);
+    public GuiList(AbstractScreen screen, Vector2i localPosition, Vector2i size) {
+        super(screen, localPosition, size);
     }
 
     @Override
@@ -81,8 +81,8 @@ public class GuiList<L> extends AbstractGuiNode {
     }
 
     protected void doInputLogic() {
-        if (gamestate.getGamestateManager().getEngine().getMouse().didMouseWheelMove() && isMouseOver()) {
-            if (gamestate.getGamestateManager().getEngine().getMouse().getWheelRotation() > 0) {
+        if (screen.getScreenManager().getEngine().getMouse().didMouseWheelMove() && isMouseOver()) {
+            if (screen.getScreenManager().getEngine().getMouse().getWheelRotation() > 0) {
                 scrollDown();
             } else {
                 scrollUp();
