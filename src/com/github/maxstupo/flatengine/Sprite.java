@@ -57,10 +57,10 @@ public class Sprite {
         gg.dispose();
     }
 
-    public Sprite rotate(int amt) {
+    public Sprite rotate(float angleDegrees) {
         AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
         tx.translate(-image.getWidth(), 0);
-        tx.rotate(Math.toRadians(amt), image.getWidth() / 2, image.getHeight() / 2);
+        tx.rotate(Math.toRadians(angleDegrees), image.getWidth() / 2, image.getHeight() / 2);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
         BufferedImage img = op.filter(image, null);
         return new Sprite(img, key);
