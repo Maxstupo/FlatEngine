@@ -20,14 +20,13 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  *
  * @author Maxstupo
  */
-public class GuiList<L> extends AbstractGuiNode {
+// TODO: Rewrite gui list using GuiText for alignable entries.
+public class GuiList<L> extends GuiNode {
 
-    protected Color backgroundColor = UtilGraphics.changeAlpha(Color.BLACK, 127);
     protected Color foregroundColor = Color.BLACK;
-    protected Color outlineColor = Color.BLACK;
     protected Color hoverColor = Color.LIGHT_GRAY;
-    protected Color barColor = Color.DARK_GRAY;
-    protected Color barBackgroundColor = Color.LIGHT_GRAY;
+    protected Color barColor = Color.LIGHT_GRAY;
+    protected Color barBackgroundColor = Color.DARK_GRAY;
     private Font font;
 
     private final List<L> entires = new ArrayList<>();
@@ -50,12 +49,12 @@ public class GuiList<L> extends AbstractGuiNode {
 
     public GuiList(AbstractScreen screen, Vector2i localPosition, Vector2i size) {
         super(screen, localPosition, size);
+        setBackgroundColor(UtilGraphics.changeAlpha(Color.BLACK, 127));
+        setOutlineColor(Color.black);
     }
 
     @Override
     public boolean update(double delta, boolean shouldHandleInput) {
-        if (!isEnabled())
-            return shouldHandleInput;
 
         indexHover = -1;
         if (shouldHandleInput) {
@@ -90,7 +89,12 @@ public class GuiList<L> extends AbstractGuiNode {
         }
     }
 
-    private void fireClickEvent(int i, int mouseCode) {
+    @Override
+    public void onResize(int width, int height) {
+
+    }
+
+    protected void fireClickEvent(int i, int mouseCode) {
         for (IEventListener<GuiList<L>, Integer, Integer> listener : listeners)
             listener.onEvent(this, i, mouseCode);
     }
@@ -122,9 +126,10 @@ public class GuiList<L> extends AbstractGuiNode {
 
     @Override
     public void render(Graphics2D g) {
+        super.render(g);
+
         Vector2i gpos = getGlobalPosition();
 
-        renderBackground(g, gpos);
         renderItems(g, gpos);
         renderScrollBar(g, gpos);
     }
@@ -185,14 +190,6 @@ public class GuiList<L> extends AbstractGuiNode {
         return foregroundColor;
     }
 
-    protected void renderBackground(Graphics2D g, Vector2i gpos) {
-        g.setColor(backgroundColor);
-        g.fillRect(gpos.x, gpos.y, size.x, size.y);
-
-        g.setColor(outlineColor);
-        g.drawRect(gpos.x, gpos.y, size.x, size.y);
-    }
-
     public GuiList<L> addEntry(L entry) {
         entires.add(entry);
         this.entryHeightDirty = true;
@@ -239,16 +236,6 @@ public class GuiList<L> extends AbstractGuiNode {
         if (i < 0 || i >= entires.size())
             return null;
         return entires.get(i);
-    }
-
-    public GuiList<L> setBackgroundColor(Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
-        return this;
-    }
-
-    public GuiList<L> setOutlineColor(Color outlineColor) {
-        this.outlineColor = outlineColor;
-        return this;
     }
 
     public GuiList<L> setFont(Font font) {
@@ -321,20 +308,12 @@ public class GuiList<L> extends AbstractGuiNode {
         return hoverColor;
     }
 
-    public Color getOutlineColor() {
-        return outlineColor;
-    }
-
     public int getTotalEntries() {
         return entires.size();
     }
 
     public int getSpacing() {
         return spacing;
-    }
-
-    public Color getBackgroundColor() {
-        return backgroundColor;
     }
 
     public Color getBarColor() {
@@ -351,6 +330,11 @@ public class GuiList<L> extends AbstractGuiNode {
 
     public int getScrollBarHeight() {
         return scrollBarHeight;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("GuiList [backgroundColor=%s, foregroundColor=%s, outlineColor=%s, hoverColor=%s, barColor=%s, barBackgroundColor=%s, font=%s, entires=%s, listeners=%s, scrollBarPosition=%s, renderEntryPosition=%s, scroll=%s, spacing=%s, indexHover=%s, entryBounds=%s, entryHeightDirty=%s, scrollBarEnabled=%s, scrollBarWidth=%s, scrollBarHeight=%s, screen=%s, localPosition=%s, size=%s, isEnabled=%s, isDebug=%s]", backgroundColor, foregroundColor, outlineColor, hoverColor, barColor, barBackgroundColor, font, entires, listeners, scrollBarPosition, renderEntryPosition, scroll, spacing, indexHover, entryBounds, entryHeightDirty, scrollBarEnabled, scrollBarWidth, scrollBarHeight, screen, localPosition, size, isEnabled(), isDebug());
     }
 
 }

@@ -26,7 +26,8 @@ public abstract class AbstractGuiNode {
     protected final Vector2i localPosition = new Vector2i();
     protected final Vector2i size = new Vector2i();
 
-    protected boolean isEnabled = true;
+    private boolean isEnabled = true;
+    protected boolean isVisible = true;
     protected boolean isDebug = false;
 
     private final Rectangle bounds = new Rectangle();
@@ -50,6 +51,8 @@ public abstract class AbstractGuiNode {
     }
 
     public void renderAll(Graphics2D g) {
+        if (!isVisible())
+            return;
         render(g);
         for (AbstractGuiNode node : children)
             node.renderAll(g);
@@ -63,9 +66,18 @@ public abstract class AbstractGuiNode {
             shouldHandleInput = node.updateAll(delta, shouldHandleInput);
         }
 
-        shouldHandleInput = update(delta, shouldHandleInput);
+        if (isEnabled())
+            shouldHandleInput = update(delta, shouldHandleInput);
 
         return shouldHandleInput;
+    }
+
+    public abstract void onResize(int width, int height);
+
+    public void resize(int width, int height) {
+        this.onResize(width, height);
+        for (AbstractGuiNode node : children)
+            node.resize(width, height);
     }
 
     protected Mouse getMouse() {
@@ -102,16 +114,18 @@ public abstract class AbstractGuiNode {
         return globalPosition;
     }
 
-    public void setLocalPosition(int x, int y) {
+    public AbstractGuiNode setLocalPosition(int x, int y) {
         if (x != localPosition.x || y != localPosition.y)
             setDirty();
         localPosition.set(x, y);
+        return this;
     }
 
-    public void setDirty() {
+    public AbstractGuiNode setDirty() {
         this.isDirty = true;
         for (AbstractGuiNode node : children)
             node.setDirty();
+        return this;
     }
 
     public synchronized void bringToFront(AbstractGuiNode node) {
@@ -213,6 +227,15 @@ public abstract class AbstractGuiNode {
         return localPosition.x;
     }
 
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public AbstractGuiNode setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+        return this;
+    }
+
     public int getLocalPositionY() {
         return localPosition.y;
     }
@@ -222,19 +245,24 @@ public abstract class AbstractGuiNode {
     }
 
     public boolean isEnabled() {
-        return isEnabled;
+        if (getParent() != null) {
+            return isEnabled && isVisible && getParent().isEnabled();
+        }
+        return isEnabled && isVisible;
     }
 
-    public void setEnabled(boolean isEnabled) {
+    public AbstractGuiNode setEnabled(boolean isEnabled) {
         this.isEnabled = isEnabled;
+        return this;
     }
 
     public boolean isDebug() {
         return isDebug;
     }
 
-    public void setDebug(boolean isDebug) {
+    public AbstractGuiNode setDebug(boolean isDebug) {
         this.isDebug = isDebug;
+        return this;
     }
 
     public boolean isDirty() {
@@ -251,9 +279,10 @@ public abstract class AbstractGuiNode {
     /**
      * Disposes this node and all children nodes.
      */
-    public void dispose() {
+    public AbstractGuiNode dispose() {
         this.onDispose();
         for (AbstractGuiNode node : children)
             node.dispose();
+        return this;
     }
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.maxstupo.flatengine.IEventListener;
-import com.github.maxstupo.flatengine.gui.GuiText.TextAlignment;
+import com.github.maxstupo.flatengine.gui.AlignableGuiNode.Alignment;
 import com.github.maxstupo.flatengine.input.Mouse;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
@@ -36,17 +36,13 @@ public class GuiButton extends AbstractGuiNode {
 
     public GuiButton(AbstractScreen screen, String text, Vector2i localPosition, Vector2i size) {
         super(screen, localPosition, size);
-        this.text = new GuiText(screen, null, text);
-        this.addChild(this.text);
-
+        this.text = new GuiText(screen, Alignment.CENTER, text);
         this.text.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
+        this.addChild(this.text);
     }
 
     @Override
     public boolean update(double delta, boolean shouldHandleInput) {
-
-        if (!isEnabled())
-            return shouldHandleInput;
 
         if (shouldHandleInput) {
             isMouseOver = isMouseOver();
@@ -57,7 +53,7 @@ public class GuiButton extends AbstractGuiNode {
         return shouldHandleInput && !isMouseOver;
     }
 
-    public void doInputLogic() {
+    protected void doInputLogic() {
         for (int i = 1; i <= Mouse.TOTAL_MOUSE_BUTTONS_MONITORED; i++) {
             if (isMouseClicked(i))
                 fireActionEvent(i);
@@ -76,7 +72,7 @@ public class GuiButton extends AbstractGuiNode {
 
         if (!boxLess) {
             g.setColor(getBackgroundColor());
-            g.fill3DRect(gpos.x, gpos.y, size.x, size.y, isEnabled);
+            g.fill3DRect(gpos.x, gpos.y, size.x, size.y, isEnabled());
 
             if (isMouseOver) {
                 g.setColor(getSelectionColor());
@@ -92,21 +88,11 @@ public class GuiButton extends AbstractGuiNode {
         } else {
             text.setColor(isMouseOver ? getSelectionColor() : getForegroundColor());
         }
-
-        if (isDebug) {
-            g.setColor(Color.WHITE);
-            g.drawRect(gpos.x, gpos.y, size.x, size.y);
-        }
     }
 
-    public GuiButton setText(String text) {
-        this.text.setText(text);
-        return this;
-    }
+    @Override
+    public void onResize(int width, int height) {
 
-    public GuiButton setFont(Font font) {
-        this.text.setFont(font);
-        return this;
     }
 
     public GuiButton setBackgroundColor(Color backgroundColor) {
@@ -129,19 +115,14 @@ public class GuiButton extends AbstractGuiNode {
         return this;
     }
 
-    public GuiButton setTextAlignment(TextAlignment alignment) {
-        text.setAlignment(alignment);
-        return this;
-    }
-
     public GuiButton addListener(IEventListener<GuiButton, String, Integer> listener) {
         if (listener != null)
             listeners.add(listener);
         return this;
     }
 
-    public Font getFont() {
-        return text.getFont();
+    public GuiText getText() {
+        return text;
     }
 
     public Color getBackgroundColor() {
@@ -160,13 +141,9 @@ public class GuiButton extends AbstractGuiNode {
         return boxLess;
     }
 
-    public TextAlignment getTextAlignment() {
-        return text.getAlignment();
-    }
-
     @Override
     public String toString() {
-        return String.format("GuiButton [text=%s, backgroundColor=%s, foregroundColor=%s, selectionColor=%s, boxLess=%s, outlineStroke=%s, isMouseOver=%s, listeners=%s]", text, backgroundColor, foregroundColor, selectionColor, boxLess, outlineStroke, isMouseOver, listeners);
+        return String.format("GuiButton [text=%s, backgroundColor=%s, foregroundColor=%s, selectionColor=%s, boxLess=%s, outlineStroke=%s, isMouseOver=%s, listeners=%s, screen=%s, localPosition=%s, size=%s, isEnabled=%s, isDebug=%s]", text, backgroundColor, foregroundColor, selectionColor, boxLess, outlineStroke, isMouseOver, listeners, screen, localPosition, size, isEnabled(), isDebug());
     }
 
     @Override

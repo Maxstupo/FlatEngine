@@ -16,7 +16,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  *
  * @author Maxstupo
  */
-public class GuiTextbox extends AbstractGuiNode implements IKeyListener {
+public class GuiTextbox extends GuiNode implements IKeyListener {
 
     protected boolean isSelected = false;
 
@@ -28,13 +28,12 @@ public class GuiTextbox extends AbstractGuiNode implements IKeyListener {
     protected String cursor_temp = "";
     protected IKeycodeFilter filter = null;
 
-    protected Color outlineColor = Color.BLACK;
-    protected Color backgroundColor = UtilGraphics.changeAlpha(Color.BLACK, 100);
     protected Color foregroundColor = Color.WHITE;
 
     public GuiTextbox(AbstractScreen screen, Vector2i localPosition, Vector2i size) {
         super(screen, localPosition, size);
-
+        setBackgroundColor(UtilGraphics.changeAlpha(Color.BLACK, 100));
+        setOutlineColor(Color.BLACK);
         screen.getScreenManager().getEngine().getKeyboard().addListener(this);
     }
 
@@ -54,8 +53,6 @@ public class GuiTextbox extends AbstractGuiNode implements IKeyListener {
 
     protected void handleInput(KeyEvent e) {
         if (!isSelected)
-            return;
-        if (!isEnabled())
             return;
         if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
             if (text.length() > 0)
@@ -121,6 +118,11 @@ public class GuiTextbox extends AbstractGuiNode implements IKeyListener {
         screen.getScreenManager().getEngine().getKeyboard().removeListener(this);
     }
 
+    @Override
+    public void onResize(int width, int height) {
+
+    }
+
     public void setForegroundColor(Color color) {
         foregroundColor = color;
     }
@@ -154,22 +156,6 @@ public class GuiTextbox extends AbstractGuiNode implements IKeyListener {
         return foregroundColor;
     }
 
-    public Color getBackgroundColor() {
-        return backgroundColor;
-    }
-
-    public void setBackgroundColor(Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
-
-    public Color getOutlineColor() {
-        return outlineColor;
-    }
-
-    public void setOutlineColor(Color outlineColor) {
-        this.outlineColor = outlineColor;
-    }
-
     public boolean isSelected() {
         return isSelected;
     }
@@ -180,5 +166,10 @@ public class GuiTextbox extends AbstractGuiNode implements IKeyListener {
 
     public String getText() {
         return text;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("GuiTextbox [isSelected=%s, text=%s, cursorCount=%s, cursor=%s, cursor_temp=%s, filter=%s, outlineColor=%s, backgroundColor=%s, foregroundColor=%s, screen=%s, localPosition=%s, size=%s, isEnabled=%s, isDebug=%s]", isSelected, text, cursorCount, cursor, cursor_temp, filter, outlineColor, backgroundColor, foregroundColor, screen, localPosition, size, isEnabled(), isDebug());
     }
 }

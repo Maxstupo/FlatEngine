@@ -48,13 +48,20 @@ public class ScreenManager {
     }
 
     public boolean switchTo(String id) {
-        if (id.equals(currentId))
+        if (id.equals(currentId)) {
+            engine.getLog().warn(getClass().getSimpleName(), "Switch screens ignored. Screen requested already is current screen.");
             return false;
+        }
 
         AbstractScreen state = createScreen(id);
-        if (state == null)
+        if (state == null) {
+            engine.getLog().warn(getClass().getSimpleName(), "No screen registered with the id: '{0}'", id);
             return false;
+        }
+
         hasRendered = false;
+
+        engine.getLog().debug(getClass().getSimpleName(), "Switched screen: '{0}' -> '{1}'", currentId, id);
 
         if (currentScreen != null)
             currentScreen.onDeactivated();
@@ -84,6 +91,7 @@ public class ScreenManager {
         if (screens.containsKey(id) || id == null)
             throw new IllegalArgumentException("The screen id is already registered: " + id);
         screens.put(id, screen);
+        engine.getLog().debug(getClass().getSimpleName(), "Registered screen: '{0}' -> '{1}'", id, screen.getName());
         return this;
     }
 

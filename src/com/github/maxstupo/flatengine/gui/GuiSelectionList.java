@@ -65,4 +65,9 @@ public class GuiSelectionList<L> extends GuiList<L> {
     public int getSelected() {
         return selected;
     }
+
+    @Override
+    public String toString() {
+        return String.format("GuiSelectionList [selected=%s, selectedColor=%s, backgroundColor=%s, foregroundColor=%s, outlineColor=%s, hoverColor=%s, barColor=%s, barBackgroundColor=%s, listeners=%s, spacing=%s, scrollBarEnabled=%s, scrollBarWidth=%s, scrollBarHeight=%s, screen=%s, localPosition=%s, size=%s, isEnabled=%s, isDebug=%s]", selected, selectedColor, backgroundColor, foregroundColor, outlineColor, hoverColor, barColor, barBackgroundColor, listeners, spacing, scrollBarEnabled, scrollBarWidth, scrollBarHeight, screen, localPosition, size, isEnabled(), isDebug());
+    }
 }
