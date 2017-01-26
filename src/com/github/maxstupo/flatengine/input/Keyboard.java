@@ -134,12 +134,10 @@ public class Keyboard {
 
     public void addListener(IKeyListener listener) {
         listeners.add(listener);
-        System.out.println(listeners.size());
     }
 
     public void removeListener(IKeyListener listener) {
         listeners.remove(listener);
-        System.out.println(listeners.size());
     }
 
 }
