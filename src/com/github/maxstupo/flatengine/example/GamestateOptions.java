@@ -2,7 +2,7 @@ package com.github.maxstupo.flatengine.example;
 
 import java.awt.Graphics2D;
 
-import com.github.maxstupo.flatengine.Engine;
+import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 
 /**
@@ -11,7 +11,7 @@ import com.github.maxstupo.flatengine.screen.AbstractScreen;
  */
 public class GamestateOptions extends AbstractScreen {
 
-    public GamestateOptions(Engine engine, String key) {
+    public GamestateOptions(FlatEngine engine, String key) {
         super(engine, key);
     }
 

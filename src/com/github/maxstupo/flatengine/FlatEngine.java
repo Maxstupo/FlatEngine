@@ -3,9 +3,17 @@ package com.github.maxstupo.flatengine;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.image.BufferStrategy;
+
+import javax.swing.JFrame;
 
 import com.github.maxstupo.flatengine.gameloop.AbstractGameloop;
 import com.github.maxstupo.flatengine.gameloop.IEngine;
@@ -19,7 +27,12 @@ import com.github.maxstupo.jflatlog.JFlatLog;
  *
  * @author Maxstupo
  */
-public class Engine implements IEngine {
+public class FlatEngine implements IEngine {
+
+    public static final int EXIT_ON_CLOSE = JFrame.EXIT_ON_CLOSE;
+    public static final int DO_NOTHING_ON_CLOSE = JFrame.DO_NOTHING_ON_CLOSE;
+    public static final int DISPOSE_ON_CLOSE = JFrame.DISPOSE_ON_CLOSE;
+    public static final int HIDE_ON_CLOSE = JFrame.HIDE_ON_CLOSE;
 
     private final JFlatLog log;
 
@@ -34,7 +47,14 @@ public class Engine implements IEngine {
 
     private boolean hasInit = false;
 
-    public Engine(AbstractGameloop loop, JFlatLog log) {
+    private JFrame frame;
+    private boolean isFullscreen = false;
+    private boolean windowResized;
+
+    private final GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    private final GraphicsDevice dev = env.getDefaultScreenDevice();
+
+    public FlatEngine(AbstractGameloop loop, JFlatLog log) {
 
         this.loop = loop;
         this.log = log;
@@ -56,7 +76,7 @@ public class Engine implements IEngine {
         System.setProperty("sun.awt.noerasebackground", "true");
     }
 
-    protected void init() {
+    private void init() {
         if (hasInit)
             return;
         if (log != null)
@@ -81,7 +101,7 @@ public class Engine implements IEngine {
         gsm.update(delta);
         keyboard.update();
         mouse.update();
-        Window.get().update();
+        windowResized = false;
     }
 
     @Override
@@ -100,6 +120,67 @@ public class Engine implements IEngine {
             strategy.show();
 
         } while (strategy.contentsLost());
+    }
+
+    public void createWindow(String title, int width, int height, boolean resizable, int closeOperation) {
+        if (frame != null)
+            return;
+        frame = new JFrame(title);
+        frame.setDefaultCloseOperation(closeOperation);
+        frame.setSize(width, height);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(resizable);
+        frame.addComponentListener(new ComponentAdapter() {
+
+            @Override
+            public void componentResized(ComponentEvent e) {
+                windowResized = true;
+            }
+        });
+        frame.add(getRenderSurface());
+        frame.setVisible(true);
+
+        init();
+    }
+
+    public boolean isResized() {
+        return windowResized;
+    }
+
+    public void setFullscreen(boolean fullscreen) {
+        if (frame != null)
+            dev.setFullScreenWindow(fullscreen ? frame : null);
+    }
+
+    public void toggleFullscreen() {
+        setFullscreen(!isFullscreen);
+    }
+
+    public FlatEngine setTitle(String title) {
+        if (frame != null)
+            frame.setTitle(title);
+        return this;
+    }
+
+    public FlatEngine setMinimumSize(int width, int height) {
+        if (frame == null)
+            return this;
+        frame.setMinimumSize(new Dimension(width, height));
+        return this;
+    }
+
+    public FlatEngine setMaximumSize(int width, int height) {
+        if (frame == null)
+            return this;
+        frame.setMaximumSize(new Dimension(width, height));
+        return this;
+    }
+
+    public FlatEngine addWindowListener(WindowAdapter w) {
+        if (frame == null || w == null)
+            return this;
+        frame.addWindowListener(w);
+        return this;
     }
 
     /**

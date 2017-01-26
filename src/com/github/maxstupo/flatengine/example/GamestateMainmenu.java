@@ -4,9 +4,8 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-import com.github.maxstupo.flatengine.Engine;
+import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.IEventListener;
-import com.github.maxstupo.flatengine.Window;
 import com.github.maxstupo.flatengine.gui.GuiButton;
 import com.github.maxstupo.flatengine.gui.GuiNode;
 import com.github.maxstupo.flatengine.gui.GuiText;
@@ -33,7 +32,7 @@ public class GamestateMainmenu extends AbstractScreen implements IEventListener<
 
     private final GuiText title;
 
-    public GamestateMainmenu(Engine engine, String key) {
+    public GamestateMainmenu(FlatEngine engine, String key) {
         super(engine, key);
 
         // Buttons
@@ -84,7 +83,7 @@ public class GamestateMainmenu extends AbstractScreen implements IEventListener<
         if (screenManager.getEngine().getMouse().isMouseDown(Mouse.LEFT_CLICK)) {
 
             // Set mouse position in window title.
-            Window.get().setTitle(screenManager.getEngine().getMouse().getPosition().x + "," + screenManager.getEngine().getMouse().getPosition().y);
+            screenManager.getEngine().setTitle(screenManager.getEngine().getMouse().getPosition().x + "," + screenManager.getEngine().getMouse().getPosition().y);
 
         }
     }

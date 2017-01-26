@@ -2,7 +2,7 @@ package com.github.maxstupo.flatengine.screen;
 
 import java.awt.Graphics2D;
 
-import com.github.maxstupo.flatengine.Engine;
+import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gui.AbstractGuiNode;
 import com.github.maxstupo.flatengine.gui.GuiNode;
 
@@ -17,7 +17,7 @@ public abstract class AbstractScreen {
 
     protected final AbstractGuiNode gui = new GuiNode(this);
 
-    public AbstractScreen(Engine engine, String key) {
+    public AbstractScreen(FlatEngine engine, String key) {
         this.screenManager = engine.getScreenManager();
         this.key = key;
     }

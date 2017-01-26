@@ -4,8 +4,7 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.maxstupo.flatengine.Engine;
-import com.github.maxstupo.flatengine.Window;
+import com.github.maxstupo.flatengine.FlatEngine;
 
 /**
  *
@@ -13,14 +12,14 @@ import com.github.maxstupo.flatengine.Window;
  */
 public class ScreenManager {
 
-    private final Engine engine;
+    private final FlatEngine engine;
     private final Map<String, AbstractScreen> screens = new HashMap<>();
 
     private AbstractScreen currentScreen = null;
     private boolean hasRendered;
     private boolean onActivated;
 
-    public ScreenManager(Engine engine) {
+    public ScreenManager(FlatEngine engine) {
         this.engine = engine;
     }
 
@@ -34,7 +33,7 @@ public class ScreenManager {
                 currentScreen.onActivated();
             }
 
-            if (Window.get().isResized() && hasRendered)
+            if (engine.isResized() && hasRendered)
                 currentScreen.onResize(engine.getWidth(), engine.getHeight());
         }
     }
@@ -74,7 +73,7 @@ public class ScreenManager {
         return currentScreen;
     }
 
-    public Engine getEngine() {
+    public FlatEngine getEngine() {
         return engine;
     }
 
