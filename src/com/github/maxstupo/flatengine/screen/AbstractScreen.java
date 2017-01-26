@@ -43,6 +43,7 @@ public abstract class AbstractScreen {
     }
 
     public void onDeactivated() {
+        gui.dispose();
     }
 
     public String getKey() {

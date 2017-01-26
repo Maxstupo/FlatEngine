@@ -240,4 +240,20 @@ public abstract class AbstractGuiNode {
     public boolean isDirty() {
         return isDirty;
     }
+
+    /***
+     * This method should unregister all events and/or listeners.
+     * <p>
+     * The method is called when the gui is no longer needed. E.g. when the screen changes.
+     */
+    protected abstract void onDispose();
+
+    /**
+     * Disposes this node and all children nodes.
+     */
+    public void dispose() {
+        this.onDispose();
+        for (AbstractGuiNode node : children)
+            node.dispose();
+    }
 }

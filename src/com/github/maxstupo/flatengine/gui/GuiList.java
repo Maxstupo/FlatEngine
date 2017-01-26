@@ -199,6 +199,11 @@ public class GuiList<L> extends AbstractGuiNode {
         return this;
     }
 
+    @Override
+    protected void onDispose() {
+
+    }
+
     public boolean canScrollUp() {
         return scroll > 0;
     }

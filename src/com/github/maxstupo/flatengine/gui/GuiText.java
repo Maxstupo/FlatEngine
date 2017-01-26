@@ -133,6 +133,11 @@ public class GuiText extends AbstractGuiNode {
         isTextDirty = false;
     }
 
+    @Override
+    protected void onDispose() {
+
+    }
+
     public GuiText setText(String text) {
         this.text = text;
         this.isTextDirty = true;

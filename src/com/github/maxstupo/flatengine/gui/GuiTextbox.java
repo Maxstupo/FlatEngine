@@ -16,7 +16,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  *
  * @author Maxstupo
  */
-public class GuiTextbox extends AbstractGuiNode {
+public class GuiTextbox extends AbstractGuiNode implements IKeyListener {
 
     protected boolean isSelected = false;
 
@@ -35,18 +35,16 @@ public class GuiTextbox extends AbstractGuiNode {
     public GuiTextbox(AbstractScreen screen, Vector2i localPosition, Vector2i size) {
         super(screen, localPosition, size);
 
-        screen.getScreenManager().getEngine().getKeyboard().addListener(new IKeyListener() {
+        screen.getScreenManager().getEngine().getKeyboard().addListener(this);
+    }
 
-            @Override
-            public void keyReleased(KeyEvent e) {
-                handleInput(e);
-            }
+    @Override
+    public void keyReleased(KeyEvent e) {
+        handleInput(e);
+    }
 
-            @Override
-            public void keyPressed(KeyEvent e) {
-            }
-        });
-
+    @Override
+    public void keyPressed(KeyEvent e) {
     }
 
     public void doInputLogic() {
@@ -116,6 +114,11 @@ public class GuiTextbox extends AbstractGuiNode {
         int textY = gpos.y + (size.y / 2 - r.height / 2) + 1;
         UtilGraphics.drawString(g, text + cursor_temp, textX, textY);
 
+    }
+
+    @Override
+    protected void onDispose() {
+        screen.getScreenManager().getEngine().getKeyboard().removeListener(this);
     }
 
     public void setForegroundColor(Color color) {

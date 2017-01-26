@@ -169,4 +169,9 @@ public class GuiButton extends AbstractGuiNode {
         return String.format("GuiButton [text=%s, backgroundColor=%s, foregroundColor=%s, selectionColor=%s, boxLess=%s, outlineStroke=%s, isMouseOver=%s, listeners=%s]", text, backgroundColor, foregroundColor, selectionColor, boxLess, outlineStroke, isMouseOver, listeners);
     }
 
+    @Override
+    protected void onDispose() {
+
+    }
+
 }

@@ -24,4 +24,9 @@ public class GuiNode extends AbstractGuiNode {
 
     }
 
+    @Override
+    protected void onDispose() {
+
+    }
+
 }
