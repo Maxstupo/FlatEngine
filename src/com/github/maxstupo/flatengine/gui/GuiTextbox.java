@@ -16,7 +16,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  *
  * @author Maxstupo
  */
-public class GuiTextbox extends GuiNode implements IKeyListener {
+public class GuiTextbox extends GuiContainer implements IKeyListener {
 
     protected boolean isSelected = false;
 

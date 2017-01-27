@@ -21,7 +21,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  * @author Maxstupo
  */
 // TODO: Rewrite gui list using GuiText for alignable entries.
-public class GuiList<L> extends GuiNode {
+public class GuiList<L> extends GuiContainer {
 
     protected Color foregroundColor = Color.BLACK;
     protected Color hoverColor = Color.LIGHT_GRAY;

@@ -14,10 +14,10 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  * @author Maxstupo
  *
  */
-public class GuiWindow extends GuiNode implements IEventListener<GuiButton, String, Integer> {
+public class GuiWindow extends GuiContainer implements IEventListener<GuiButton, String, Integer> {
 
     private final GuiText titleText;
-    private final GuiNode titleNode;
+    private final GuiContainer titleNode;
 
     private final GuiButton btnClose;
 
@@ -30,7 +30,7 @@ public class GuiWindow extends GuiNode implements IEventListener<GuiButton, Stri
 
         titleText = new GuiText(screen, Alignment.CENTER, title);
 
-        titleNode = new GuiNode(screen, Vector2i.ZERO, new Vector2i(size.x, 0));
+        titleNode = new GuiContainer(screen, Vector2i.ZERO, new Vector2i(size.x, 0));
         titleNode.setBackgroundColor(getBackgroundColor());
         titleNode.addChild(titleText);
 
@@ -117,7 +117,7 @@ public class GuiWindow extends GuiNode implements IEventListener<GuiButton, Stri
         return super.addChild(node);
     }
 
-    public GuiNode getTitleNode() {
+    public GuiContainer getTitleNode() {
         return titleNode;
     }
 

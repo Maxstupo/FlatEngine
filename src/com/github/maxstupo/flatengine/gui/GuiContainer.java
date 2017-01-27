@@ -10,12 +10,12 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  * @author Maxstupo
  *
  */
-public class GuiNode extends AbstractGuiNode {
+public class GuiContainer extends AbstractGuiNode {
 
     protected Color backgroundColor = Color.GRAY;
     protected Color outlineColor = Color.BLACK;
 
-    public GuiNode(AbstractScreen screen, Vector2i localPosition, Vector2i size) {
+    public GuiContainer(AbstractScreen screen, Vector2i localPosition, Vector2i size) {
         super(screen, localPosition, size);
     }
 
@@ -52,7 +52,7 @@ public class GuiNode extends AbstractGuiNode {
         return outlineColor;
     }
 
-    public GuiNode setOutlineColor(Color outlineColor) {
+    public GuiContainer setOutlineColor(Color outlineColor) {
         this.outlineColor = outlineColor;
         return this;
     }
@@ -61,7 +61,7 @@ public class GuiNode extends AbstractGuiNode {
         return backgroundColor;
     }
 
-    public GuiNode setBackgroundColor(Color backgroundColor) {
+    public GuiContainer setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
         return this;
     }
