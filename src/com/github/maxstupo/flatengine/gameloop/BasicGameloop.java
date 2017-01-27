@@ -30,7 +30,7 @@ public class BasicGameloop extends AbstractGameloop {
             long now = System.nanoTime();
             long updateLength = now - lastLoopTime;
             lastLoopTime = now;
-            double delta = updateLength / ((double) optimalTime);
+            float delta = updateLength / ((float) optimalTime);
 
             // update the frame counter
             lastFpsTime += updateLength;

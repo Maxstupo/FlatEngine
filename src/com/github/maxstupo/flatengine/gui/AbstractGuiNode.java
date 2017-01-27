@@ -43,7 +43,7 @@ public abstract class AbstractGuiNode {
             this.size.set(size);
     }
 
-    public abstract boolean update(double delta, boolean shouldHandleInput);
+    public abstract boolean update(float delta, boolean shouldHandleInput);
 
     public abstract void render(Graphics2D g);
 
@@ -59,7 +59,7 @@ public abstract class AbstractGuiNode {
         renderPost(g);
     }
 
-    public boolean updateAll(double delta, boolean shouldHandleInput) {
+    public boolean updateAll(float delta, boolean shouldHandleInput) {
         for (int i = children.size() - 1; i >= 0; i--) {
             AbstractGuiNode node = children.get(i);
 

@@ -80,7 +80,7 @@ public class GuiItemContainer<T extends IItemStack> extends GuiContainer {
     }
 
     @Override
-    public boolean update(double delta, boolean shouldHandleInput) {
+    public boolean update(float delta, boolean shouldHandleInput) {
 
         selectedSlot = null;
 

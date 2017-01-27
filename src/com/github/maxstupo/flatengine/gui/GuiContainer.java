@@ -20,7 +20,7 @@ public class GuiContainer extends AbstractGuiNode {
     }
 
     @Override
-    public boolean update(double delta, boolean shouldHandleInput) {
+    public boolean update(float delta, boolean shouldHandleInput) {
         return shouldHandleInput;
     }
 

@@ -85,7 +85,7 @@ public class FlatEngine implements IEngine {
     }
 
     @Override
-    public void update(double delta) {
+    public void update(float delta) {
         gsm.update(delta);
         keyboard.update();
         mouse.update();

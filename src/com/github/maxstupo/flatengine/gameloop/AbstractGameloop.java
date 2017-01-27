@@ -18,7 +18,7 @@ public abstract class AbstractGameloop implements Runnable {
     protected boolean isRunning = false;
 
     /**
-     * The attached game engine interface used to update the game engine. Both {@link IEngine#render()} and {@link IEngine#update(double)} need to be
+     * The attached game engine interface used to update the game engine. Both {@link IEngine#render()} and {@link IEngine#update(float)} need to be
      * called within the game loop logic.
      */
     protected IEngine engine;

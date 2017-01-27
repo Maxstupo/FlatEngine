@@ -48,7 +48,7 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
     }
 
     @Override
-    public boolean update(double delta, boolean shouldHandleInput) {
+    public boolean update(float delta, boolean shouldHandleInput) {
         super.update(delta, shouldHandleInput);
 
         if (titleNode.getSize().y != titleText.getSize().y) {

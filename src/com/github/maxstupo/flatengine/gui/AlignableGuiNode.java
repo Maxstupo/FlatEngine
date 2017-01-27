@@ -84,7 +84,7 @@ public class AlignableGuiNode extends AbstractGuiNode {
     }
 
     @Override
-    public boolean update(double delta, boolean shouldHandleInput) {
+    public boolean update(float delta, boolean shouldHandleInput) {
         if (isAlignmentDirty)
             updateAlignment();
         return shouldHandleInput;

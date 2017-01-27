@@ -43,7 +43,7 @@ public class ScreenManager {
      * @param delta
      *            the delta time.
      */
-    public void update(double delta) {
+    public void update(float delta) {
         if (currentScreen != null) {
 
             currentScreen.doUpdate(delta);
@@ -51,10 +51,11 @@ public class ScreenManager {
             if (onActivated && hasRendered) {
                 onActivated = false;
                 currentScreen.onActivated();
+                currentScreen.resize(engine.getWidth(), engine.getHeight());
             }
 
             if (engine.isResized() && hasRendered)
-                currentScreen.onResize(engine.getWidth(), engine.getHeight());
+                currentScreen.resize(engine.getWidth(), engine.getHeight());
         }
     }
 

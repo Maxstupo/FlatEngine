@@ -1,4 +1,4 @@
-package com.github.maxstupo.flatengine.gui;
+package com.github.maxstupo.flatengine.hgui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,8 +10,8 @@ import com.github.maxstupo.flatengine.util.UtilGraphics;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
- *
  * @author Maxstupo
+ *
  */
 public class GuiText extends AlignableGuiNode {
 
@@ -27,22 +27,17 @@ public class GuiText extends AlignableGuiNode {
     }
 
     public GuiText(AbstractScreen screen, Alignment alignment, String text) {
-        this(screen, Vector2i.ZERO, text);
+        this(screen, 0, 0, text);
         setAlignment(alignment);
     }
 
-    public GuiText(AbstractScreen screen, Vector2i localPosition) {
-        this(screen, localPosition, "");
+    public GuiText(AbstractScreen screen, float localX, float localY) {
+        this(screen, localX, localY, "");
     }
 
-    public GuiText(AbstractScreen gamestate, Vector2i localPosition, String text) {
-        super(gamestate, localPosition, null);
+    public GuiText(AbstractScreen screen, float localX, float localY, String text) {
+        super(screen, localX, localY, 0, 0);
         setText(text);
-    }
-
-    @Override
-    public boolean update(float delta, boolean shouldHandleInput) {
-        return shouldHandleInput;
     }
 
     @Override
@@ -55,15 +50,10 @@ public class GuiText extends AlignableGuiNode {
         Font defaultFont = g.getFont();
         Color defaultColor = g.getColor();
         {
-            g.setFont(font);
-            g.setColor(color);
+            g.setFont(getFont());
+            g.setColor(getColor());
 
-            UtilGraphics.drawString(g, text, gpos.x, gpos.y);
-
-            if (isDebug()) {
-                g.setColor(Color.WHITE);
-                g.drawRect(gpos.x, gpos.y, size.x, size.y);
-            }
+            UtilGraphics.drawString(g, getText(), gpos.x, gpos.y);
         }
         g.setFont(defaultFont);
         g.setColor(defaultColor);
@@ -71,20 +61,15 @@ public class GuiText extends AlignableGuiNode {
     }
 
     protected void calculateBounds(Graphics2D g) {
-        if (font == null)
-            font = g.getFont();
+        if (getFont() == null)
+            setFont(g.getFont());
 
-        Dimension bounds = UtilGraphics.getStringBounds(g, text, font);
-        getSize().set(bounds.width, bounds.height);
+        Dimension bounds = UtilGraphics.getStringBounds(g, getText(), getFont());
+        setSize(bounds.width, bounds.height);
 
-        updateAlignment();
+        // setAlignmentDirty();
 
         isTextDirty = false;
-    }
-
-    @Override
-    protected void onDispose() {
-
     }
 
     public GuiText setText(String text) {
@@ -123,7 +108,7 @@ public class GuiText extends AlignableGuiNode {
 
     @Override
     public String toString() {
-        return String.format("GuiText [text=%s, color=%s, font=%s, isTextDirty=%s, screen=%s, localPosition=%s, size=%s, isEnabled=%s, isDebug=%s]", text, color, font, isTextDirty, screen, localPosition, size, isEnabled(), isDebug());
+        return String.format("%s [text=%s, color=%s, font=%s, isTextDirty=%s, isVisible=%s, getAlignment()=%s, getLocalPositionX()=%s, getLocalPositionY()=%s, getWidth()=%s, getHeight()=%s, isEnabled()=%s]", getClass().getSimpleName(), text, color, font, isTextDirty, isVisible, getAlignment(), getLocalPositionX(), getLocalPositionY(), getWidth(), getHeight(), isEnabled());
     }
 
 }

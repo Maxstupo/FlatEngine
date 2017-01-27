@@ -13,7 +13,7 @@ public interface IEngine {
      * @param delta
      *            the delta time.
      */
-    void update(double delta);
+    void update(float delta);
 
     /**
      * Called when the game engine should render the game.

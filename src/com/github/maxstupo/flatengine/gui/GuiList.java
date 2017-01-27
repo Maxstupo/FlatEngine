@@ -54,7 +54,7 @@ public class GuiList<L> extends GuiContainer {
     }
 
     @Override
-    public boolean update(double delta, boolean shouldHandleInput) {
+    public boolean update(float delta, boolean shouldHandleInput) {
 
         indexHover = -1;
         if (shouldHandleInput) {

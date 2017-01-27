@@ -73,7 +73,7 @@ public class GuiTextbox extends GuiContainer implements IKeyListener {
     }
 
     @Override
-    public boolean update(double delta, boolean shouldHandleInput) {
+    public boolean update(float delta, boolean shouldHandleInput) {
         if (shouldHandleInput)
             doInputLogic();
 
