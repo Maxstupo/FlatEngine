@@ -28,20 +28,54 @@ public final class UtilGraphics {
         return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
     }
 
+    /**
+     * Returns the {@link Dimension} of the given string using the current font of the graphics context.
+     * 
+     * @param g
+     *            the graphics context.
+     * @param text
+     *            the text to check.
+     * @return a new {@link Dimension} object containing the width and height of the given string.
+     */
     public static Dimension getStringBounds(Graphics g, String text) {
-        return getStringBounds(g, text, g.getFont());
+        return getStringBounds(g, text, null);
     }
 
+    /**
+     * Returns the {@link Dimension} of the given string using the given font.
+     * 
+     * @param g
+     *            the graphics context to draw to.
+     * @param text
+     *            the text to check.
+     * @param font
+     *            the font to use when doing the check, if null the current font of the graphics context will be used instead.
+     * @return a new {@link Dimension} object containing the width and height of the given string.
+     */
     public static Dimension getStringBounds(Graphics g, String text, Font font) {
         if (text == null)
             return new Dimension();
-        FontMetrics metrics = g.getFontMetrics(font);
+        FontMetrics metrics = (font != null) ? g.getFontMetrics(font) : g.getFontMetrics();
         int height = metrics.getHeight();
         int adv = metrics.stringWidth(text);
 
         return new Dimension(adv + 2, height + 2);
     }
 
+    /**
+     * Draws each element from the given string array below one another.
+     * 
+     * @param g
+     *            the graphics context to draw to.
+     * @param x
+     *            the x position.
+     * @param y
+     *            the y position.
+     * @param spacing
+     *            the spacing between each line.
+     * @param lines
+     *            the array of each line of text.
+     */
     public static void drawString(Graphics g, int x, int y, int spacing, String... lines) {
         for (int i = 0; i < lines.length; i++) {
             Dimension lineBounds = getStringBounds(g, lines[i]);
@@ -54,6 +88,18 @@ public final class UtilGraphics {
 
     }
 
+    /**
+     * Draw a string with the origin being the top-left of the string.
+     * 
+     * @param g
+     *            the graphics context to draw to.
+     * @param text
+     *            the text to draw.
+     * @param x
+     *            the x position.
+     * @param y
+     *            the y position.
+     */
     public static void drawString(Graphics g, String text, int x, int y) {
         if (text == null)
             return;

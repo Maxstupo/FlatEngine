@@ -67,14 +67,14 @@ public class Main extends AbstractScreen {
 
         for (int i = 0; i < items.length; i++) {
             for (int j = 0; j < items[0].length; j++) {
-                items[i][j] = new ItemStack(id++, Rand.instance.nextIntRange(0, 5));
+                items[i][j] = new ItemStack(id++, Rand.INSTANCE.nextIntRange(0, 5));
             }
         }
 
         newItems = new ItemStack[3][3];
         for (int i = 0; i < newItems.length; i++) {
             for (int j = 0; j < newItems[0].length; j++) {
-                newItems[i][j] = new ItemStack(id++, Rand.instance.nextIntRange(0, 5));
+                newItems[i][j] = new ItemStack(id++, Rand.INSTANCE.nextIntRange(0, 5));
             }
         }
 

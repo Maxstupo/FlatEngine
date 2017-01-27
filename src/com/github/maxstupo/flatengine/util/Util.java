@@ -8,15 +8,27 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import com.github.maxstupo.flatengine.util.math.UtilMath;
+
 /**
+ * This class contains general util methods that dont fit in {@link UtilGraphics}, {@link UtilXML} or {@link UtilMath}.
+ * 
  * @author Maxstupo
- *
  */
 public final class Util {
 
     private Util() {
     }
 
+    /**
+     * Returns a {@link BufferedImage} using {@link Class#getResourceAsStream(String)}
+     * 
+     * @param path
+     *            the path to the image.
+     * @return the {@link BufferedImage} of the given path.
+     * @throws IOException
+     *             if an error occurs.
+     */
     public static BufferedImage createImage(String path) throws IOException {
         Image img = null;
         try (InputStream file = Util.class.getResourceAsStream(path)) {

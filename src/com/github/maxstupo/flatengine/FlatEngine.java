@@ -46,8 +46,6 @@ public class FlatEngine implements IEngine {
     private final Keyboard keyboard;
     private final Mouse mouse;
 
-    private boolean hasInit = false;
-
     private JFrame frame;
     private boolean isFullscreen = false;
     private boolean windowResized;
@@ -80,28 +78,9 @@ public class FlatEngine implements IEngine {
         this.gsm = new ScreenManager(this);
         this.keyboard = new Keyboard(canvas);
         this.mouse = new Mouse(canvas);
-        this.am = new AssetManager();
+        this.am = new AssetManager(this);
 
         System.setProperty("sun.awt.noerasebackground", "true");
-    }
-
-    private void init() {
-        if (hasInit)
-            return;
-        log.debug(getClass().getSimpleName(), "Initializing...");
-
-        initGraphics();
-        canvas.requestFocusInWindow();
-        hasInit = true;
-    }
-
-    private void initGraphics() {
-
-        log.debug(getClass().getSimpleName(), "Initializing: Double buffering.");
-
-        canvas.setIgnoreRepaint(true);
-        canvas.createBufferStrategy(2);
-        strategy = canvas.getBufferStrategy();
     }
 
     @Override
@@ -149,6 +128,7 @@ public class FlatEngine implements IEngine {
     public void createWindow(String title, int width, int height, boolean resizable, int closeOperation) throws RuntimeException {
         if (frame != null)
             throw new RuntimeException("createWindow() has already been called!");
+
         frame = new JFrame(title);
         frame.setDefaultCloseOperation(closeOperation);
         frame.setSize(width, height);
@@ -164,7 +144,13 @@ public class FlatEngine implements IEngine {
         frame.add(canvas);
         frame.setVisible(true);
 
-        init();
+        log.debug(getClass().getSimpleName(), "Initializing: Double buffering.");
+
+        canvas.setIgnoreRepaint(true);
+        canvas.createBufferStrategy(2);
+        strategy = canvas.getBufferStrategy();
+
+        canvas.requestFocusInWindow();
     }
 
     /**
@@ -270,7 +256,7 @@ public class FlatEngine implements IEngine {
     }
 
     /**
-     * Register a screen to the {@link ScreenManager}. This is a convenience method of {@link ScreenManager#registerScreen(AbstractScreen)}
+     * Register a screen to the {@link ScreenManager}. This is a convenience method of {@link ScreenManager#registerScreen(String, Class)}
      * 
      * @param id
      *            the id of the screen.
@@ -373,6 +359,11 @@ public class FlatEngine implements IEngine {
         return loop;
     }
 
+    /**
+     * Returns the {@link AssetManager} of this engine.
+     * 
+     * @return the asset manager of this engine.
+     */
     public AssetManager getAssetManager() {
         return am;
     }
