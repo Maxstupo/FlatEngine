@@ -133,6 +133,10 @@ public abstract class AbstractGuiNode {
         children.add(node);
     }
 
+    public void removeChildren() {
+        children.clear();
+    }
+
     protected void onAdded() {
     }
 

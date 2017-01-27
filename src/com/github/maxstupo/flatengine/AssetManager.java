@@ -26,12 +26,10 @@ import com.github.maxstupo.jflatlog.JFlatLog;
  */
 public class AssetManager {
 
-    private static AssetManager instance;
-
     private final Map<String, Font> fonts = new HashMap<>();
     private final Map<String, Sprite> sprites = new HashMap<>();
 
-    private AssetManager() {
+    public AssetManager() {
     }
 
     public void loadAssets(String path) {
@@ -135,9 +133,4 @@ public class AssetManager {
         return font.deriveFont(size);
     }
 
-    public static AssetManager get() {
-        if (instance == null)
-            instance = new AssetManager();
-        return instance;
-    }
 }
