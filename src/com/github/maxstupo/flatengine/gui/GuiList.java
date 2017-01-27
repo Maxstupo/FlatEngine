@@ -66,7 +66,7 @@ public class GuiList<L> extends GuiContainer {
                 Vector2i entryPos = getEntryRenderPosition(i, gpos);
                 entryBounds.setLocation(entryPos.x, entryPos.y);
 
-                if (getMouse().getBounds().intersects(entryBounds)) {
+                if (entryBounds.contains(getMouse().getPositionPoint())) {
                     indexHover = i;
 
                     for (int j = 1; j <= Mouse.TOTAL_MOUSE_BUTTONS_MONITORED; j++) {

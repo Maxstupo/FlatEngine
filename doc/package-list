@@ -1,10 +1,9 @@
 com.github.maxstupo.flatengine
-com.github.maxstupo.flatengine.animation
-com.github.maxstupo.flatengine.example
 com.github.maxstupo.flatengine.gameloop
 com.github.maxstupo.flatengine.gui
 com.github.maxstupo.flatengine.input
 com.github.maxstupo.flatengine.input.filter
-com.github.maxstupo.flatengine.states
+com.github.maxstupo.flatengine.item
+com.github.maxstupo.flatengine.screen
 com.github.maxstupo.flatengine.util
 com.github.maxstupo.flatengine.util.math

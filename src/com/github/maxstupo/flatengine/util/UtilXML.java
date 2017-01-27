@@ -19,17 +19,18 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * This class contains a list of methods to help extract data out of a XML file.
+ * 
  * @author Maxstupo
  */
-public class UtilXML {
+public final class UtilXML {
 
     private static final XPath path = XPathFactory.newInstance().newXPath();
 
     private UtilXML() {
     }
 
-    public static XPathExpression createXPathExpression(String xpath) {
+    private static XPathExpression createXPathExpression(String xpath) {
         try {
             return path.compile(xpath);
         } catch (XPathExpressionException e) {
@@ -38,6 +39,19 @@ public class UtilXML {
         return null;
     }
 
+    /**
+     * Returns a document object representing a XML file.
+     * 
+     * @param file
+     *            the path to the file.
+     * @return a document object representing a XML file.
+     * @throws SAXException
+     *             if any parse errors occur.
+     * @throws IOException
+     *             if any IO errors occur.
+     * @throws ParserConfigurationException
+     *             if a DocumentBuilder cannot be created which satisfies the configuration requested.
+     */
     public static Document loadDocument(File file) throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -45,6 +59,19 @@ public class UtilXML {
         return dBuilder.parse(file);
     }
 
+    /**
+     * Returns a document object representing a XML file.
+     * 
+     * @param path
+     *            the path to the file resource.
+     * @return a document object representing a XML file.
+     * @throws SAXException
+     *             if any parse errors occur.
+     * @throws IOException
+     *             if any IO errors occur.
+     * @throws ParserConfigurationException
+     *             if a DocumentBuilder cannot be created which satisfies the configuration requested.
+     */
     public static Document loadDocument(String path) throws SAXException, IOException, ParserConfigurationException {
 
         try (InputStream file = UtilXML.class.getClassLoader().getResourceAsStream(path)) {
@@ -53,19 +80,38 @@ public class UtilXML {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             return dBuilder.parse(file);
         }
-
     }
 
-    public static String xpathGetString(Object doc, String xpath) {
+    /**
+     * Returns a string value from the given xpath or the defaultValue if the xpath is invalid.
+     * 
+     * @param doc
+     *            the object to evaluate.
+     * @param xpath
+     *            the xpath.
+     * @param defaultValue
+     *            the defaultValue returned if xpath is invalid.
+     * @return a node from the given xpath or null if the xpath is invalid.
+     */
+    public static String xpathGetString(Object doc, String xpath, String defaultValue) {
         XPathExpression expr = createXPathExpression(xpath);
         try {
             return (String) expr.evaluate(doc, XPathConstants.STRING);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
-        return null;
+        return defaultValue;
     }
 
+    /**
+     * Returns a node list from the given xpath or null if the xpath is invalid.
+     * 
+     * @param doc
+     *            the object to evaluate.
+     * @param xpath
+     *            the xpath.
+     * @return a node list from the given xpath or null if the xpath is invalid.
+     */
     public static NodeList xpathGetNodeList(Object doc, String xpath) {
         XPathExpression expr = createXPathExpression(xpath);
         try {
@@ -76,6 +122,15 @@ public class UtilXML {
         return null;
     }
 
+    /**
+     * Returns a node from the given xpath or null if the xpath is invalid.
+     * 
+     * @param doc
+     *            the object to evaluate.
+     * @param xpath
+     *            the xpath.
+     * @return a node from the given xpath or null if the xpath is invalid.
+     */
     public static Node xpathGetNode(Object doc, String xpath) {
         XPathExpression expr = createXPathExpression(xpath);
         try {
@@ -86,6 +141,17 @@ public class UtilXML {
         return null;
     }
 
+    /**
+     * Returns a double value from the given xpath or the defaultValue if the xpath is invalid.
+     * 
+     * @param doc
+     *            the object to evaluate.
+     * @param xpath
+     *            the xpath.
+     * @param defaultValue
+     *            the defaultValue returned if xpath is invalid.
+     * @return a double value from the given xpath or the defaultValue if the xpath is invalid.
+     */
     public static double xpathGetNumber(Object doc, String xpath, double defaultValue) {
         XPathExpression expr = createXPathExpression(xpath);
         try {
@@ -100,6 +166,17 @@ public class UtilXML {
         return defaultValue;
     }
 
+    /**
+     * Returns a boolean value from the given xpath or the defaultValue if the xpath is invalid.
+     * 
+     * @param doc
+     *            the object to evaluate.
+     * @param xpath
+     *            the xpath.
+     * @param defaultValue
+     *            the defaultValue returned if xpath is invalid.
+     * @return a boolean value from the given xpath or the defaultValue if the xpath is invalid.
+     */
     public static boolean xpathGetBoolean(Object doc, String xpath, boolean defaultValue) {
         XPathExpression expr = createXPathExpression(xpath);
         try {
@@ -108,6 +185,6 @@ public class UtilXML {
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
-        return false;
+        return defaultValue;
     }
 }

@@ -62,8 +62,9 @@ public class FlatEngine implements IEngine {
      *            the logger this engine will use to log information to, if null {@link JFlatLog#get()} is used.
      */
     public FlatEngine(AbstractGameloop loop, JFlatLog log) {
-        this.loop = loop;
         this.log = (log != null) ? log : JFlatLog.get();
+        this.loop = loop;
+        this.loop.detachEngine();
         this.loop.attachEngine(this);
         this.canvas = new Canvas() {
 
@@ -299,7 +300,6 @@ public class FlatEngine implements IEngine {
      * 
      * @return width of the render area.
      */
-    @Override
     public int getWidth() {
         return canvas.getWidth();
     }
@@ -309,7 +309,6 @@ public class FlatEngine implements IEngine {
      * 
      * @return height of the render area.
      */
-    @Override
     public int getHeight() {
         return canvas.getHeight();
     }

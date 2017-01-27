@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * This class allows for handling of keys in a game oriented way.
+ * 
  * @author Maxstupo
  */
+@SuppressWarnings("javadoc") // Suppress for the key constants.
 public class Keyboard {
 
     public static final int KEY_A = KeyEvent.VK_A;
@@ -94,11 +96,24 @@ public class Keyboard {
         }
     };
 
-    public Keyboard(Component comp) {
+    /**
+     * Create a new {@link Keyboard} object.
+     * 
+     * @param comp
+     *            the component to hook into and listener for key events.
+     * @throws IllegalArgumentException
+     *             if the given component is null.
+     */
+    public Keyboard(Component comp) throws IllegalArgumentException {
+        if (comp == null)
+            throw new IllegalArgumentException("The given component can't be null!");
         comp.addKeyListener(adapter);
         comp.requestFocusInWindow();
     }
 
+    /**
+     * Called to update the last keys pressed.
+     */
     public void update() {
         for (int i = 0; i < lastKeys.length; i++)
             lastKeys[i] = getKey(i);
@@ -110,16 +125,52 @@ public class Keyboard {
         keys[e.getKeyCode()] = state;
     }
 
+    /**
+     * Returns true if the key code is held down.
+     * 
+     * @param keyCode
+     *            the key code to check.
+     * @return true if the key code is held down.
+     */
     public boolean isKeyHeld(int keyCode) {
         return getKey(keyCode);
     }
 
+    /**
+     * Returns true if the key code is down during this update.
+     * 
+     * @param keyCode
+     *            the key code to check.
+     * @return true if the key code is down during this update.
+     */
     public boolean isKeyDown(int keyCode) {
+        if (!isValid(keyCode))
+            return false;
         return getKey(keyCode) && !lastKeys[keyCode];
     }
 
+    /**
+     * Returns true if the key code is up during this update.
+     * 
+     * @param keyCode
+     *            the key code to check.
+     * @return true if the key code is up during this update.
+     */
     public boolean isKeyUp(int keyCode) {
+        if (!isValid(keyCode))
+            return false;
         return !getKey(keyCode) && lastKeys[keyCode];
+    }
+
+    /**
+     * Returns true if the key code is up.
+     * 
+     * @param keyCode
+     *            the key code to check.
+     * @return true if the key code is up.
+     */
+    public boolean isKeyReleased(int keyCode) {
+        return !getKey(keyCode);
     }
 
     private boolean isValid(int id) {
@@ -132,10 +183,24 @@ public class Keyboard {
         return keys[keycode];
     }
 
+    /**
+     * Adds a key listener to this keyboard handler.
+     * 
+     * @param listener
+     *            the listener to add.
+     */
     public void addListener(IKeyListener listener) {
+        if (listener == null)
+            return;
         listeners.add(listener);
     }
 
+    /**
+     * Removes a key listener from this keyboard handler.
+     * 
+     * @param listener
+     *            the listener to remove.
+     */
     public void removeListener(IKeyListener listener) {
         listeners.remove(listener);
     }

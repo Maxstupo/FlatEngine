@@ -148,7 +148,7 @@ public abstract class AbstractGuiNode {
     }
 
     public boolean isMouseOver(Rectangle bounds) {
-        return getMouse().getBounds().intersects(bounds);
+        return bounds.contains(getMouse().getPositionPoint());
     }
 
     public boolean isMouseClicked(int buttonCode) {

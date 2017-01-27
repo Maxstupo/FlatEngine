@@ -53,8 +53,8 @@ public class AssetManager {
             /* Load sprites */
             nList = UtilXML.xpathGetNodeList(doc, "assets/sprite");
             for (int i = 0; ((node = nList.item(i)) != null); i++) {
-                String key = UtilXML.xpathGetString(node, "@key");
-                String spritePath = UtilXML.xpathGetString(node, "@path");
+                String key = UtilXML.xpathGetString(node, "@key", null);
+                String spritePath = UtilXML.xpathGetString(node, "@path", null);
 
                 BufferedImage sprite = Util.createImage(spritePath);
                 registerSprite(key, sprite);

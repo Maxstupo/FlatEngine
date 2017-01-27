@@ -1,8 +1,9 @@
 package com.github.maxstupo.flatengine.gameloop;
 
 /**
+ * This is a basic game loop implementation that supports delta time.
+ * 
  * @author Maxstupo
- *
  */
 public class BasicGameloop extends AbstractGameloop {
 
@@ -11,6 +12,12 @@ public class BasicGameloop extends AbstractGameloop {
     private int fps;
     private int realFps;
 
+    /**
+     * Create a new {@link BasicGameloop} object with the given target frames per second.
+     * 
+     * @param targetFps
+     *            the frames per second the game loop will try and achieve.
+     */
     public BasicGameloop(double targetFps) {
         super(targetFps);
         this.optimalTime = 1000000000 / (int) targetFps;
