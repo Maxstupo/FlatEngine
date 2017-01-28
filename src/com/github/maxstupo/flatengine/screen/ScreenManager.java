@@ -51,11 +51,11 @@ public class ScreenManager {
             if (onActivated && hasRendered) {
                 onActivated = false;
                 currentScreen.onActivated();
-                currentScreen.resize(engine.getWidth(), engine.getHeight());
+                currentScreen.notifyResize(engine.getWidth(), engine.getHeight());
             }
 
             if (engine.isResized() && hasRendered)
-                currentScreen.resize(engine.getWidth(), engine.getHeight());
+                currentScreen.notifyResize(engine.getWidth(), engine.getHeight());
         }
     }
 
@@ -96,7 +96,7 @@ public class ScreenManager {
         engine.getLog().debug(getClass().getSimpleName(), "Switched screen: '{0}' -> '{1}'", currentId, id);
 
         if (currentScreen != null)
-            currentScreen.onDeactivated();
+            currentScreen.notifyDeactivated();
 
         currentScreen = state;
         currentId = id;

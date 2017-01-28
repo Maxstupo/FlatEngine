@@ -3,7 +3,7 @@ package com.github.maxstupo.flatengine.hgui;
 import java.awt.Color;
 
 import com.github.maxstupo.flatengine.IEventListener;
-import com.github.maxstupo.flatengine.hgui.AlignableGuiNode.Alignment;
+import com.github.maxstupo.flatengine.hgui.AbstractAlignableGuiNode.Alignment;
 import com.github.maxstupo.flatengine.input.Mouse;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.math.UtilMath;
@@ -11,8 +11,9 @@ import com.github.maxstupo.flatengine.util.math.Vector2f;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
+ * This GUI node is a embedded draggable window that can contain other nodes.
+ * 
  * @author Maxstupo
- *
  */
 public class GuiWindow extends GuiContainer implements IEventListener<GuiButton, String, Integer> {
 
@@ -24,7 +25,24 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
 
     private final Vector2f clickOrigin = new Vector2f();
     private boolean isDragging;
+    private boolean addToContents;
 
+    /**
+     * Create a new {@link GuiWindow} object.
+     * 
+     * @param screen
+     *            the screen that owns this node.
+     * @param title
+     *            the title of the window.
+     * @param localX
+     *            the local x position.
+     * @param localY
+     *            the local y position.
+     * @param width
+     *            the width of this node.
+     * @param height
+     *            the height of this node.
+     */
     public GuiWindow(AbstractScreen screen, String title, float localX, float localY, int width, int height) {
         super(screen, localX, localY, width, height);
         setKeepWithinParent(true);
@@ -55,14 +73,28 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
         titleNode.add(titleText);
 
         btnClose = new GuiButton(screen, "X", 0, 0, 0, 0);
-        btnClose.setSelectionColor(Color.RED);
+        btnClose.setTextColorSelected(Color.RED);
         btnClose.setBoxLess(true);
         btnClose.addListener(this);
         titleNode.add(btnClose);
 
+        addToContents = false;
         add(titleNode);
         add(contents);
+        addToContents = true;
+    }
 
+    /**
+     * Redirect added nodes to the {@link #getContents()} node instead.
+     */
+    @Override
+    public AbstractNode add(AbstractNode node) {
+        if (addToContents) {
+            contents.add(node);
+        } else {
+            super.add(node);
+        }
+        return this;
     }
 
     @Override
@@ -71,14 +103,14 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
 
         if (titleNode.getHeight() != titleText.getHeight() || contents.getLocalPositionY() != titleNode.getHeight()) {
             titleNode.setHeight(titleText.getHeight());
-            titleText.setAlignmentDirty();// Update text alignment.
+            // titleText.setGraphicsCalculationsDirty();// Update text alignment.
 
             contents.setLocalPositionY(titleNode.getHeight());
             setHeight(contents.getHeight() + titleNode.getHeight());
 
             btnClose.setSize(titleText.getHeight(), titleText.getHeight());
             btnClose.setLocalPositionX(titleNode.getWidth() - btnClose.getWidth());
-            btnClose.getText().setAlignmentDirty();// Update text alignment.
+            // btnClose.getText().setAlignmentDirty();// Update text alignment.
         }
 
         if (shouldHandleInput)
@@ -96,6 +128,9 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
         return !isMouseOver() && !titleNode.isMouseOver() && shouldHandleInput;
     }
 
+    /**
+     * Handles the input for dragging this window node.
+     */
     protected void doInputLogic() {
 
         if (!isDragging && titleNode.isMouseClicked(Mouse.LEFT_CLICK)) {
@@ -115,22 +150,47 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
         setVisible(false);
     }
 
+    /**
+     * Returns the node containing the title and the close button.
+     * 
+     * @return the title node.
+     */
     public GuiContainer getTitleNode() {
         return titleNode;
     }
 
+    /**
+     * Returns the title node.
+     * 
+     * @return the title node.
+     */
     public GuiText getTitle() {
         return titleText;
     }
 
+    /**
+     * Returns true if this window is being dragged.
+     * 
+     * @return true if this window is being dragged.
+     */
     public boolean isDragging() {
         return isDragging;
     }
 
+    /**
+     * Return the close button.
+     * 
+     * @return the close button.
+     */
     public GuiButton getCloseButton() {
         return btnClose;
     }
 
+    /**
+     * Returns the window contents container.
+     * 
+     * @return the window contents container.
+     */
     public GuiContainer getContents() {
         return contents;
     }

@@ -98,8 +98,8 @@ public abstract class AbstractScreen {
      *            the graphics context to draw to.
      */
     protected void doRender(Graphics2D g) {
-        render(g);
         guiRoot.renderAll(g);
+        render(g);
     }
 
     /**
@@ -110,9 +110,8 @@ public abstract class AbstractScreen {
      * @param height
      *            the new height of the window.
      */
-    protected void resize(int width, int height) {
-        guiRoot.setSize(getWidth(), getHeight());
-        guiRoot.resize(width, height);
+    protected void notifyResize(int width, int height) {
+        guiRoot.setSize(width, height);
         onResize(width, height);
     }
 
@@ -121,7 +120,7 @@ public abstract class AbstractScreen {
      * <p>
      * Note: Don't override or call this method unless you know what you are doing.
      */
-    protected void deactivated() {
+    protected void notifyDeactivated() {
         guiRoot.dispose();
         onDeactivated();
     }

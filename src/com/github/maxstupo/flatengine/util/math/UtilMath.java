@@ -25,6 +25,34 @@ public final class UtilMath {
     }
 
     /**
+     * Checks if two floats are equal using an epsilon of 0.0000001.
+     * 
+     * @param n1
+     *            the first number.
+     * @param n2
+     *            the second number.
+     * @return true if the difference of the two numbers are less than 0.0000001.
+     */
+    public static boolean equals(float n1, float n2) {
+        return equals(n1, n2, 0.0000001f);
+    }
+
+    /**
+     * Checks if two floats are equal using an epsilon.
+     * 
+     * @param n1
+     *            the first number.
+     * @param n2
+     *            the second number.
+     * @param epsilon
+     *            the epsilon.
+     * @return true if the difference of the two numbers are less than the epsilon.
+     */
+    public static boolean equals(float n1, float n2, float epsilon) {
+        return Math.abs(n1 - n2) < epsilon;
+    }
+
+    /**
      * Returns the percentage of n.
      * 
      * @param n
