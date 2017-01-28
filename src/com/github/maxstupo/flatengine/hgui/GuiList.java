@@ -100,7 +100,7 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
     public boolean scrollUp() {
         if (canScrollUp()) {
             scroll--;
-            isScrollDirty = true;
+            setScrollDirty();
             return true;
         }
         return false;
@@ -114,7 +114,7 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
     public boolean scrollDown() {
         if (canScrollDown()) {
             scroll++;
-            isScrollDirty = true;
+            setScrollDirty();
             return true;
         }
         return false;
@@ -148,10 +148,24 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
             int newScroll = i + scroll;
 
             T t = items.get(newScroll);
-            btn.getTextNode().setText(getItemText(t));
-            btn.setUserData(new Object[] { t, newScroll });
+            updateItem(btn, t, newScroll);
         }
         isScrollDirty = false;
+    }
+
+    /**
+     * Updates the given button to have the correct name and user data.
+     * 
+     * @param btn
+     *            the button to update.
+     * @param t
+     *            the item this button represents.
+     * @param index
+     *            the index location of this item/button.
+     */
+    protected void updateItem(GuiButton btn, T t, int index) {
+        btn.getTextNode().setText(getItemText(t));
+        btn.setUserData(new Object[] { t, index });
     }
 
     @Override
@@ -221,7 +235,7 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
         }
 
         isItemNodesDirty = false;
-        isScrollDirty = true;
+        setScrollDirty();
     }
 
     @Override
@@ -272,6 +286,32 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
     }
 
     /**
+     * Removes the item from the given index location.
+     * 
+     * @param index
+     *            the item to remove at the index.
+     * @return this object for chaining.
+     */
+    public GuiList<T> remove(int index) {
+        items.remove(index);
+        setDirty();
+        return this;
+    }
+
+    /**
+     * Removes the given item from this list.
+     * 
+     * @param t
+     *            the item to remove.
+     * @return this object for chaining.
+     */
+    public GuiList<T> remove(T t) {
+        items.remove(t);
+        setDirty();
+        return this;
+    }
+
+    /**
      * Clears this list of items.
      * 
      * @return this object for chaining.
@@ -280,6 +320,16 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
         items.clear();
         isItemNodesDirty = true;
         return this;
+    }
+
+    /**
+     * Returns an unmodifiable list of the items within this GUI list.
+     * 
+     * @see Collections#unmodifiableList(List)
+     * @return an unmodifiable list of the items within this GUI list.
+     */
+    public List<T> getItems() {
+        return Collections.unmodifiableList(items);
     }
 
     /**
@@ -330,6 +380,28 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
         this.itemHeight = itemHeight;
         setDirty();
         return this;
+    }
+
+    /**
+     * Returns the total items within this list.
+     * 
+     * @return the total items within this list.
+     */
+    public int getTotalItems() {
+        return items.size();
+    }
+
+    /**
+     * Return the item with the given index.
+     * 
+     * @param index
+     *            the index.
+     * @return the item or null if the index is out of bounds.
+     */
+    public T getItem(int index) {
+        if (index < 0 || index >= items.size())
+            return null;
+        return items.get(index);
     }
 
     /**
@@ -391,6 +463,16 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
      */
     public List<IEventListener<GuiList<T>, T, Integer>> getListeners() {
         return Collections.unmodifiableList(listeners);
+    }
+
+    /**
+     * Requests for the current {@link GuiButton} items to be updated with the current item information.
+     * 
+     * @return this object for chaining.
+     */
+    public GuiList<T> setScrollDirty() {
+        this.isScrollDirty = true;
+        return this;
     }
 
 }

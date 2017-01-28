@@ -5,12 +5,14 @@ import java.awt.Graphics2D;
 
 import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
+import com.github.maxstupo.flatengine.hgui.AbstractAlignableGuiNode.Alignment;
 import com.github.maxstupo.flatengine.hgui.GuiList;
+import com.github.maxstupo.flatengine.hgui.GuiProgressBar;
+import com.github.maxstupo.flatengine.hgui.GuiSelectionList;
 import com.github.maxstupo.flatengine.hgui.GuiWindow;
 import com.github.maxstupo.flatengine.input.Keyboard;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.screen.ScreenManager;
-import com.github.maxstupo.flatengine.util.math.Rand;
 import com.github.maxstupo.jflatlog.JFlatLog;
 
 /**
@@ -31,7 +33,7 @@ public class Main extends AbstractScreen {
         // btn.getTextNode().setAlignment(Alignment.CENTER);
         // window.add(btn);
 
-        list = new GuiList<>(this, 10, 10, 150, 200);
+        list = new GuiSelectionList<>(this, 10, 10, 150, 200);
         list.addListener((executor, actionItem, action) -> {
             System.out.println(actionItem + ", " + action);
         });
@@ -40,8 +42,14 @@ public class Main extends AbstractScreen {
         window.add(list);
         guiRoot.add(window);
 
+        bar = new GuiProgressBar(this, 10, 200, 200, 30);
+        bar.setValue(75);
+        // bar.setVertical(true);
+        guiRoot.add(bar);
+
     }
 
+    GuiProgressBar bar;
     GuiList<String> list;
 
     public static void main(String[] args) {
@@ -63,14 +71,14 @@ public class Main extends AbstractScreen {
     @Override
     public void update(double delta) {
         if (getKeyboard().isKeyDown(Keyboard.KEY_1)) {
-            list.getDefaultItem().setOutlineColorSelected(Color.red);
+            list.getDefaultItem().getTextNode().setAlignment(Alignment.MIDDLE_LEFT);
             list.setDirty();
         }
         if (getKeyboard().isKeyDown(Keyboard.KEY_0)) {
             list.clear();
         }
         if (getKeyboard().isKeyDown(Keyboard.KEY_SPACE)) {
-            list.addItem(Rand.INSTANCE.nextIntRange(0, 100) + "");
+            bar.setVertical(!bar.isVertical()); // list.addItem(Rand.INSTANCE.nextIntRange(0, 100) + "");
         }
     }
 
