@@ -15,7 +15,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  * 
  * @author Maxstupo
  */
-public class GuiWindow extends GuiContainer implements IEventListener<GuiButton, String, Integer> {
+public class GuiWindow extends GuiContainer implements IEventListener<GuiButton, Boolean, Integer> {
 
     private final GuiContainer titleNode;
     private final GuiText titleText;
@@ -146,7 +146,7 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
     }
 
     @Override
-    public void onEvent(GuiButton executor, String actionItem, Integer action) {
+    public void onEvent(GuiButton executor, Boolean actionItem, Integer action) {
         setVisible(false);
     }
 

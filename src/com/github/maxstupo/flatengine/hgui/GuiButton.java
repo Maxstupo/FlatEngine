@@ -41,8 +41,9 @@ public class GuiButton extends GuiContainer {
     /** The mouse button codes that will trigger this button. (Default: Left Mouse Button) */
     protected int[] buttonsMonitored = { Mouse.LEFT_CLICK };
 
-    private final List<IEventListener<GuiButton, String, Integer>> listeners = new ArrayList<>();
+    private final List<IEventListener<GuiButton, Boolean, Integer>> listeners = new ArrayList<>();
     private Object userdata;
+    private boolean isMouseOver;
 
     /**
      * Create a new {@link GuiButton} object.
@@ -91,15 +92,18 @@ public class GuiButton extends GuiContainer {
     @Override
     protected boolean update(float delta, boolean shouldHandleInput) {
 
-        if (shouldHandleInput)
+        if (shouldHandleInput) {
             doInputLogic();
+            isMouseOver = isMouseOver();
+        } else {
+            isMouseOver = false;
+        }
 
         return shouldHandleInput && !isMouseOver();
     }
 
     @Override
     protected void render(Graphics2D g) {
-        boolean isMouseOver = isMouseOver();
         text.setColor(isMouseOver ? getTextColorSelected() : getTextColorUnselected());
 
         if (!isBoxLess()) {
@@ -121,8 +125,11 @@ public class GuiButton extends GuiContainer {
             for (int i = 0; i < buttonsMonitored.length; i++) {
                 int code = buttonsMonitored[i];
 
-                if (isMouseClicked(code))
-                    fireEventListeners(code);
+                if (isMouseClicked(code)) {
+                    fireEventListeners(code, true);
+                } else if (isMouseUp(code)) {
+                    fireEventListeners(code, false);
+                }
             }
         }
     }
@@ -132,10 +139,12 @@ public class GuiButton extends GuiContainer {
      * 
      * @param mouseCode
      *            the mouse button code that triggered this event.
+     * @param isPressedDown
+     *            true if the event was caused by a mouse being pressed down.
      */
-    protected void fireEventListeners(int mouseCode) {
-        for (IEventListener<GuiButton, String, Integer> listener : listeners)
-            listener.onEvent(this, getTextNode().getText(), mouseCode);
+    protected void fireEventListeners(int mouseCode, boolean isPressedDown) {
+        for (IEventListener<GuiButton, Boolean, Integer> listener : listeners)
+            listener.onEvent(this, isPressedDown, mouseCode);
     }
 
     /**
@@ -145,7 +154,7 @@ public class GuiButton extends GuiContainer {
      *            the listener to add.
      * @return this object for chaining.
      */
-    public GuiButton addListener(IEventListener<GuiButton, String, Integer> listener) {
+    public GuiButton addListener(IEventListener<GuiButton, Boolean, Integer> listener) {
         if (listener != null)
             listeners.add(listener);
         return this;
@@ -325,7 +334,7 @@ public class GuiButton extends GuiContainer {
      * @see Collections#unmodifiableList(List)
      * @return an unmodifiable list of listeners.
      */
-    public List<IEventListener<GuiButton, String, Integer>> getListeners() {
+    public List<IEventListener<GuiButton, Boolean, Integer>> getListeners() {
         return Collections.unmodifiableList(listeners);
     }
 

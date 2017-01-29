@@ -63,6 +63,8 @@ public abstract class AbstractNode {
         this.setLocalPosition(localX, localY);
 
         this.setSize(width, height);
+
+        setPositionDirty();
     }
 
     /**
@@ -488,6 +490,30 @@ public abstract class AbstractNode {
      */
     public boolean isMouseClicked(int buttonCode) {
         return isMouseClicked(getBounds(), buttonCode);
+    }
+
+    /**
+     * Returns true if the mouse was released when over this node.
+     * 
+     * @param buttonCode
+     *            the mouse button code to check is up.
+     * @return true if the mouse was released when over this node.
+     */
+    public boolean isMouseUp(int buttonCode) {
+        return isMouseUp(getBounds(), buttonCode);
+    }
+
+    /**
+     * Returns true if the mouse was released when over the given rectangle bounds.
+     * 
+     * @param bounds
+     *            the rectangle to check if the mouse is within it.
+     * @param buttonCode
+     *            the mouse button code to check is up.
+     * @return true if the mouse was released when over the given rectangle bounds.
+     */
+    public boolean isMouseUp(Rectangle bounds, int buttonCode) {
+        return isMouseOver(bounds) && getMouse().isMouseUp(buttonCode);
     }
 
     /**

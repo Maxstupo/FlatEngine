@@ -31,6 +31,7 @@ public class Mouse {
     private final boolean[] mouse = new boolean[TOTAL_MOUSE_BUTTONS_MONITORED];
     private final boolean[] lastMouse = new boolean[TOTAL_MOUSE_BUTTONS_MONITORED];
     private final Vector2i position = new Vector2i();
+    private final Vector2i oldPosition = new Vector2i();
     private final Point point = new Point(0, 0);
 
     private boolean didMouseWheelMove = false;
@@ -96,6 +97,7 @@ public class Mouse {
      * Updates the last mouse buttons pressed and resets wheel rotation related variables.
      */
     public void update() {
+        oldPosition.set(position);
         for (int i = 0; i < lastMouse.length; i++)
             lastMouse[i] = getMouse(i);
 
@@ -106,6 +108,7 @@ public class Mouse {
     }
 
     private void updateLocation(MouseEvent e) {
+
         position.set(e.getX(), e.getY());
     }
 
@@ -203,6 +206,24 @@ public class Mouse {
      */
     public Vector2i getPosition() {
         return position;
+    }
+
+    /**
+     * Returns true if the mouse has moved.
+     * 
+     * @return true if the mouse has moved.
+     */
+    public boolean hasMouseMoved() {
+        return !position.equals(oldPosition);
+    }
+
+    /**
+     * Returns the previous mouse cursor position.
+     * 
+     * @return the previous mouse cursor position.
+     */
+    public Vector2i getOldPosition() {
+        return oldPosition;
     }
 
     /**

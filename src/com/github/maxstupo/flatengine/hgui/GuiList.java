@@ -20,11 +20,12 @@ import com.github.maxstupo.flatengine.util.UtilGraphics;
  *            something else.
  *
  */
-public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton, String, Integer> {
+public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton, Boolean, Integer> {
 
     private final List<T> items = new ArrayList<>();
     private final List<GuiButton> itemNodes = new ArrayList<>();
     private final GuiButton defaultItem;
+    private final GuiSlider scrollbar;
 
     private boolean isItemNodesDirty;
     private boolean isScrollDirty;
@@ -35,6 +36,7 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
     private int calculatedItemHeight;
 
     private List<IEventListener<GuiList<T>, T, Integer>> listeners = new ArrayList<>();
+    private boolean isScrollBarDirty;
 
     /**
      * Create a new {@link GuiList} object.
@@ -58,12 +60,36 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
         this.defaultItem.setOutlineColorUnselected(null);
         this.defaultItem.setBackgroundColorSelected(Color.GRAY);
 
+        this.scrollbar = new GuiSlider(screen, width - 10, 0, height, 10);
+        scrollbar.addListener((executor, value, fromDragging) -> {
+            if (fromDragging) {
+                scroll = value.intValue();
+                isScrollDirty = true;
+            }
+        });
+        scrollbar.setSpacing(0);
+        scrollbar.setBackgroundColor(Color.GRAY);
+        scrollbar.getKnobNode().setBackgroundColorUnselected(Color.LIGHT_GRAY);
+        scrollbar.getKnobNode().setBackgroundColorSelected(Color.DARK_GRAY);
+        scrollbar.setVertical(true);
+        add(scrollbar);
+
         setBackgroundColor(UtilGraphics.changeAlpha(Color.BLACK, 127));
         setOutlineColor(Color.BLACK);
     }
 
     @Override
+    protected void onChildNodeChange(AbstractNode instigator) {
+        super.onChildNodeChange(instigator);
+        if (instigator.equals(scrollbar))
+            isScrollBarDirty = true;
+    }
+
+    @Override
     protected boolean update(float delta, boolean shouldHandleInput) {
+
+        if (isScrollBarDirty)
+            updateScrollBar();
 
         if (isItemNodesDirty)
             rebuildItemNodes();
@@ -75,6 +101,15 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
             doInputLogic();
 
         return shouldHandleInput && !isMouseOver();
+    }
+
+    /**
+     * Updates the x position of the scroll bar, and requests that the item nodes be updated also.
+     */
+    protected void updateScrollBar() {
+        scrollbar.setLocalPositionX(getWidth() - scrollbar.getWidth());
+        isItemNodesDirty = true;
+        isScrollBarDirty = false;
     }
 
     /**
@@ -150,6 +185,10 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
             T t = items.get(newScroll);
             updateItem(btn, t, newScroll);
         }
+        if (!scrollbar.isDragging()) {
+            scrollbar.setMaxValue(items.size() - getItemsVisible());
+            scrollbar.setValue(scroll);
+        }
         isScrollDirty = false;
     }
 
@@ -209,12 +248,12 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
         int height = (itemHeight == -1) ? calculatedItemHeight : itemHeight;
         for (int i = 0; i < Math.min(items.size(), getItemsVisible()); i++) {
 
-            GuiButton btn = new GuiButton(screen, "<template>", getSpacing(), j * (height + getSpacing()) + getSpacing(), getWidth() - getSpacing() * 2, height) {
+            GuiButton btn = new GuiButton(screen, "<template>", getSpacing(), j * (height + getSpacing()) + getSpacing(), getWidth() - getSpacing() * 2 - scrollbar.getWidth(), height) {
 
                 @Override
                 protected boolean update(float delta, boolean shouldHandleInput) {
                     super.update(delta, shouldHandleInput);
-                    return true;// return true so we can scroll
+                    return shouldHandleInput;// return true so we can scroll
                 }
             };
             btn.getTextNode().setFont(defaultItem.getTextNode().getFont());
@@ -239,10 +278,9 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
     }
 
     @Override
-    public AbstractNode setSize(int width, int height) {
-        super.setSize(width, height);
+    protected void onResize(int width, int height) {
+        super.onResize(width, height);
         isItemNodesDirty = true;
-        return this;
     }
 
     /**
@@ -294,6 +332,8 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
      */
     public GuiList<T> remove(int index) {
         items.remove(index);
+        if (items.size() <= getItemsVisible())
+            scroll = 0;
         setDirty();
         return this;
     }
@@ -307,6 +347,8 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
      */
     public GuiList<T> remove(T t) {
         items.remove(t);
+        if (items.size() <= getItemsVisible())
+            scroll = 0;
         setDirty();
         return this;
     }
@@ -319,6 +361,7 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
     public GuiList<T> clear() {
         items.clear();
         isItemNodesDirty = true;
+        scroll = 0;
         return this;
     }
 
@@ -346,7 +389,9 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onEvent(GuiButton executor, String actionItem, Integer action) {
+    public void onEvent(GuiButton executor, Boolean actionItem, Integer action) {
+        if (!actionItem)
+            return;
         Object[] arr = (Object[]) executor.getUserData();
 
         for (IEventListener<GuiList<T>, T, Integer> listener : listeners) {
