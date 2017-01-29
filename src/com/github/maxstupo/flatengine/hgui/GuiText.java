@@ -16,7 +16,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  */
 public class GuiText extends AbstractAlignableGuiNode {
 
-    private String text;
+    private String text = "";
 
     /** The color of the text. */
     protected Color textColor = Color.WHITE;
@@ -125,8 +125,10 @@ public class GuiText extends AbstractAlignableGuiNode {
      * @return this object for chaining.
      */
     public GuiText setText(String text) {
-        this.text = text;
-        setGraphicsCalculationsDirty();
+        if (this.text == null || !this.text.equals(text)) {
+            this.text = text;
+            setGraphicsCalculationsDirty();
+        }
         return this;
     }
 
@@ -150,8 +152,10 @@ public class GuiText extends AbstractAlignableGuiNode {
      * @return this object for chaining.
      */
     public GuiText setTextFont(Font font) {
-        this.textFont = font;
-        setGraphicsCalculationsDirty();
+        if (this.textFont == null || !this.textFont.equals(font)) {
+            this.textFont = font;
+            setGraphicsCalculationsDirty();
+        }
         return this;
     }
 

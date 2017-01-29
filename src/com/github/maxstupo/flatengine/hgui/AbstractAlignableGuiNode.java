@@ -112,6 +112,12 @@ public abstract class AbstractAlignableGuiNode extends AbstractNode {
     }
 
     @Override
+    protected void onChildNodeChange(AbstractNode instigator) {
+        super.onChildNodeChange(instigator);
+        setGraphicsCalculationsDirty();
+    }
+
+    @Override
     protected void onParentNodeChange(AbstractNode instigator) {
         super.onParentNodeChange(instigator);
         setGraphicsCalculationsDirty();

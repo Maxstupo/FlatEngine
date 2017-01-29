@@ -1,12 +1,9 @@
 package com.github.maxstupo.flatengine.hgui;
 
-import java.awt.Graphics2D;
-
 import com.github.maxstupo.flatengine.Sprite;
 import com.github.maxstupo.flatengine.hgui.AbstractAlignableGuiNode.Alignment;
 import com.github.maxstupo.flatengine.item.IItemStack;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
-import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
  * This GUI node represents a item slot, it can contain a stack of items defined by the interface {@link IItemStack}.
@@ -44,10 +41,6 @@ public class GuiItemSlot<T extends IItemStack> extends GuiImage {
 
         this.textAmount = new GuiText(screen, Alignment.BOTTOM_RIGHT);
         add(textAmount);
-    }
-
-    public void renderItemName(Graphics2D g, Vector2i pos) {
-
     }
 
     @Override

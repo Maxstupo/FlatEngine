@@ -265,6 +265,11 @@ public abstract class AbstractNode {
             node.notifyChildrenOfChange(instigator);
     }
 
+    public void bringToFront(AbstractNode node) {
+        children.remove(node);
+        children.add(node);
+    }
+
     /**
      * Adds a child node to this node, this method calls {@link #onAdded(AbstractNode)}, notifies the parent node of a change via
      * {@link #onChildNodeChange(AbstractNode)} and notifies all children nodes via {@link #onParentNodeChange(AbstractNode)}.

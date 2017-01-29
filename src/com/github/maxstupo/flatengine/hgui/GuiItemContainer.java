@@ -1,6 +1,6 @@
 package com.github.maxstupo.flatengine.hgui;
 
-import java.awt.Graphics2D;
+import java.awt.Color;
 
 import com.github.maxstupo.flatengine.item.IItemStack;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
@@ -22,11 +22,16 @@ public class GuiItemContainer<T extends IItemStack> extends GuiContainer {
 
     private T[][] items;
     private GuiItemSlot<T>[][] slots;
-    private GuiItemSlot<T> selectedSlotOld;
-    private GuiItemSlot<T> selectedSlot;
+
     private boolean isItemSlotsDirty;
+    private boolean isNameplateDirty;
 
     private final GuiLabel nameplate;
+    protected final Vector2i nameplateOffset = new Vector2i(10, -20);
+
+    private GuiItemSlot<T> selectedSlot;
+    private GuiItemSlot<T> oldSelectedSlot;
+    private int hoverI, hoverJ, oldHoverI, oldHoverJ;
 
     public GuiItemContainer(AbstractScreen screen, float localX, float localY, int slotSize, int spacing, T[][] items, T holding) {
         super(screen, localX, localY, items.length * (slotSize + spacing), items[0].length * (slotSize + spacing) + 8);
@@ -34,21 +39,15 @@ public class GuiItemContainer<T extends IItemStack> extends GuiContainer {
         this.spacing = spacing;
         this.holding = holding;
         this.items = items;
+
         this.defaultSlot = new GuiItemSlot<>(null, 0, 0, 0, null);
-        this.nameplate = new GuiLabel(screen, 0, 0, 200, 20);
-        nameplate.setVisible(false);
+
+        this.nameplate = new GuiLabel(screen, 0, 0, -1, -1);
+        this.nameplate.setVisible(false);
+        this.nameplate.setBackgroundColor(Color.LIGHT_GRAY);
         add(nameplate);
-        isItemSlotsDirty = true;
-    }
 
-    @Override
-    protected void renderPost(Graphics2D g) {
-        super.renderPost(g);
-
-        Vector2i mpos = getMouse().getPosition();
-
-        if (getSlotHovered() != null)
-            getSlotHovered().renderItemName(g, mpos);
+        setItemSlotsDirty();
     }
 
     @Override
@@ -56,13 +55,46 @@ public class GuiItemContainer<T extends IItemStack> extends GuiContainer {
         if (isItemSlotsDirty)
             rebuildItemSlots();
 
-        if (!shouldHandleInput)
-            return shouldHandleInput;
+        if (isNameplateDirty)
+            updateNameplate();
 
-        selectedSlotOld = selectedSlot;
+        if (!shouldHandleInput) {
+            selectedSlot = null;
+            nameplate.setVisible(false);
+            return shouldHandleInput;
+        }
+
+        oldSelectedSlot = selectedSlot;
         selectedSlot = getSlotMouseHover();
 
+        if (selectedSlot != null) {
+
+            if (hoverJ != oldHoverJ || hoverI != oldHoverI || getMouse().hasMouseMoved())
+                isNameplateDirty = true;
+
+        } else if (oldSelectedSlot != null) {
+
+            isNameplateDirty = true;
+        }
+
         return shouldHandleInput && !isMouseOver();
+    }
+
+    protected void updateNameplate() {
+        if (getSlotHovered() != null) {
+            nameplate.getTextNode().setText(getItemHovered().getName());
+
+            Vector2i mpos = getMouse().getPosition();
+            Vector2i gpos = getGlobalPosition();
+
+            nameplate.setLocalPosition(mpos.x - gpos.x + nameplateOffset.x, mpos.y - gpos.y + nameplateOffset.y);
+            nameplate.setVisible(true);
+
+        } else {
+            nameplate.setVisible(false);
+        }
+
+        isNameplateDirty = false;
     }
 
     protected GuiItemSlot<T> getSlotMouseHover() {
@@ -71,8 +103,13 @@ public class GuiItemContainer<T extends IItemStack> extends GuiContainer {
                 if (!slots[i][j].isEnabled())
                     continue;
 
-                if (slots[i][j].isMouseOver())
+                if (slots[i][j].isMouseOver()) {
+                    oldHoverI = hoverI;
+                    oldHoverJ = hoverJ;
+                    hoverI = i;
+                    hoverJ = j;
                     return slots[i][j];
+                }
             }
         }
         return null;
@@ -97,6 +134,7 @@ public class GuiItemContainer<T extends IItemStack> extends GuiContainer {
                         return shouldHandleInput;
                     }
                 });
+
                 slot.getTextAmount().setTextFont(defaultSlot.getTextAmount().getTextFont());
                 slot.getTextAmount().setTextColor(defaultSlot.getTextAmount().getTextColor());
                 slot.getTextAmount().setAlignment(defaultSlot.getTextAmount().getAlignment());
@@ -112,11 +150,20 @@ public class GuiItemContainer<T extends IItemStack> extends GuiContainer {
             }
         }
 
+        bringToFront(nameplate);
+
         if (isAutoSize) {
             setSize(items.length * (slotSize + spacing) + spacing, items[0].length * (slotSize + spacing) + spacing);
         }
 
         isItemSlotsDirty = false;
+    }
+
+    @Override
+    public AbstractNode setEnabled(boolean isEnabled) {
+        selectedSlot = null;
+        nameplate.setVisible(false);
+        return super.setEnabled(isEnabled);
     }
 
     public GuiItemContainer<T> setSpacing(int spacing) {
@@ -134,12 +181,8 @@ public class GuiItemContainer<T extends IItemStack> extends GuiContainer {
     }
 
     public GuiItemContainer<T> setContents(T[][] items) {
-        if (this.items.length != items.length || this.items[0].length != items[0].length) {
-            this.items = items;
-            isItemSlotsDirty = true;
-        } else {
-            this.items = items;
-        }
+        this.items = items;
+        isItemSlotsDirty = true;
         return this;
     }
 

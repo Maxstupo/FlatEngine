@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
-import com.github.maxstupo.flatengine.hgui.AbstractAlignableGuiNode.Alignment;
 import com.github.maxstupo.flatengine.hgui.GuiItemContainer;
 import com.github.maxstupo.flatengine.hgui.GuiList;
 import com.github.maxstupo.flatengine.hgui.GuiSelectionList;
@@ -46,7 +45,6 @@ public class Main extends AbstractScreen {
         for (int i = 0; i < 15; i++)
             list.addItem("Item " + i);
         window.add(list);
-        guiRoot.add(window);
 
         // bar.addListener((s, f, b) -> {
         // System.out.println(f + ", " + b);
@@ -61,14 +59,22 @@ public class Main extends AbstractScreen {
         }
 
         IS holding = new IS(0, 0);
-        IS[][] items = new IS[4][5];
+
+        slot = new GuiItemContainer<>(this, 32, 32, 64, 5, get(), holding);
+        guiRoot.add(slot);
+        guiRoot.add(window);
+    }
+
+    GuiItemContainer<IS> slot;
+
+    public IS[][] get() {
+        IS[][] items = new IS[5][5];
         for (int i = 0; i < items.length; i++) {
             for (int j = 0; j < items[0].length; j++) {
                 items[i][j] = new IS(Rand.INSTANCE.nextIntRange(1, 2), Rand.INSTANCE.nextIntRange(0, 10));
             }
         }
-        GuiItemContainer<IS> slot = new GuiItemContainer<>(this, 32, 32, 64, 5, items, holding);
-        guiRoot.add(slot);
+        return items;
     }
 
     public static class IS implements IItemStack {
@@ -124,18 +130,20 @@ public class Main extends AbstractScreen {
     @Override
     public void update(double delta) {
         if (getKeyboard().isKeyDown(Keyboard.KEY_1)) {
-            list.getDefaultItem().getTextNode().setAlignment(Alignment.MIDDLE_LEFT);
-            list.setDirty();
+            // list.getDefaultItem().getTextNode().setAlignment(Alignment.MIDDLE_LEFT);
+            // list.setDirty();
+            slot.setEnabled(false);
         }
         if (getKeyboard().isKeyDown(Keyboard.KEY_C)) {
-            list.clear();
+            // list.clear();
+            slot.setSlotSize(slot.getSlotSize() - 1);
         }
         if (getKeyboard().isKeyDown(Keyboard.KEY_SPACE)) {
-            list.addItem("Item - " + Rand.INSTANCE.nextIntRange(0, 100) + "");
-
+            // list.addItem("Item - " + Rand.INSTANCE.nextIntRange(0, 100) + "");
+            slot.setContents(get());
         }
         if (getKeyboard().isKeyDown(Keyboard.KEY_S)) {
-
+            slot.setSpacing(slot.getSpacing() + 1);
         }
     }
 
