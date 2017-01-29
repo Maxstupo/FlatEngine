@@ -13,11 +13,11 @@ public class GuiLabel extends GuiContainer {
 
     private final GuiText text;
 
-    protected int autoSizeSpacing = 2;
-    protected int minAutoSizeWidth = 70;
-    protected int minAutoSizeHeight = 0;
-    protected boolean autoSizeWidth;
-    protected boolean autoSizeHeight;
+    private int autoSizeSpacing = 2;
+    private int minAutoSizeWidth = 70;
+    private int minAutoSizeHeight = 0;
+    private boolean autoSizeWidth;
+    private boolean autoSizeHeight;
 
     public GuiLabel(AbstractScreen screen, float localX, float localY, int width, int height) {
         super(screen, localX, localY, width, height);
