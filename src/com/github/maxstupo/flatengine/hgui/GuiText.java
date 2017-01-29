@@ -19,8 +19,8 @@ public class GuiText extends AbstractAlignableGuiNode {
     private String text;
 
     /** The color of the text. */
-    protected Color color = Color.WHITE;
-    private Font font = null;
+    protected Color textColor = Color.WHITE;
+    private Font textFont = null;
 
     /**
      * Create a new {@link GuiText} object, with an empty label.
@@ -87,30 +87,31 @@ public class GuiText extends AbstractAlignableGuiNode {
     }
 
     @Override
-    public void render(Graphics2D g) {
-
+    protected void render(Graphics2D g) {
         Vector2i gpos = getGlobalPosition();
 
-        Font defaultFont = g.getFont();
-        Color defaultColor = g.getColor();
-        {
-            g.setFont(getFont());
-            g.setColor(getColor());
+        if (getText() != null) {
+            Font defaultFont = g.getFont();
+            Color defaultColor = g.getColor();
+            {
+                g.setFont(getTextFont());
+                g.setColor(getTextColor());
 
-            UtilGraphics.drawString(g, getText(), gpos.x, gpos.y);
+                UtilGraphics.drawString(g, getText(), gpos.x, gpos.y);
+            }
+            g.setFont(defaultFont);
+            g.setColor(defaultColor);
         }
-        g.setFont(defaultFont);
-        g.setColor(defaultColor);
-
     }
 
     @Override
     protected void renderFirst(Graphics2D g) {
 
-        if (getFont() == null)
-            setFont(g.getFont());
+        if (getTextFont() == null)
+            setTextFont(g.getFont());
 
-        Dimension bounds = UtilGraphics.getStringBounds(g, getText(), getFont());
+        Dimension bounds = UtilGraphics.getStringBounds(g, getText(), getTextFont());
+
         setSize(bounds.width, bounds.height);
 
         super.renderFirst(g); // Update alignable node, with the new GUI text size.
@@ -136,8 +137,8 @@ public class GuiText extends AbstractAlignableGuiNode {
      *            the color of the text.
      * @return this object for chaining.
      */
-    public GuiText setColor(Color color) {
-        this.color = color;
+    public GuiText setTextColor(Color color) {
+        this.textColor = color;
         return this;
     }
 
@@ -148,8 +149,8 @@ public class GuiText extends AbstractAlignableGuiNode {
      *            the font of the text.
      * @return this object for chaining.
      */
-    public GuiText setFont(Font font) {
-        this.font = font;
+    public GuiText setTextFont(Font font) {
+        this.textFont = font;
         setGraphicsCalculationsDirty();
         return this;
     }
@@ -168,8 +169,8 @@ public class GuiText extends AbstractAlignableGuiNode {
      * 
      * @return the color of the text.
      */
-    public Color getColor() {
-        return color;
+    public Color getTextColor() {
+        return textColor;
     }
 
     /**
@@ -177,13 +178,13 @@ public class GuiText extends AbstractAlignableGuiNode {
      * 
      * @return the font of the text.
      */
-    public Font getFont() {
-        return font;
+    public Font getTextFont() {
+        return textFont;
     }
 
     @Override
     public String toString() {
-        return String.format("%s [text=%s, color=%s, font=%s, isVisible=%s, getAlignment()=%s, getLocalPositionX()=%s, getLocalPositionY()=%s, getWidth()=%s, getHeight()=%s, isEnabled()=%s]", getClass().getSimpleName(), text, color, font, isVisible, getAlignment(), getLocalPositionX(), getLocalPositionY(), getWidth(), getHeight(), isEnabled());
+        return String.format("%s [text=%s, color=%s, font=%s, isVisible=%s, getAlignment()=%s, getLocalPositionX()=%s, getLocalPositionY()=%s, getWidth()=%s, getHeight()=%s, isEnabled()=%s]", getClass().getSimpleName(), text, textColor, textFont, isVisible, getAlignment(), getLocalPositionX(), getLocalPositionY(), getWidth(), getHeight(), isEnabled());
     }
 
 }

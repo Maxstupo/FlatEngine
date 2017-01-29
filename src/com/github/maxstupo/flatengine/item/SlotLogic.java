@@ -1,22 +1,20 @@
 package com.github.maxstupo.flatengine.item;
 
-import com.github.maxstupo.flatengine.gui.GuiItemSlot;
-import com.github.maxstupo.flatengine.input.Keyboard;
-import com.github.maxstupo.flatengine.input.Mouse;
-
 /**
  * @author Maxstupo
  *
  */
-public class SlotLogic implements ISlotLogic {
+public class SlotLogic {// implements ISlotLogic {
 
+//@off
+    /*
     @Override
     public <T extends IItemStack> boolean doSlotLogic(GuiItemSlot<T> slot, T item, T holding, boolean takeOnly, Keyboard keyboard) {
         boolean didChange = true;
         if (slot.isMouseClicked(Mouse.LEFT_CLICK)) {
 
             if (holding.isEmpty() && !item.isEmpty()) { // Take a stack.
-                holding.set(item);
+   holding.set(item);
                 item.setEmpty();
             } else if (!holding.isEmpty() && item.isEmpty() && !takeOnly) { // Place a stack.
                 item.set(holding);
@@ -65,5 +63,7 @@ public class SlotLogic implements ISlotLogic {
         }
         return didChange;
     }
+    */
+    //@on
 
 }

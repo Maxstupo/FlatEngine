@@ -56,7 +56,7 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
         super(screen, localX, localY, width, height);
 
         this.defaultItem = new GuiButton(null, "", 0, 0, 0, 0);
-        this.defaultItem.getTextNode().setFont(new Font(Font.MONOSPACED, Font.PLAIN, 15));
+        this.defaultItem.getTextNode().setTextFont(new Font(Font.MONOSPACED, Font.PLAIN, 15));
         this.defaultItem.setOutlineColorUnselected(null);
         this.defaultItem.setBackgroundColorSelected(Color.GRAY);
 
@@ -256,7 +256,7 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
                     return shouldHandleInput;// return true so we can scroll
                 }
             };
-            btn.getTextNode().setFont(defaultItem.getTextNode().getFont());
+            btn.getTextNode().setTextFont(defaultItem.getTextNode().getTextFont());
             btn.getTextNode().setAlignment(defaultItem.getTextNode().getAlignment());
             btn.setOutlineColorUnselected(defaultItem.getOutlineColorUnselected());
             btn.setOutlineColorSelected(defaultItem.getOutlineColorSelected());

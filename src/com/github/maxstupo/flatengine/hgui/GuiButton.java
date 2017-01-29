@@ -64,7 +64,7 @@ public class GuiButton extends GuiContainer {
     public GuiButton(AbstractScreen screen, String text, int localX, int localY, int width, int height) {
         super(screen, localX, localY, width, height);
         this.text = new GuiText(screen, Alignment.CENTER, text);
-        this.text.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
+        this.text.setTextFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
         this.add(this.text);
     }
 
@@ -104,7 +104,7 @@ public class GuiButton extends GuiContainer {
 
     @Override
     protected void render(Graphics2D g) {
-        text.setColor(isMouseOver ? getTextColorSelected() : getTextColorUnselected());
+        text.setTextColor(isMouseOver ? getTextColorSelected() : getTextColorUnselected());
 
         if (!isBoxLess()) {
             super.setBackgroundColor(isMouseOver ? getBackgroundColorSelected() : getBackgroundColorUnselected());

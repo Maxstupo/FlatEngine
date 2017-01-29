@@ -2,16 +2,20 @@ package test.com.github.maxstupo.flatengine;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.IOException;
 
 import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
 import com.github.maxstupo.flatengine.hgui.AbstractAlignableGuiNode.Alignment;
+import com.github.maxstupo.flatengine.hgui.GuiItemContainer;
 import com.github.maxstupo.flatengine.hgui.GuiList;
 import com.github.maxstupo.flatengine.hgui.GuiSelectionList;
 import com.github.maxstupo.flatengine.hgui.GuiWindow;
 import com.github.maxstupo.flatengine.input.Keyboard;
+import com.github.maxstupo.flatengine.item.IItemStack;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.screen.ScreenManager;
+import com.github.maxstupo.flatengine.util.Util;
 import com.github.maxstupo.flatengine.util.math.Rand;
 import com.github.maxstupo.jflatlog.JFlatLog;
 
@@ -47,6 +51,55 @@ public class Main extends AbstractScreen {
         // bar.addListener((s, f, b) -> {
         // System.out.println(f + ", " + b);
         // });
+
+        try {
+            screenManager.getEngine().getAssetManager().registerSprite("1", Util.createImage("/potion_mana.png"));
+            screenManager.getEngine().getAssetManager().registerSprite("2", Util.createImage("/potion_mana2.png"));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        IS holding = new IS(0, 0);
+        IS[][] items = new IS[4][5];
+        for (int i = 0; i < items.length; i++) {
+            for (int j = 0; j < items[0].length; j++) {
+                items[i][j] = new IS(Rand.INSTANCE.nextIntRange(1, 2), Rand.INSTANCE.nextIntRange(0, 10));
+            }
+        }
+        GuiItemContainer<IS> slot = new GuiItemContainer<>(this, 32, 32, 64, 5, items, holding);
+        guiRoot.add(slot);
+    }
+
+    public static class IS implements IItemStack {
+
+        private int id;
+        private int amt;
+
+        public IS(int id, int amt) {
+            this.id = id;
+            this.amt = amt;
+        }
+
+        @Override
+        public int getAmount() {
+            return amt;
+        }
+
+        @Override
+        public String getIconId() {
+            return id + "";
+        }
+
+        @Override
+        public String getName() {
+            return "Item " + id;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return getAmount() <= 0;
+        }
 
     }
 

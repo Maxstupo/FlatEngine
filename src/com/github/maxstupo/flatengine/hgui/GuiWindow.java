@@ -105,7 +105,7 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
             titleNode.setHeight(titleText.getHeight());
             // titleText.setGraphicsCalculationsDirty();// Update text alignment.
 
-            contents.setLocalPositionY(titleNode.getHeight());
+            contents.setLocalPositionY(titleNode.getHeight() - 1);
             setHeight(contents.getHeight() + titleNode.getHeight());
 
             btnClose.setSize(titleText.getHeight(), titleText.getHeight());

@@ -578,6 +578,16 @@ public abstract class AbstractNode {
     }
 
     /**
+     * Removes all children nodes from this node.
+     * 
+     * @return this object for chaining.
+     */
+    public AbstractNode removeChildren() {
+        children.clear();
+        return this;
+    }
+
+    /**
      * Returns the width of the parent node or the width of the screen if the parent node is null.
      * 
      * @return the width of the parent node or the width of the screen if the parent node is null.

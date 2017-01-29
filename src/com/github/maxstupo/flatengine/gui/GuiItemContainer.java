@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import com.github.maxstupo.flatengine.Sprite;
 import com.github.maxstupo.flatengine.item.IItemStack;
 import com.github.maxstupo.flatengine.item.ISlotLogic;
-import com.github.maxstupo.flatengine.item.SlotLogic;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.UtilGraphics;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
@@ -29,7 +28,7 @@ public class GuiItemContainer<T extends IItemStack> extends GuiContainer {
     private GuiItemSlot<T> selectedSlot;
 
     private boolean autoSize = true;
-    protected ISlotLogic slotLogic = new SlotLogic();
+    protected ISlotLogic slotLogic;// = new SlotLogic();
     protected int namePlateBorderSize = 2;
 
     public GuiItemContainer(AbstractScreen screen, Vector2i localPosition, int slotSize, int spacing, T[][] items, T holding) {

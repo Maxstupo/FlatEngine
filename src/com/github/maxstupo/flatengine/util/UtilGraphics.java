@@ -12,6 +12,8 @@ import java.awt.Graphics;
  */
 public final class UtilGraphics {
 
+    private static final Dimension dimension = new Dimension(0, 0);
+
     private UtilGraphics() {
     }
 
@@ -26,6 +28,34 @@ public final class UtilGraphics {
      */
     public static Color changeAlpha(Color c, int alpha) {
         return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
+    }
+
+    /**
+     * Returns a scaled dimension keeping aspect ratio.
+     * 
+     * @param originalWidth
+     *            the old width.
+     * @param originalHeight
+     *            the old height.
+     * @param newWidth
+     *            the width to fit.
+     * @param newHeight
+     *            the height to fit.
+     * @return the new dimension within the newWidth and newHeight.
+     */
+    public static Dimension getScaledDimension(int originalWidth, int originalHeight, int newWidth, int newHeight) {
+
+        double ratio = (double) originalWidth / originalHeight;
+
+        double height = newWidth / ratio;
+        double width = newHeight * ratio;
+
+        if (width > newWidth) {
+            dimension.setSize(newWidth, (int) height);
+        } else {
+            dimension.setSize((int) width, newHeight);
+        }
+        return dimension;
     }
 
     /**

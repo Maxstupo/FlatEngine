@@ -63,7 +63,7 @@ public class GuiContainer extends AbstractNode {
                     g.setStroke(getOutlineStroke());
 
                 g.setColor(getOutlineColor());
-                g.drawRect(gpos.x, gpos.y, getWidth(), getHeight());
+                g.drawRect(gpos.x, gpos.y, getWidth() - 1, getHeight() - 1);
             }
             g.setStroke(defaultStroke);
         }
