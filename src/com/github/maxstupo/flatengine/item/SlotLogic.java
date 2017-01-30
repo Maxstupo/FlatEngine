@@ -28,7 +28,7 @@ public class SlotLogic implements ISlotLogic {
                 holding.setEmpty();
                 didChange = true;
 
-            } else if (!holding.equals(item) && !takeOnly) { // Swap item stacks.
+            } else if (holding.getId() != item.getId() && !takeOnly) { // Swap item stacks.
                 AbstractItemStack newStack = item.copy();
                 item.set(holding);
                 holding.set(newStack);
@@ -44,7 +44,7 @@ public class SlotLogic implements ISlotLogic {
                 }
                 didChange = true;
 
-            } else if (takeOnly && holding.equals(item) && !item.isEmpty() && (holding.getMaxAmount() - holding.getAmount()) >= item.getAmount()) {
+            } else if (takeOnly && holding.getId() == item.getId() && !item.isEmpty() && (holding.getMaxAmount() - holding.getAmount()) >= item.getAmount()) {
                 // If takeOnly, take from slot if items are the same.
                 holding.add(item);
                 didChange = true;
@@ -67,7 +67,7 @@ public class SlotLogic implements ISlotLogic {
                 didChange = true;
 
             } else if (!holding.isEmpty() && !item.isEmpty()) { // Add one to a slot.
-                if (holding.equals(item)) {
+                if (holding.getId() == item.getId()) {
                     if (!item.increase(1))
                         holding.decrease(1);
                     didChange = true;

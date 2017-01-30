@@ -1,8 +1,14 @@
 package com.github.maxstupo.flatengine.hgui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.github.maxstupo.flatengine.IEventListener;
 import com.github.maxstupo.flatengine.Sprite;
 import com.github.maxstupo.flatengine.hgui.AbstractAlignableGuiNode.Alignment;
 import com.github.maxstupo.flatengine.item.AbstractItemStack;
+import com.github.maxstupo.flatengine.item.ISlotLogic;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 
 /**
@@ -15,11 +21,25 @@ import com.github.maxstupo.flatengine.screen.AbstractScreen;
 public class GuiItemSlot<T extends AbstractItemStack> extends GuiImage {
 
     private int oldAmount;
+
     /** The item stack within this item slot. */
     protected T contents;
+
     private boolean isTextAmountDirty = false;
 
-    private final GuiText textAmount;
+    /** The text node containing the amount this item stack has. */
+    protected final GuiText textAmount;
+
+    /** The logic for this item slot. */
+    protected ISlotLogic logic;
+
+    /** The item stack that is held. This is used to share an item stack between multiple item slots. */
+    protected final T holding;
+
+    /** True if this item slot can remove items only. */
+    protected boolean isTakeOnly;
+
+    private final List<IEventListener<GuiItemSlot<T>, T, T>> listeners = new ArrayList<>();
 
     /**
      * Create a new {@link GuiItemSlot} object.
@@ -33,11 +53,20 @@ public class GuiItemSlot<T extends AbstractItemStack> extends GuiImage {
      * @param size
      *            the size of this square item slot.
      * @param contents
-     *            the contents stored within this item slot, can be null.
+     *            the contents stored within this item slot, can't be null.
+     * @param isTakeOnly
+     *            true if this item slot can remove items only.
+     * @param logic
+     *            the slot logic for this item slot.
+     * @param holding
+     *            the item stack that is held. This is used to share an item stack between multiple item slots.
      */
-    public GuiItemSlot(AbstractScreen screen, float localX, float localY, int size, T contents) {
+    public GuiItemSlot(AbstractScreen screen, float localX, float localY, int size, T contents, boolean isTakeOnly, ISlotLogic logic, T holding) {
         super(screen, localX, localY, size, size);
         this.contents = contents;
+        this.isTakeOnly = isTakeOnly;
+        this.holding = holding;
+        this.logic = logic;
 
         this.textAmount = new GuiText(screen, Alignment.BOTTOM_RIGHT);
         add(textAmount);
@@ -54,7 +83,22 @@ public class GuiItemSlot<T extends AbstractItemStack> extends GuiImage {
             if (oldAmount != getContents().getAmount())
                 setTextAmountDirty();
         }
+
+        if (getHolding() != null && getLogic() != null && isMouseOver()) {
+            if (getLogic().doSlotLogic(this, getContents(), getHolding(), isTakeOnly(), getMouse())) {
+                fireEventListeners();
+            }
+        }
+
         return shouldHandleInput && !isMouseOver();
+    }
+
+    /**
+     * Fires all event listeners for this item slot.
+     */
+    protected void fireEventListeners() {
+        for (IEventListener<GuiItemSlot<T>, T, T> listener : listeners)
+            listener.onEvent(this, getContents(), getHolding());
     }
 
     /**
@@ -73,6 +117,28 @@ public class GuiItemSlot<T extends AbstractItemStack> extends GuiImage {
         }
 
         isTextAmountDirty = false;
+    }
+
+    /**
+     * Adds a listener to this item slot.
+     * 
+     * @param listener
+     *            the listener to add.
+     * @return this object for chaining.
+     */
+    public GuiItemSlot<T> addListener(IEventListener<GuiItemSlot<T>, T, T> listener) {
+        if (listener != null)
+            listeners.add(listener);
+        return this;
+    }
+
+    /**
+     * Returns an unmodifiable list of listeners for this item slot.
+     * 
+     * @return an unmodifiable list of listeners for this item slot.
+     */
+    public List<IEventListener<GuiItemSlot<T>, T, T>> getListeners() {
+        return Collections.unmodifiableList(listeners);
     }
 
     /**
@@ -120,8 +186,61 @@ public class GuiItemSlot<T extends AbstractItemStack> extends GuiImage {
      * @return this object for chaining.
      */
     public GuiItemSlot<T> setContents(T contents) {
-        this.contents = contents;
-        setTextAmountDirty();
+        if (!contents.equals(this.contents)) {
+            this.contents = contents;
+            setTextAmountDirty();
+        }
+        return this;
+    }
+
+    /**
+     * Returns the slot logic for this item slot.
+     * 
+     * @return the slot logic for this item slot.
+     */
+    public ISlotLogic getLogic() {
+        return logic;
+    }
+
+    /**
+     * Sets the slot logic for this item slot.
+     * 
+     * @param logic
+     *            the logic.
+     * @return this object for chaining.
+     */
+    public GuiItemSlot<T> setLogic(ISlotLogic logic) {
+        this.logic = logic;
+        return this;
+    }
+
+    /**
+     * Returns the item stack that is held.
+     * 
+     * @return the item stack that is held.
+     */
+    public T getHolding() {
+        return holding;
+    }
+
+    /**
+     * Returns true if this item slot can remove items only.
+     * 
+     * @return true if this item slot can remove items only.
+     */
+    public boolean isTakeOnly() {
+        return isTakeOnly;
+    }
+
+    /**
+     * Sets if this item slot can only remove items.
+     * 
+     * @param isTakeOnly
+     *            true to prevent items being added.
+     * @return this object for chaining.
+     */
+    public GuiItemSlot<T> setTakeOnly(boolean isTakeOnly) {
+        this.isTakeOnly = isTakeOnly;
         return this;
     }
 

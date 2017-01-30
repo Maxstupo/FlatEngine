@@ -1,7 +1,11 @@
 package com.github.maxstupo.flatengine.hgui;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+import com.github.maxstupo.flatengine.IEventListener;
 import com.github.maxstupo.flatengine.item.AbstractItemStack;
 import com.github.maxstupo.flatengine.item.ISlotLogic;
 import com.github.maxstupo.flatengine.item.SlotLogic;
@@ -16,7 +20,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  *            the item stack type stored within this item container, the type must derive from {@link AbstractItemStack}.
  *
  */
-public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer {
+public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer implements IEventListener<GuiItemSlot<T>, T, T> {
 
     private int slotSize;
     private int spacing;
@@ -34,8 +38,7 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
     private T[][] contents;
     private GuiItemSlot<T>[][] slots;
 
-    /** The item slot logic used for all item slots within this item container. */
-    protected ISlotLogic slotLogic = new SlotLogic();
+    private ISlotLogic slotLogic = new SlotLogic();
 
     private boolean isItemSlotsDirty;
     private boolean isNameplateDirty;
@@ -52,6 +55,9 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
     private GuiItemSlot<T> oldSelectedSlot;
     private GuiItemSlot<T> holdingItemSlot; // Used to render item only.
     private int hoverI, hoverJ, oldHoverI, oldHoverJ;
+
+    private boolean isTakeOnly;
+    private final List<IEventListener<GuiItemContainer<T>, T, GuiItemSlot<T>>> listeners = new ArrayList<>();
 
     /**
      * Create a new {@link GuiItemContainer} object.
@@ -70,22 +76,25 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
      *            the items within the item slots.
      * @param holding
      *            the item stack object that is currently held within this container.
+     * @param isTakeOnly
+     *            if true item slots can only have items taken out.
      */
-    public GuiItemContainer(AbstractScreen screen, float localX, float localY, int slotSize, int spacing, T[][] items, T holding) {
+    public GuiItemContainer(AbstractScreen screen, float localX, float localY, int slotSize, int spacing, T[][] items, T holding, boolean isTakeOnly) {
         super(screen, localX, localY, items.length * (slotSize + spacing), items[0].length * (slotSize + spacing) + 8);
         this.slotSize = slotSize;
         this.spacing = spacing;
         this.holding = holding;
+        this.isTakeOnly = isTakeOnly;
         this.contents = items;
 
-        this.defaultSlot = new GuiItemSlot<>(null, 0, 0, 0, null);
+        this.defaultSlot = new GuiItemSlot<>(null, 0, 0, 0, null, false, null, null);
 
         this.nameplate = new GuiLabel(screen, 0, 0, -1, -1, "");
         this.nameplate.setBackgroundColor(Color.LIGHT_GRAY);
         this.nameplate.setVisible(false);
         add(nameplate);
 
-        this.holdingItemSlot = new GuiItemSlot<T>(screen, 5, 5, slotSize, null) {
+        this.holdingItemSlot = new GuiItemSlot<T>(screen, 0, 0, slotSize, null, false, null, null) {
 
             @Override
             protected boolean update(float delta, boolean shouldHandleInput) {
@@ -121,17 +130,6 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
 
         if (slotHovered != null) {
 
-            if (slotLogic != null) {
-                if (slotLogic.doSlotLogic(getSlotHovered(), getItemHovered(), getHolding(), false, getMouse())) {
-                    setNameplateDirty();
-
-                    if (!getHolding().isEmpty())
-                        holdingItemSlot.setContents(getHolding());
-
-                    onGridChange(getSlotHovered(), false);
-                }
-            }
-
             if (hoverJ != oldHoverJ || hoverI != oldHoverI || getMouse().hasMouseMoved())
                 setNameplateDirty();
 
@@ -146,8 +144,11 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
             int ox = (holdingOffset.x == -1) ? holdingItemSlot.getWidth() / 2 : holdingOffset.x;
             int oy = (holdingOffset.y == -1) ? holdingItemSlot.getHeight() / 2 : holdingOffset.y;
 
+            holdingItemSlot.setContents(getHolding());
             holdingItemSlot.setLocalPosition(mpos.x - ox, mpos.y - oy);
+
             holdingItemSlot.setVisible(true);
+
         } else {
             holdingItemSlot.setVisible(false);
         }
@@ -221,7 +222,7 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
         for (int i = 0; i < contents.length; i++) {
             for (int j = 0; j < contents[0].length; j++) {
 
-                GuiItemSlot<T> slot = (slots[i][j] = new GuiItemSlot<T>(screen, i * (slotSize + spacing) + spacing, j * (slotSize + spacing) + spacing, slotSize, contents[i][j]) {
+                GuiItemSlot<T> slot = (slots[i][j] = new GuiItemSlot<T>(screen, i * (slotSize + spacing) + spacing, j * (slotSize + spacing) + spacing, slotSize, contents[i][j], isTakeOnly, slotLogic, holding) {
 
                     @Override
                     protected boolean update(float delta, boolean shouldHandleInput) {
@@ -241,6 +242,8 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
                 slot.setIconResized(defaultSlot.isIconResized());
                 slot.setIcon(defaultSlot.getIcon());
 
+                slot.addListener(this);
+
                 add(slot);
             }
         }
@@ -252,6 +255,41 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
             setSize(contents.length * (slotSize + spacing) + spacing, contents[0].length * (slotSize + spacing) + spacing);
 
         isItemSlotsDirty = false;
+    }
+
+    /**
+     * Fires all event listeners within this item container.
+     */
+    protected void fireEventListeners() {
+        for (IEventListener<GuiItemContainer<T>, T, GuiItemSlot<T>> listener : listeners)
+            listener.onEvent(this, getHolding(), getSlotHovered());
+    }
+
+    @Override
+    public void onEvent(GuiItemSlot<T> executor, T actionItem, T action) {
+        fireEventListeners();
+    }
+
+    /**
+     * Adds a listener to this item container.
+     * 
+     * @param listener
+     *            the listener to add.
+     * @return this object for chaining.
+     */
+    public GuiItemContainer<T> addListener(IEventListener<GuiItemContainer<T>, T, GuiItemSlot<T>> listener) {
+        if (listener != null)
+            listeners.add(listener);
+        return this;
+    }
+
+    /**
+     * Returns an unmodifiable list of listeners for this item container.
+     * 
+     * @return an unmodifiable list of listeners for this item container.
+     */
+    public List<IEventListener<GuiItemContainer<T>, T, GuiItemSlot<T>>> getListeners() {
+        return Collections.unmodifiableList(listeners);
     }
 
     @Override
@@ -332,6 +370,30 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
      */
     public GuiItemContainer<T> setNameplateDirty() {
         this.isNameplateDirty = true;
+        return this;
+    }
+
+    /**
+     * Returns true if item slots can only have items taken out.
+     * 
+     * @return true if item slots can only have items taken out.
+     */
+    public boolean isTakeOnly() {
+        return isTakeOnly;
+    }
+
+    /**
+     * Set true to allow item slots to take out items only.
+     * 
+     * @param isTakeOnly
+     *            true to allow item slots to take out items only.
+     * @return this object for chaining.
+     */
+    public GuiItemContainer<T> setTakeOnly(boolean isTakeOnly) {
+        if (this.isTakeOnly != isTakeOnly) {
+            this.isTakeOnly = isTakeOnly;
+            setItemSlotsDirty();
+        }
         return this;
     }
 
@@ -454,6 +516,7 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
      */
     public GuiItemContainer<T> setSlotLogic(ISlotLogic slotLogic) {
         this.slotLogic = slotLogic;
+        setItemSlotsDirty();
         return this;
     }
 
@@ -467,4 +530,5 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
     public Vector2i getHoldingOffset() {
         return holdingOffset;
     }
+
 }

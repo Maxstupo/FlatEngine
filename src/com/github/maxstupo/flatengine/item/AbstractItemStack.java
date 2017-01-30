@@ -65,7 +65,7 @@ public abstract class AbstractItemStack {
 
         }
 
-        if (!equals(stack)) // Given item stack doesn't contain the same item.
+        if (getId() != stack.getId()) // Given item stack doesn't contain the same item.
             return stack.getAmount();
 
         if ((getAmount() + stack.getAmount()) <= getMaxAmount()) { // Given stack will fit within this stack without overflowing.
@@ -145,6 +145,8 @@ public abstract class AbstractItemStack {
      * @return this object for chaining.
      */
     public AbstractItemStack set(AbstractItemStack stack) {
+        if (stack == null)
+            return setEmpty();
         return set(stack.getId(), stack.getAmount());
     }
 
@@ -212,6 +214,7 @@ public abstract class AbstractItemStack {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + amount;
         result = prime * result + id;
         return result;
     }
@@ -225,6 +228,8 @@ public abstract class AbstractItemStack {
         if (getClass() != obj.getClass())
             return false;
         AbstractItemStack other = (AbstractItemStack) obj;
+        if (amount != other.amount)
+            return false;
         if (id != other.id)
             return false;
         return true;

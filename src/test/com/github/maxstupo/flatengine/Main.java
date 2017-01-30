@@ -7,11 +7,13 @@ import java.io.IOException;
 import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
 import com.github.maxstupo.flatengine.hgui.GuiItemContainer;
+import com.github.maxstupo.flatengine.hgui.GuiItemSlot;
 import com.github.maxstupo.flatengine.hgui.GuiList;
 import com.github.maxstupo.flatengine.hgui.GuiSelectionList;
 import com.github.maxstupo.flatengine.hgui.GuiWindow;
 import com.github.maxstupo.flatengine.input.Keyboard;
 import com.github.maxstupo.flatengine.item.AbstractItemStack;
+import com.github.maxstupo.flatengine.item.SlotLogic;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.screen.ScreenManager;
 import com.github.maxstupo.flatengine.util.Util;
@@ -52,7 +54,13 @@ public class Main extends AbstractScreen {
 
         IS holding = new IS(0, 0);
 
-        slot = new GuiItemContainer<>(this, 32, 32, 64, 5, get(), holding);
+        slot = new GuiItemContainer<>(this, 32, 32, 64, 5, get(), holding, false);
+
+        GuiItemSlot<IS> s = new GuiItemSlot<>(this, 280, 20, 64, new IS(2, 10), !false, new SlotLogic(), holding);
+        slot.addListener((executor, actionItem, action) -> {
+            System.out.println(actionItem.getName());
+        });
+        guiRoot.add(s);
         guiRoot.add(slot);
         guiRoot.add(window);
     }
