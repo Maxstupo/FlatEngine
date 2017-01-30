@@ -84,7 +84,7 @@ public abstract class AbstractItemStack {
     public abstract String getName();
 
     /**
-     * Returns true if this item stack is empty. (e.g. amount <= 0)
+     * Returns true if this item stack is empty. (e.g. amount &lt;= 0)
      * 
      * @return true if this item stack is empty.
      */

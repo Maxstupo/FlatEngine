@@ -1,11 +1,14 @@
 package com.github.maxstupo.flatengine.item;
 
+import com.github.maxstupo.flatengine.hgui.GuiItemContainer;
 import com.github.maxstupo.flatengine.hgui.GuiItemSlot;
 import com.github.maxstupo.flatengine.input.Mouse;
 
 /**
+ * This class is a general purpose implementation for slot logic that can be used with {@link GuiItemContainer} object.
+ * 
+ * @see ISlotLogic
  * @author Maxstupo
- *
  */
 public class SlotLogic implements ISlotLogic {
 
@@ -19,10 +22,12 @@ public class SlotLogic implements ISlotLogic {
                 holding.set(item);
                 item.setEmpty();
                 didChange = true;
+
             } else if (!holding.isEmpty() && item.isEmpty() && !takeOnly) { // Place a stack.
                 item.set(holding);
                 holding.setEmpty();
                 didChange = true;
+
             }
 
         }
