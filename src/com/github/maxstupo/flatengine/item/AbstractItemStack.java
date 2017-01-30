@@ -33,6 +33,13 @@ public abstract class AbstractItemStack {
     }
 
     /**
+     * Create a empty {@link AbstractItemStack}.
+     */
+    public AbstractItemStack() {
+        set(0, 0);
+    }
+
+    /**
      * Sets this item stack empty.
      * 
      * @return this object for chaining.

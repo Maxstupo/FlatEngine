@@ -11,7 +11,6 @@ import com.github.maxstupo.flatengine.IEventListener;
 import com.github.maxstupo.flatengine.hgui.AbstractAlignableGuiNode.Alignment;
 import com.github.maxstupo.flatengine.input.Mouse;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
-import com.github.maxstupo.flatengine.util.UtilGraphics;
 
 /**
  * This GUI node is a button it will trigger all listeners when a mouse button is pressed.
@@ -31,7 +30,7 @@ public class GuiButton extends GuiContainer {
     /** The outline color when this button is unselected. */
     protected Color outlineColorUnselected = Color.BLACK;
     /** The background color when this button is selected. */
-    protected Color backgroundColorSelected = UtilGraphics.changeAlpha(Color.DARK_GRAY, 127);
+    protected Color backgroundColorSelected = new Color(127, 127, 127);
     /** The background color when this button is unselected. */
     protected Color backgroundColorUnselected = Color.DARK_GRAY;
 

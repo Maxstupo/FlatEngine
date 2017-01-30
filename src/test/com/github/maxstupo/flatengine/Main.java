@@ -32,29 +32,21 @@ public class Main extends AbstractScreen {
         window.setUsePercentagePositions(true);
         window.setKeepWithinParent(true);
 
-        // GuiButton btn = new GuiButton(this, "Apple", 10, 20, 150, 50);
-        // btn.getTextNode().setAlignment(Alignment.CENTER);
-        // window.add(btn);
-
-        list = new GuiSelectionList<>(this, 10, 10, 150, 200);
+        list = new GuiSelectionList<>(this, 10, 10, 150, 205);
         list.addListener((executor, actionItem, action) -> {
             System.out.println(actionItem + ", " + action);
 
             executor.remove(actionItem);
         });
-        for (int i = 0; i < 15; i++)
+
+        for (int i = 0; i < 14; i++)
             list.addItem("Item " + i);
         window.add(list);
-
-        // bar.addListener((s, f, b) -> {
-        // System.out.println(f + ", " + b);
-        // });
 
         try {
             screenManager.getEngine().getAssetManager().registerSprite("1", Util.createImage("/potion_mana.png"));
             screenManager.getEngine().getAssetManager().registerSprite("2", Util.createImage("/potion_mana2.png"));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -68,7 +60,7 @@ public class Main extends AbstractScreen {
     GuiItemContainer<IS> slot;
 
     public IS[][] get() {
-        IS[][] items = new IS[5][5];
+        IS[][] items = new IS[3][5];
         for (int i = 0; i < items.length; i++) {
             for (int j = 0; j < items[0].length; j++) {
                 items[i][j] = new IS(Rand.INSTANCE.nextIntRange(1, 2), Rand.INSTANCE.nextIntRange(0, 10));

@@ -3,7 +3,6 @@ package com.github.maxstupo.flatengine.hgui;
 import java.awt.Color;
 
 import com.github.maxstupo.flatengine.IEventListener;
-import com.github.maxstupo.flatengine.hgui.AbstractAlignableGuiNode.Alignment;
 import com.github.maxstupo.flatengine.input.Mouse;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.util.math.UtilMath;
@@ -17,8 +16,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
  */
 public class GuiWindow extends GuiContainer implements IEventListener<GuiButton, Boolean, Integer> {
 
-    private final GuiContainer titleNode;
-    private final GuiText titleText;
+    private final GuiLabel titleNode;
     private final GuiButton btnClose;
 
     private final GuiContainer contents;
@@ -49,8 +47,6 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
         setBackgroundColor(null);
         setOutlineColor(null);
 
-        titleText = new GuiText(screen, Alignment.CENTER, title);
-
         contents = new GuiContainer(screen, 0, 0, width, height) {
 
             @Override
@@ -61,17 +57,7 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
             }
         };
 
-        // TODO: Replace title node from a GuiContainer to a GuiLabel as it works the same way for the GuiWindow.
-        titleNode = new GuiContainer(screen, 0, 0, width, 0) {
-
-            @Override
-            public AbstractNode add(AbstractNode node) {
-                node.setSize(UtilMath.clampI(node.getWidth(), 0, getWidth()), UtilMath.clampI(node.getHeight(), 0, getHeight()));
-                node.setKeepWithinParent(true);
-                return super.add(node);
-            }
-        };
-        titleNode.add(titleText);
+        titleNode = new GuiLabel(screen, 0, 0, width, -1, title);
 
         btnClose = new GuiButton(screen, "X", 0, 0, 0, 0);
         btnClose.setTextColorSelected(Color.RED);
@@ -102,17 +88,13 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
     public boolean update(float delta, boolean shouldHandleInput) {
         super.update(delta, shouldHandleInput);
 
-        if (titleNode.getHeight() != titleText.getHeight() || contents.getLocalPositionY() != titleNode.getHeight()) {
-            titleNode.setHeight(titleText.getHeight());
-            // titleText.setGraphicsCalculationsDirty();// Update text alignment.
+        titleNode.setWidth(getWidth());
+        contents.setWidth(titleNode.getWidth());
+        contents.setLocalPositionY(titleNode.getHeight() - 1);
+        setHeight(contents.getHeight() + titleNode.getHeight());
 
-            contents.setLocalPositionY(titleNode.getHeight() - 1);
-            setHeight(contents.getHeight() + titleNode.getHeight());
-
-            btnClose.setSize(titleText.getHeight(), titleText.getHeight());
-            btnClose.setLocalPositionX(titleNode.getWidth() - btnClose.getWidth());
-            // btnClose.getText().setAlignmentDirty();// Update text alignment.
-        }
+        btnClose.setSize(titleNode.getHeight(), titleNode.getHeight());
+        btnClose.setLocalPositionX(titleNode.getWidth() - btnClose.getWidth());
 
         if (shouldHandleInput)
             doInputLogic();
@@ -156,17 +138,17 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
      * 
      * @return the title node.
      */
-    public GuiContainer getTitleNode() {
+    public GuiLabel getTitleNode() {
         return titleNode;
     }
 
     /**
-     * Returns the title node.
+     * Returns the text node for the title.
      * 
-     * @return the title node.
+     * @return the text node for the title.
      */
     public GuiText getTitle() {
-        return titleText;
+        return getTitleNode().getTextNode();
     }
 
     /**
@@ -198,7 +180,7 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
 
     @Override
     public String toString() {
-        return String.format("%s [titleNode=%s, titleText=%s, btnClose=%s, contents=%s, clickOrigin=%s, isDragging=%s, backgroundColor=%s, outlineColor=%s, isVisible=%s, getOutlineColor()=%s, getBackgroundColor()=%s, getParentWidth()=%s, getParentHeight()=%s, isMouseOver()=%s, getLocalPositionX()=%s, getLocalPositionY()=%s, isKeepWithinParent()=%s, getWidth()=%s, getHeight()=%s, isEnabled()=%s, usePercentagePositions()=%s]", getClass().getSimpleName(), titleNode, titleText, btnClose, contents, clickOrigin, isDragging, backgroundColor, outlineColor, isVisible, getOutlineColor(), getBackgroundColor(), getParentWidth(), getParentHeight(), isMouseOver(), getLocalPositionX(), getLocalPositionY(), isKeepWithinParent(), getWidth(), getHeight(), isEnabled(), usePercentagePositions());
+        return String.format("%s [titleNode=%s, btnClose=%s, clickOrigin=%s, isDragging=%s, backgroundColor=%s, outlineColor=%s, outlineStroke=%s, isVisible=%s, getGlobalPosition()=%s, isEnabled()=%s, getLocalPositionX()=%s, getLocalPositionY()=%s, isKeepWithinParent()=%s, getWidth()=%s, getHeight()=%s, usePercentagePositions()=%s]", titleNode, btnClose, clickOrigin, isDragging, backgroundColor, outlineColor, outlineStroke, isVisible, getClass().getSimpleName(), getGlobalPosition(), isEnabled(), getLocalPositionX(), getLocalPositionY(), isKeepWithinParent(), getWidth(), getHeight(), usePercentagePositions());
     }
 
 }

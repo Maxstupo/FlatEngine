@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
-import com.github.maxstupo.flatengine.util.UtilGraphics;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
@@ -17,7 +16,7 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
 public class GuiContainer extends AbstractNode {
 
     /** The background color of this node. */
-    protected Color backgroundColor = UtilGraphics.changeAlpha(Color.DARK_GRAY, 127);
+    protected Color backgroundColor = new Color(127, 127, 127);
     /** The outline color of this node. */
     protected Color outlineColor = Color.BLACK;
 

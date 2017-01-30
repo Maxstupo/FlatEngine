@@ -284,21 +284,6 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
     }
 
     /**
-     * Sets the height of the list based on the number of rows given.
-     * 
-     * @param rows
-     *            the rows of items.
-     * @return this object for chaining.
-     */
-    public GuiList<T> setHeightByRows(int rows) {
-        int height = (getItemHeight() == -1) ? getCalculatedItemHeight() : getItemHeight();
-        setHeight(rows * height);
-
-        isItemNodesDirty = true;
-        return this;
-    }
-
-    /**
      * Returns the number of items that can fit within the list.
      * 
      * @return the number of items that can fit within the list.
