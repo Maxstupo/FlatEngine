@@ -44,7 +44,9 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
 
     /** The offset from the mouse cursor that the nameplate will be located. */
     protected final Vector2i nameplateOffset = new Vector2i(10, -20);
-    private final Vector2i holdingClickOrigin = new Vector2i();
+
+    /** The offset for the held item. */
+    protected final Vector2i holdingOffset = new Vector2i(-1, -1);
 
     private GuiItemSlot<T> slotHovered;
     private GuiItemSlot<T> oldSelectedSlot;
@@ -123,12 +125,8 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
                 if (slotLogic.doSlotLogic(getSlotHovered(), getItemHovered(), getHolding(), false, getMouse())) {
                     setNameplateDirty();
 
-                    if (!getHolding().isEmpty()) {
-                        Vector2i mpos = getSlotHovered().getLocalMousePosition();
-
-                        holdingClickOrigin.set(mpos.x, mpos.y);
+                    if (!getHolding().isEmpty())
                         holdingItemSlot.setContents(getHolding());
-                    }
 
                     onGridChange(getSlotHovered(), false);
                 }
@@ -145,7 +143,10 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
         if (!getHolding().isEmpty()) {
             Vector2i mpos = getLocalMousePosition();
 
-            holdingItemSlot.setLocalPosition(mpos.x - holdingClickOrigin.x, mpos.y - holdingClickOrigin.y);
+            int ox = (holdingOffset.x == -1) ? holdingItemSlot.getWidth() / 2 : holdingOffset.x;
+            int oy = (holdingOffset.y == -1) ? holdingItemSlot.getHeight() / 2 : holdingOffset.y;
+
+            holdingItemSlot.setLocalPosition(mpos.x - ox, mpos.y - oy);
             holdingItemSlot.setVisible(true);
         } else {
             holdingItemSlot.setVisible(false);
@@ -454,5 +455,16 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
     public GuiItemContainer<T> setSlotLogic(ISlotLogic slotLogic) {
         this.slotLogic = slotLogic;
         return this;
+    }
+
+    /**
+     * Returns the offset used for the item that is held.
+     * <p>
+     * Set x or y (or both) to -1 to use the center of the item icon.
+     * 
+     * @return the offset used for the item that is held.
+     */
+    public Vector2i getHoldingOffset() {
+        return holdingOffset;
     }
 }

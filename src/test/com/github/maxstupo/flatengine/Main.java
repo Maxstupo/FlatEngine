@@ -93,6 +93,16 @@ public class Main extends AbstractScreen {
             return "Item " + getId();
         }
 
+        @Override
+        public AbstractItemStack copy() {
+            return new IS(getId(), getAmount());
+        }
+
+        @Override
+        public int getMaxAmount() {
+            return 40;
+        }
+
     }
 
     GuiList<String> list;
