@@ -61,6 +61,7 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
             }
         };
 
+        // TODO: Replace title node from a GuiContainer to a GuiLabel as it works the same way for the GuiWindow.
         titleNode = new GuiContainer(screen, 0, 0, width, 0) {
 
             @Override

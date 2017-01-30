@@ -1,10 +1,33 @@
 package com.github.maxstupo.flatengine.item;
 
+import com.github.maxstupo.flatengine.hgui.GuiItemSlot;
+import com.github.maxstupo.flatengine.input.Mouse;
+
 /**
  * @author Maxstupo
  *
  */
-public class SlotLogic {// implements ISlotLogic {
+public class SlotLogic implements ISlotLogic {
+
+    @Override
+    public <T extends AbstractItemStack> boolean doSlotLogic(GuiItemSlot<T> slot, T item, T holding, boolean takeOnly, Mouse mouse) {
+        boolean didChange = false;
+
+        if (slot.isMouseClicked(Mouse.LEFT_CLICK)) {
+
+            if (holding.isEmpty() && !item.isEmpty()) { // Take a stack.
+                holding.set(item);
+                item.setEmpty();
+                didChange = true;
+            } else if (!holding.isEmpty() && item.isEmpty() && !takeOnly) { // Place a stack.
+                item.set(holding);
+                holding.setEmpty();
+                didChange = true;
+            }
+
+        }
+        return didChange;
+    }
 
 //@off
     /*

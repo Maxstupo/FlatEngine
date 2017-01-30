@@ -2,17 +2,17 @@ package com.github.maxstupo.flatengine.hgui;
 
 import com.github.maxstupo.flatengine.Sprite;
 import com.github.maxstupo.flatengine.hgui.AbstractAlignableGuiNode.Alignment;
-import com.github.maxstupo.flatengine.item.IItemStack;
+import com.github.maxstupo.flatengine.item.AbstractItemStack;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 
 /**
- * This GUI node represents a item slot, it can contain a stack of items defined by the interface {@link IItemStack}.
+ * This GUI node represents a item slot, it can contain a stack of items defined by the interface {@link AbstractItemStack}.
  * 
  * @author Maxstupo
  * @param <T>
- *            the item stack type.
+ *            the item stack type it must derive from {@link AbstractItemStack}.
  */
-public class GuiItemSlot<T extends IItemStack> extends GuiImage {
+public class GuiItemSlot<T extends AbstractItemStack> extends GuiImage {
 
     private int oldAmount;
     /** The item stack within this item slot. */
@@ -58,7 +58,7 @@ public class GuiItemSlot<T extends IItemStack> extends GuiImage {
     }
 
     /**
-     * Updates the text node with the amount within the {@link IItemStack}.
+     * Updates the text node with the amount within the {@link AbstractItemStack}.
      */
     protected void updateTextAmount() {
         if (getContents() != null) {

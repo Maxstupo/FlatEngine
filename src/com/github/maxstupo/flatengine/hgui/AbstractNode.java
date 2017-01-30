@@ -26,6 +26,7 @@ public abstract class AbstractNode {
     private final List<AbstractNode> children = new ArrayList<>();
 
     private final Vector2i globalPosition = new Vector2i();
+    private final Vector2i localMousePosition = new Vector2i();
     private float localPositionX = 0;
     private float localPositionY = 0;
     private int width = 0;
@@ -265,9 +266,20 @@ public abstract class AbstractNode {
             node.notifyChildrenOfChange(instigator);
     }
 
-    public void bringToFront(AbstractNode node) {
+    /**
+     * Brings the given node to the end of the children node list within this node. This allows changing the render order of children nodes.
+     * 
+     * @param node
+     *            the node to bring to the front.
+     * @return this object for chaining.
+     */
+    public AbstractNode bringToFront(AbstractNode node) {
+        if (!children.contains(node))
+            return this;
+
         children.remove(node);
         children.add(node);
+        return this;
     }
 
     /**
@@ -335,6 +347,18 @@ public abstract class AbstractNode {
             isPositionDirty = false;
         }
         return globalPosition;
+    }
+
+    /**
+     * Returns the local mouse position for this node.
+     * 
+     * @return the local mouse position for this node. The vector object is cached and reused.
+     */
+    public Vector2i getLocalMousePosition() {
+        Vector2i mpos = getMouse().getPosition();
+        Vector2i gpos = getGlobalPosition();
+        localMousePosition.set(mpos.x - gpos.x, mpos.y - gpos.y);
+        return localMousePosition;
     }
 
     /**

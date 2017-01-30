@@ -11,7 +11,7 @@ import com.github.maxstupo.flatengine.hgui.GuiList;
 import com.github.maxstupo.flatengine.hgui.GuiSelectionList;
 import com.github.maxstupo.flatengine.hgui.GuiWindow;
 import com.github.maxstupo.flatengine.input.Keyboard;
-import com.github.maxstupo.flatengine.item.IItemStack;
+import com.github.maxstupo.flatengine.item.AbstractItemStack;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.screen.ScreenManager;
 import com.github.maxstupo.flatengine.util.Util;
@@ -77,34 +77,20 @@ public class Main extends AbstractScreen {
         return items;
     }
 
-    public static class IS implements IItemStack {
-
-        private int id;
-        private int amt;
+    public static class IS extends AbstractItemStack {
 
         public IS(int id, int amt) {
-            this.id = id;
-            this.amt = amt;
-        }
-
-        @Override
-        public int getAmount() {
-            return amt;
+            super(id, amt);
         }
 
         @Override
         public String getIconId() {
-            return id + "";
+            return getId() + "";
         }
 
         @Override
         public String getName() {
-            return "Item " + id;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return getAmount() <= 0;
+            return "Item " + getId();
         }
 
     }
