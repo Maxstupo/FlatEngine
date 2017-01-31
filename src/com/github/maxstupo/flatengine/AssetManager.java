@@ -20,7 +20,8 @@ import com.github.maxstupo.flatengine.util.Util;
 import com.github.maxstupo.flatengine.util.UtilXML;
 
 /**
- *
+ * This class handles all assets within the game engine.
+ * 
  * @author Maxstupo
  */
 public class AssetManager {
@@ -30,10 +31,22 @@ public class AssetManager {
     private final Map<String, Font> fonts = new HashMap<>();
     private final Map<String, Sprite> sprites = new HashMap<>();
 
+    /**
+     * Create a new {@link AssetManager} object.
+     * 
+     * @param engine
+     *            the engine that owns this asset manager.
+     */
     public AssetManager(FlatEngine engine) {
         this.engine = engine;
     }
 
+    /**
+     * Loads sprites and fonts from an XML asset file.
+     * 
+     * @param path
+     *            the path to the XML file.
+     */
     public void loadAssets(String path) {
         engine.getLog().debug(getClass().getSimpleName(), "Loading assets from file: '{0}'", path);
         try {
@@ -69,6 +82,14 @@ public class AssetManager {
         }
     }
 
+    /**
+     * Register the given image with the given key.
+     * 
+     * @param key
+     *            the key.
+     * @param sprite
+     *            the image.
+     */
     public void registerSprite(String key, BufferedImage sprite) {
         if (key == null || sprite == null)
             return;
@@ -76,6 +97,12 @@ public class AssetManager {
         sprites.put(key, new Sprite(sprite, key));
     }
 
+    /**
+     * Register a true type font, the id of the font is the name of the given font file.
+     * 
+     * @param path
+     *            the path to the font file.
+     */
     public void registerFont(String path) {
         if (path == null)
             return;
@@ -98,18 +125,44 @@ public class AssetManager {
         }
     }
 
+    /**
+     * Clears all sprites from this asset manager.
+     */
     public void clear() {
         sprites.clear();
     }
 
+    /**
+     * Returns a sprite referenced by a given key.
+     * 
+     * @param key
+     *            the key of the sprite to return.
+     * @return the sprite.
+     */
     public Sprite getSprite(String key) {
         return sprites.get(key);
     }
 
+    /**
+     * Returns a font referenced by a given key.
+     * 
+     * @param key
+     *            the key of the font to return.
+     * @return the font.
+     */
     public Font getFont(String key) {
         return fonts.get(key);
     }
 
+    /**
+     * Returns a new font with the given size referenced by the give key.
+     * 
+     * @param key
+     *            the key of the font to return.
+     * @param size
+     *            the new font size.
+     * @return a new derived font object.
+     */
     public Font getFont(String key, float size) {
         Font font = getFont(key);
         if (font == null)
