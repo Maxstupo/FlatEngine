@@ -20,6 +20,8 @@ public class TiledMap {
     private final List<MapLayer> backgroundLayers = new ArrayList<>();
     private final List<MapLayer> foregroundLayers = new ArrayList<>();
 
+    private final TilesetStore tilesetStore = new TilesetStore();
+
     public TiledMap(String id, String name, int width, int height) {
         this.id = id;
         this.name = name;
@@ -66,5 +68,9 @@ public class TiledMap {
 
     public int getHeight() {
         return height;
+    }
+
+    public TilesetStore getTilesetStore() {
+        return tilesetStore;
     }
 }

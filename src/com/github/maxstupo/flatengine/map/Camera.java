@@ -31,13 +31,13 @@ public class Camera {
         this.position.y = y - viewportHeight / tileSize / 2;
     }
 
-    public void updateViewport(float width, float height) {
+    public void setViewport(float width, float height) {
         this.viewportWidth = width;
         this.viewportHeight = height;
     }
 
-    public void updateViewport(FlatEngine engine) {
-        updateViewport(engine.getWidth(), engine.getHeight());
+    public void setViewport(FlatEngine engine) {
+        setViewport(engine.getWidth(), engine.getHeight());
     }
 
     public int[][] getGridPoints(float gridWidth, float gridHeight) {
@@ -67,6 +67,30 @@ public class Camera {
 
     public boolean isOutOfBounds(float x, float y) {
         return (x < -tileSize || y < -(tileSize * 3f) || x > viewportWidth || y > viewportHeight);
+    }
+
+    public float getViewportWidth() {
+        return viewportWidth;
+    }
+
+    public void setViewportWidth(float viewportWidth) {
+        this.viewportWidth = viewportWidth;
+    }
+
+    public float getViewportHeight() {
+        return viewportHeight;
+    }
+
+    public void setViewportHeight(float viewportHeight) {
+        this.viewportHeight = viewportHeight;
+    }
+
+    public float getTileSize() {
+        return tileSize;
+    }
+
+    public void setTileSize(float tileSize) {
+        this.tileSize = tileSize;
     }
 
 }
