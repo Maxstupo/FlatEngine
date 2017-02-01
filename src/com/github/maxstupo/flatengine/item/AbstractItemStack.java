@@ -235,4 +235,31 @@ public abstract class AbstractItemStack {
         return true;
     }
 
+    /**
+     * Finds the next item stack within the 2D array.
+     * 
+     * @param stacks
+     *            the 2D item stack array.
+     * @param toFind
+     *            the item stack to find within the array.
+     * @param useEquals
+     *            if true the stacks will be compared for both stack size and id.
+     * @return the found item stack.
+     */
+    public static AbstractItemStack getNextStack(AbstractItemStack[][] stacks, AbstractItemStack toFind, boolean useEquals) {
+        for (int i = 0; i < stacks.length; i++) {
+            for (int j = 0; j < stacks[0].length; j++) {
+                AbstractItemStack stack = stacks[i][j];
+
+                if (useEquals && stack.equals(toFind)) {
+                    return stack;
+
+                } else if (!useEquals && stack.getId() == toFind.getId()) {
+                    return stack;
+
+                }
+            }
+        }
+        return null;
+    }
 }
