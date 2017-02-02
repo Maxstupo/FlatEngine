@@ -2,22 +2,16 @@ package test.com.github.maxstupo.flatengine;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.io.IOException;
 
 import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
-import com.github.maxstupo.flatengine.hgui.GuiItemContainer;
-import com.github.maxstupo.flatengine.hgui.GuiItemSlot;
-import com.github.maxstupo.flatengine.hgui.GuiList;
-import com.github.maxstupo.flatengine.hgui.GuiSelectionList;
-import com.github.maxstupo.flatengine.hgui.GuiWindow;
-import com.github.maxstupo.flatengine.input.Keyboard;
-import com.github.maxstupo.flatengine.item.AbstractItemStack;
-import com.github.maxstupo.flatengine.item.SlotLogic;
+import com.github.maxstupo.flatengine.map.Camera;
+import com.github.maxstupo.flatengine.map.TiledMap;
+import com.github.maxstupo.flatengine.map.layer.TileLayer;
+import com.github.maxstupo.flatengine.map.tile.Tileset;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.screen.ScreenManager;
 import com.github.maxstupo.flatengine.util.Util;
-import com.github.maxstupo.flatengine.util.math.Rand;
 import com.github.maxstupo.jflatlog.JFlatLog;
 
 /**
@@ -26,86 +20,34 @@ import com.github.maxstupo.jflatlog.JFlatLog;
  */
 public class Main extends AbstractScreen {
 
+    Camera camera = new Camera(32);
+    TiledMap map;
+
     public Main(ScreenManager screenManager) {
         super(screenManager);
         guiRoot.setBackgroundColor(Color.LIGHT_GRAY);
 
-        GuiWindow window = new GuiWindow(this, "Inventory", 400, 100, 400, 400 / 16 * 9);
-        window.setUsePercentagePositions(true);
-        window.setKeepWithinParent(true);
-
-        list = new GuiSelectionList<>(this, 10, 10, 150, 205);
-        list.addListener((executor, actionItem, action) -> {
-            System.out.println(actionItem + ", " + action);
-
-            executor.remove(actionItem);
-        });
-
-        for (int i = 0; i < 14; i++)
-            list.addItem("Item " + i);
-        window.add(list);
+        map = new TiledMap("apple", "Test map", 50, 50);
 
         try {
-            screenManager.getEngine().getAssetManager().registerSprite("1", Util.createImage("/potion_mana.png"));
-            screenManager.getEngine().getAssetManager().registerSprite("2", Util.createImage("/potion_mana2.png"));
-        } catch (IOException e) {
+            Tileset ts = new Tileset(0, "ts1", 32, 32, Util.createImage("/Tileset_Woodland.png"));
+            map.getTilesetStore().addTileset(ts, false);
+
+            Tileset ts1 = new Tileset(42, "apple", 32, 32, Util.createImage("/Tileset_Woodland.png"));
+            map.getTilesetStore().addTileset(ts1, false);
+
+            // map.getTilesetStore().recacheTiles();
+
+            TileLayer layer = new TileLayer(map, "Background", 1, false);
+            layer.fillRandom(32, 32, 32, 32, 6, 32, 13, 32, 32, 32, 32, 32, 32, 32, 20);
+
+            map.addBackgroundLayer(layer);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        IS holding = new IS(0, 0);
-
-        slot = new GuiItemContainer<>(this, 32, 32, 64, 5, get(), holding, false);
-
-        GuiItemSlot<IS> s = new GuiItemSlot<>(this, 280, 20, 64, new IS(2, 10), !false, new SlotLogic(), holding);
-        slot.addListener((executor, actionItem, action) -> {
-            System.out.println(actionItem.getName());
-        });
-        guiRoot.add(s);
-        guiRoot.add(slot);
-        guiRoot.add(window);
     }
-
-    GuiItemContainer<IS> slot;
-
-    public IS[][] get() {
-        IS[][] items = new IS[3][5];
-        for (int i = 0; i < items.length; i++) {
-            for (int j = 0; j < items[0].length; j++) {
-                items[i][j] = new IS(Rand.INSTANCE.nextIntRange(1, 2), Rand.INSTANCE.nextIntRange(0, 10));
-            }
-        }
-        return items;
-    }
-
-    public static class IS extends AbstractItemStack {
-
-        public IS(int id, int amt) {
-            super(id, amt);
-        }
-
-        @Override
-        public String getIconId() {
-            return getId() + "";
-        }
-
-        @Override
-        public String getName() {
-            return "Item " + getId();
-        }
-
-        @Override
-        public AbstractItemStack copy() {
-            return new IS(getId(), getAmount());
-        }
-
-        @Override
-        public int getMaxAmount() {
-            return 40;
-        }
-
-    }
-
-    GuiList<String> list;
 
     public static void main(String[] args) {
         JFlatLog.get().setLogLevel(JFlatLog.LEVEL_FINE);
@@ -125,27 +67,14 @@ public class Main extends AbstractScreen {
 
     @Override
     public void update(double delta) {
-        if (getKeyboard().isKeyDown(Keyboard.KEY_1)) {
-            // list.getDefaultItem().getTextNode().setAlignment(Alignment.MIDDLE_LEFT);
-            // list.setDirty();
-            slot.setEnabled(false);
-        }
-        if (getKeyboard().isKeyDown(Keyboard.KEY_C)) {
-            // list.clear();
-            slot.setSlotSize(slot.getSlotSize() - 1);
-        }
-        if (getKeyboard().isKeyDown(Keyboard.KEY_SPACE)) {
-            // list.addItem("Item - " + Rand.INSTANCE.nextIntRange(0, 100) + "");
-            slot.setContents(get());
-        }
-        if (getKeyboard().isKeyDown(Keyboard.KEY_S)) {
-            slot.setSpacing(slot.getSpacing() + 1);
-        }
+
     }
 
     @Override
     public void render(Graphics2D g) {
+        camera.setViewport(screenManager.getEngine());
 
+        map.render(g, camera);
     }
 
 }

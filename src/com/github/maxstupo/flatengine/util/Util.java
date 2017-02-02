@@ -75,4 +75,21 @@ public final class Util {
             return false;
         return i >= 0 && i < array.length && j >= 0 && j < array[0].length;
     }
+
+    /**
+     * Returns true if <code>i,j</code> are valid array indexes for the given 2D array.
+     * 
+     * @param array
+     *            The array to compare the index with.
+     * @param i
+     *            The index value to compare.
+     * @param j
+     *            The index value to compare.
+     * @return true if <code>i,j</code> are valid indexes.
+     */
+    public static boolean isValid(int[][] array, int i, int j) {
+        if (array == null)
+            return false;
+        return i >= 0 && i < array.length && j >= 0 && j < array[0].length;
+    }
 }

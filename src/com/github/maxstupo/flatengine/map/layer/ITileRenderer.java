@@ -6,6 +6,8 @@ import com.github.maxstupo.flatengine.map.Camera;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
+ * This interface allows {@link TileLayer}s to render each tile.
+ * 
  * @author Maxstupo
  *
  */
@@ -31,6 +33,6 @@ public interface ITileRenderer {
      * @param isFringe
      *            true if the sprite should be rendered at actual size, and not resized to the tile size.
      */
-    void renderTile(Graphics2D g, MapLayer layer, Camera camera, Vector2i pos, int gid, int i, int j, boolean isFringe);
+    void renderTile(Graphics2D g, TileLayer layer, Camera camera, Vector2i pos, int gid, int i, int j, boolean isFringe);
 
 }

@@ -1,0 +1,219 @@
+package com.github.maxstupo.flatengine.map.layer;
+
+import java.awt.AlphaComposite;
+import java.awt.Composite;
+import java.awt.Graphics2D;
+
+import com.github.maxstupo.flatengine.map.Camera;
+import com.github.maxstupo.flatengine.map.TiledMap;
+import com.github.maxstupo.flatengine.util.Util;
+import com.github.maxstupo.flatengine.util.math.Rand;
+import com.github.maxstupo.flatengine.util.math.UtilMath;
+import com.github.maxstupo.flatengine.util.math.Vector2i;
+
+/**
+ * This class represents a single layer of tiles arranged in a grid.
+ * 
+ * @author Maxstupo
+ */
+public class TileLayer {
+
+    /** The map that owns this layer. */
+    protected final TiledMap map;
+
+    /** The id of this layer. */
+    protected final String id;
+
+    /** The transparency of this layer. */
+    protected final float alpha;
+
+    /**
+     * If true the {@link ITileRenderer} that is set for this tile layer will render the actual size of the tile, instead of the tile size of the
+     * camera.
+     */
+    protected final boolean isFringe;
+
+    /** If this layer will be rendered. */
+    protected boolean isVisible;
+
+    /** A grid of global ids used to represent this tile map layer. */
+    protected final int[][] tiles;
+
+    /** The {@link AlphaComposite} used to apply transparency to this layer. */
+    protected final AlphaComposite composite;
+
+    /** The tile renderer used to render each tile of this layer. */
+    protected ITileRenderer tileRenderer = new TileRenderer();
+
+    /**
+     * Create a new {@link TileLayer} object.
+     * 
+     * @param map
+     *            the map that owns this layer.
+     * @param id
+     *            the id of this layer.
+     * @param alpha
+     *            a value between 0.0 and 1.0, representing the transparency of this layer.
+     * @param isFringe
+     *            true the {@link ITileRenderer} that is set for this tile layer will render the actual size of the tile, instead of the tile size of
+     *            the camera.
+     */
+    public TileLayer(TiledMap map, String id, float alpha, boolean isFringe) {
+        this.map = map;
+        this.id = id;
+        this.alpha = UtilMath.clampF(alpha, 0, 1);
+        this.isFringe = isFringe;
+        this.isVisible = true;
+        this.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, UtilMath.clampF(alpha, 0, 1));
+
+        this.tiles = new int[map.getWidth()][map.getHeight()];
+    }
+
+    /**
+     * Render this tile layer.
+     * 
+     * @param g
+     *            the graphics context to draw to.
+     * @param camera
+     *            the camera.
+     */
+    public void render(Graphics2D g, Camera camera) {
+        if (alpha <= 0 || !isVisible)
+            return;
+
+        Composite defaultComposite = g.getComposite();
+        {
+            g.setComposite(composite);
+
+            int[][] points = camera.getGridPoints(map.getWidth(), map.getHeight());
+
+            for (int x = points[0][0]; x < points[0][1]; x++) {
+                for (int y = points[1][0]; y < points[1][1]; y++) {
+
+                    Vector2i pos = camera.getRenderLocation(x, y);
+                    if (camera.isOutOfBounds(pos))
+                        continue;
+
+                    tileRenderer.renderTile(g, this, camera, pos, tiles[x][y], x, y, isFringe());
+                }
+            }
+        }
+        g.setComposite(defaultComposite);
+    }
+
+    /**
+     * Sets the tile renderer for this map layer, if null is given {@link TileRenderer} is used.
+     * 
+     * @param tileRenderer
+     *            the tile renderer.
+     */
+    public void setTileRenderer(ITileRenderer tileRenderer) {
+        this.tileRenderer = (tileRenderer != null) ? tileRenderer : new TileRenderer();
+    }
+
+    /**
+     * Returns true if the {@link ITileRenderer} that is set for this tile layer will render the actual size of the tile, or false if the tile size of
+     * the camera is used instead.
+     * 
+     * @return true if this layer is a fringe layer.
+     */
+    public boolean isFringe() {
+        return isFringe;
+    }
+
+    /**
+     * Returns the {@link AlphaComposite} used to apply transparency to this layer.
+     * 
+     * @return the {@link AlphaComposite} used to apply transparency to this layer.
+     */
+    public AlphaComposite getComposite() {
+        return composite;
+    }
+
+    /**
+     * Returns the id of this layer.
+     * 
+     * @return the id of this layer.
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Returns the transparency of this layer.
+     * 
+     * @return the transparency of this layer, a value between 0.0 and 1.0
+     */
+    public float getAlpha() {
+        return alpha;
+    }
+
+    /**
+     * Returns the map that owns this layer.
+     * 
+     * @return the map that owns this layer.
+     */
+    public TiledMap getMap() {
+        return map;
+    }
+
+    /**
+     * Returns the grid of global ids used to represent this tile map layer.
+     * 
+     * @return the grid of global ids used to represent this tile map layer.
+     */
+    public int[][] getTiles() {
+        return tiles;
+    }
+
+    /**
+     * Returns true if this layer will be rendered.
+     * 
+     * @return true if this layer will be rendered.
+     */
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    /**
+     * Sets if this layer will be rendered.
+     * 
+     * @param isVisible
+     *            true to render this layer.
+     */
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+    }
+
+    /**
+     * Sets the tile at the given x,y position.
+     * 
+     * @param x
+     *            the x tile position.
+     * @param y
+     *            the y tile position.
+     * @param gid
+     *            the global tile id.
+     */
+    public void setTileAt(int x, int y, int gid) {
+        if (!Util.isValid(tiles, x, y))
+            return;
+        tiles[x][y] = gid;
+    }
+
+    // XXX: Debug method
+    @SuppressWarnings("javadoc")
+    public void fillRandom(int... gid) {
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[0].length; j++)
+                tiles[i][j] = gid[Rand.INSTANCE.nextIntRange(0, gid.length - 1)];
+        }
+    }
+
+    // XXX: Debug method
+    @SuppressWarnings("javadoc")
+    public void fill(int gid) {
+        fillRandom(gid, gid);
+    }
+
+}

@@ -7,14 +7,15 @@ import com.github.maxstupo.flatengine.map.Camera;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
+ * This class is a basic implementation of {@link ITileRenderer}.
+ * 
  * @author Maxstupo
- *
  */
 public class TileRenderer implements ITileRenderer {
 
     @Override
-    public void renderTile(Graphics2D g, MapLayer layer, Camera camera, Vector2i pos, int gid, int i, int j, boolean isFringe) {
-        Sprite spr = layer.getMap().getTilesetStore().getSpriteByGlobalId(gid);
+    public void renderTile(Graphics2D g, TileLayer layer, Camera camera, Vector2i pos, int gid, int i, int j, boolean isFringe) {
+        Sprite spr = layer.getMap().getTilesetStore().getTileByGlobalId(gid);
 
         if (spr != null) {
             if (isFringe) {
