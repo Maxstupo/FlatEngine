@@ -123,59 +123,52 @@ public class TiledMapReader {
     private void readTilesets(TiledMap map, Document doc) {
         Node node;
         NodeList nList = UtilXML.xpathGetNodeList(doc, "map/tileset");
+
         for (int i = 0; (node = nList.item(i)) != null; i++) {
             final int firstgid = (int) UtilXML.xpathGetNumber(node, "@firstgid", -1);
             final String source = UtilXML.xpathGetString(node, "@source", null);
 
-            if (firstgid != -1) {
+            if (source != null && !source.isEmpty()) { // Load a tsx file.
                 try {
-                    readTileset(map, firstgid, source);
+
+                    Document tilesetDoc = UtilXML.loadDocument(source);
+
+                    readTileset(map, firstgid, UtilXML.xpathGetNode(tilesetDoc, "tileset"));
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+            } else { // Load embedded tileset.
+                readTileset(map, firstgid, node);
             }
+
         }
     }
 
-    private void readTileset(TiledMap map, int firstgid, String source) throws Exception {
-        Document doc;
+    private void readTileset(TiledMap map, int firstgid, Node node) {
 
-        // TODO: Detect if tile set is a TSX file or just an image.
+        final int tileWidth = (int) UtilXML.xpathGetNumber(node, "@tilewidth", 0);
+        final int tileHeight = (int) UtilXML.xpathGetNumber(node, "@tileheight", 0);
+        final int tileSpacing = (int) UtilXML.xpathGetNumber(node, "@spacing", 0);
+        final int tileMargin = (int) UtilXML.xpathGetNumber(node, "@margin", 0);
+        final String name = UtilXML.xpathGetString(node, "@name", null);
+
+        Node imageNode = UtilXML.xpathGetNode(node, "image");
+        final String src = UtilXML.xpathGetString(imageNode, "@source", null);
+        final String trans = UtilXML.xpathGetString(imageNode, "@trans", null);
+        final Color color = Util.hexToColor(trans);
 
         try {
-            doc = UtilXML.loadDocument(source);
-        } catch (Exception e) {
-            throw new Exception("Failed to read .tsx file! " + source, e);
+            BufferedImage image = Util.createImage(src, color);
+            Tileset tileset = new Tileset(firstgid, name, tileWidth, tileHeight, tileSpacing, tileMargin, image);
+
+            map.getTilesetStore().addTileset(tileset, true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        Node node;
-        NodeList nList = UtilXML.xpathGetNodeList(doc, "tileset");
-        for (int i = 0; (node = nList.item(i)) != null; i++) {
-
-            // final int firstgid = (int) UtilXML.xmlGetNumber(path, node, "@firstgid", 0);
-            final int tileWidth = (int) UtilXML.xpathGetNumber(node, "@tilewidth", 0);
-            final int tileHeight = (int) UtilXML.xpathGetNumber(node, "@tileheight", 0);
-            final int tileSpacing = (int) UtilXML.xpathGetNumber(node, "@spacing", 0);
-            final int tileMargin = (int) UtilXML.xpathGetNumber(node, "@margin", 0);
-            String name = UtilXML.xpathGetString(node, "@name", null);
-
-            Node imageNode = UtilXML.xpathGetNode(node, "image");
-            String src = UtilXML.xpathGetString(imageNode, "@source", null);
-            String trans = UtilXML.xpathGetString(imageNode, "@trans", null);
-            Color color = Util.hexToColor(trans);
-            // TODO: Use the tile set transparent color.
-
-            try {
-                BufferedImage image = Util.createImage(src, color);
-                Tileset tileset = new Tileset(firstgid, name, tileWidth, tileHeight, tileSpacing, tileMargin, image);
-
-                map.getTilesetStore().addTileset(tileset, true);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
     }
 
     private TiledMap createBlankMap(String id, Document doc) throws RuntimeException {

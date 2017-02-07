@@ -40,6 +40,7 @@ public final class Util {
 
             img = ImageIO.read(file);
         }
+        // TODO: Implement transparent color.
 
         BufferedImage bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
         bufferedImage.getGraphics().drawImage(img, 0, 0, null);
