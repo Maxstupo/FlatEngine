@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 
 import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
+import com.github.maxstupo.flatengine.input.Keyboard;
 import com.github.maxstupo.flatengine.map.Camera;
 import com.github.maxstupo.flatengine.map.TiledMap;
 import com.github.maxstupo.flatengine.map.reader.TiledMapReader;
@@ -66,14 +67,41 @@ public class Main extends AbstractScreen {
     }
 
     @Override
-    public void update(double delta) {
+    public void update(float delta) {
 
         camera.setViewport(screenManager.getEngine());
 
-        camera.updatePosition(20, 90);
+        // camera.updatePosition(20, 90);
         camera.setTileSize(32);
 
+        x += vx * delta;
+        y += vy * delta;
+
+        // System.out.println(camera.getLocation().x + " -> " + x);
+        camera.targetPositionUsingLerp(x, y, delta);
+        camera.clamp(map.getWidth(), map.getHeight());
+        camera.setSmoothing(0.1f);
+
+        float speed = 0.1f;
+        if (getKeyboard().isKeyHeld(Keyboard.KEY_W)) {
+            vy = -speed;
+        } else if (getKeyboard().isKeyHeld(Keyboard.KEY_S)) {
+            vy = speed;
+        } else {
+            vy = 0;
+        }
+
+        if (getKeyboard().isKeyHeld(Keyboard.KEY_A)) {
+            vx = -speed;
+        } else if (getKeyboard().isKeyHeld(Keyboard.KEY_D)) {
+            vx = speed;
+        } else {
+            vx = 0;
+        }
     }
+
+    float x = 36, y = 90;
+    float vx, vy;
 
     @Override
     public void render(Graphics2D g) {

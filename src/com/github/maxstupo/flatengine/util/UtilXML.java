@@ -96,7 +96,8 @@ public final class UtilXML {
     public static String xpathGetString(Object doc, String xpath, String defaultValue) {
         XPathExpression expr = createXPathExpression(xpath);
         try {
-            return (String) expr.evaluate(doc, XPathConstants.STRING);
+            String str = (String) expr.evaluate(doc, XPathConstants.STRING);
+            return (str == null || str.isEmpty()) ? defaultValue : str;
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }

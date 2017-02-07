@@ -184,18 +184,18 @@ public final class UtilMath {
     }
 
     /**
-     * Returns a value between a and b lerped by f.
+     * Returns a value between fromValue and toValue.
      * 
-     * @param a
+     * @param fromValue
      *            the first value.
-     * @param b
+     * @param toValue
      *            the second value.
-     * @param f
+     * @param progress
      *            lerp amount.
-     * @return a value between a and b lerped by f.
+     * @return a value between fromValue and toValue.
      */
-    public static float lerpF(float a, float b, float f) {
-        return (a * (1.0f - f)) + (b * f);
+    public static float lerpF(float fromValue, float toValue, float progress) {
+        return fromValue + (toValue - fromValue) * progress;
     }
 
     /**

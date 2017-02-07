@@ -42,7 +42,7 @@ public abstract class AbstractScreen {
      * @param delta
      *            the delta time.
      */
-    protected abstract void update(double delta);
+    protected abstract void update(float delta);
 
     /**
      * All rendering code for this screen goes within this method.

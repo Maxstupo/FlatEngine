@@ -73,11 +73,11 @@ public class TiledMap {
         if (backgroundColor != null) {
             int[][] points = camera.getGridPoints(width, height);
 
-            Vector2i pos1 = camera.getRenderLocation(points[0][0], points[1][0]);
+            // Vector2i pos1 = camera.getRenderLocation(points[0][0], points[1][0]);
             Vector2i pos2 = camera.getRenderLocation(points[0][1], points[1][1]);
 
             g.setColor(backgroundColor);
-            g.fillRect(pos1.x, pos1.y, pos1.x + pos2.x, pos1.y + pos2.y);
+            g.fillRect(0, 0, pos2.x, pos2.y);
         }
 
         for (TileLayer layer : backgroundLayers)

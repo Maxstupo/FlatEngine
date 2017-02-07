@@ -174,7 +174,7 @@ public class TiledMapReader {
     private TiledMap createBlankMap(String id, Document doc) throws RuntimeException {
         int width = (int) UtilXML.xpathGetNumber(doc, "map/@width", -1);
         int height = (int) UtilXML.xpathGetNumber(doc, "map/@height", -1);
-        String color = UtilXML.xpathGetString(doc, "map/@backgroundColor", "#000000");
+        String color = UtilXML.xpathGetString(doc, "map/@backgroundColor", "#ffffff");
         Color backgroundColor = Util.hexToColor(color);
 
         if (width == -1 || height == -1)
