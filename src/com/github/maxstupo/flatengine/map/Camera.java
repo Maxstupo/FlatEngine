@@ -2,6 +2,7 @@
 package com.github.maxstupo.flatengine.map;
 
 import com.github.maxstupo.flatengine.FlatEngine;
+import com.github.maxstupo.flatengine.util.math.UtilMath;
 import com.github.maxstupo.flatengine.util.math.Vector2f;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
@@ -29,6 +30,8 @@ public class Camera {
     public void updatePosition(float x, float y) {
         this.position.x = x - viewportWidth / tileSize / 2;
         this.position.y = y - viewportHeight / tileSize / 2;
+        this.position.x = UtilMath.clampF(position.x, 0, 1000000);
+        this.position.y = UtilMath.clampF(position.y, 0, 1000000);
     }
 
     public void setViewport(float width, float height) {

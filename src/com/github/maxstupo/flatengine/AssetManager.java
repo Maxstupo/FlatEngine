@@ -69,7 +69,7 @@ public class AssetManager {
                 String key = UtilXML.xpathGetString(node, "@key", null);
                 String spritePath = UtilXML.xpathGetString(node, "@path", null);
 
-                BufferedImage sprite = Util.createImage(spritePath);
+                BufferedImage sprite = Util.createImage(spritePath, null);
                 registerSprite(key, sprite);
             }
 

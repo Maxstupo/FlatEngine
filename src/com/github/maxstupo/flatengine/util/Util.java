@@ -1,5 +1,6 @@
 package com.github.maxstupo.flatengine.util;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
@@ -25,11 +26,13 @@ public final class Util {
      * 
      * @param path
      *            the path to the image.
+     * @param transparentColor
+     *            the color that will be transparent.
      * @return the {@link BufferedImage} of the given path.
      * @throws IOException
      *             if an error occurs.
      */
-    public static BufferedImage createImage(String path) throws IOException {
+    public static BufferedImage createImage(String path, Color transparentColor) throws IOException {
         Image img = null;
         try (InputStream file = Util.class.getResourceAsStream(path)) {
             if (file == null)
@@ -91,5 +94,23 @@ public final class Util {
         if (array == null)
             return false;
         return i >= 0 && i < array.length && j >= 0 && j < array[0].length;
+    }
+
+    /**
+     * Returns a new color representing the given hex value. If the given string is null or empty, null will be returned.
+     * 
+     * @param hex
+     *            the hex value representing the new color.
+     * @return a new color representing the given hex value.
+     */
+    public static Color hexToColor(String hex) {
+        if (hex == null || hex.isEmpty())
+            return null;
+
+        if (hex.startsWith("#"))
+            hex = hex.substring(1);
+
+        int colorInt = Integer.parseInt(hex, 16);
+        return new Color(colorInt);
     }
 }

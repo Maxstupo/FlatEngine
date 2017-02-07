@@ -1,11 +1,13 @@
 package com.github.maxstupo.flatengine.map;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.github.maxstupo.flatengine.map.layer.TileLayer;
 import com.github.maxstupo.flatengine.map.tile.TilesetStore;
+import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
  * This class represents a tiled map, the map is made of tiled layers, each layer can be placed in the background (rendered behind all entities) or
@@ -27,10 +29,15 @@ public class TiledMap {
     /** The height of this map in tiles. */
     protected final int height;
 
+    /** The background color of this map, rendered before all map layers. */
+    protected Color backgroundColor;
+
     private final List<TileLayer> backgroundLayers = new ArrayList<>();
     private final List<TileLayer> foregroundLayers = new ArrayList<>();
 
     private final TilesetStore tilesetStore = new TilesetStore();
+
+    private final MapProperties properties;
 
     /**
      * Create a new {@link TiledMap} object.
@@ -43,12 +50,15 @@ public class TiledMap {
      *            the width of this map in tiles.
      * @param height
      *            the height of this map in tiles.
+     * @param properties
+     *            the properties of this map.
      */
-    public TiledMap(String id, String name, int width, int height) {
+    public TiledMap(String id, String name, int width, int height, MapProperties properties) {
         this.id = id;
         this.name = name;
         this.width = width;
         this.height = height;
+        this.properties = properties;
     }
 
     /**
@@ -60,6 +70,16 @@ public class TiledMap {
      *            the camera.
      */
     public void render(Graphics2D g, Camera camera) {
+        if (backgroundColor != null) {
+            int[][] points = camera.getGridPoints(width, height);
+
+            Vector2i pos1 = camera.getRenderLocation(points[0][0], points[1][0]);
+            Vector2i pos2 = camera.getRenderLocation(points[0][1], points[1][1]);
+
+            g.setColor(backgroundColor);
+            g.fillRect(pos1.x, pos1.y, pos1.x + pos2.x, pos1.y + pos2.y);
+        }
+
         for (TileLayer layer : backgroundLayers)
             layer.render(g, camera);
 
@@ -67,6 +87,16 @@ public class TiledMap {
 
         for (TileLayer layer : foregroundLayers)
             layer.render(g, camera);
+    }
+
+    /**
+     * Set the background color of this tiled map, set to null to disable.
+     * 
+     * @param backgroundColor
+     *            the background color.
+     */
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 
     /**
@@ -163,4 +193,19 @@ public class TiledMap {
     public TilesetStore getTilesetStore() {
         return tilesetStore;
     }
+
+    /**
+     * Returns the properties of this map.
+     * 
+     * @return the properties of this map.
+     */
+    public MapProperties getProperties() {
+        return properties;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("TiledMap [id=%s, name=%s, width=%s, height=%s, backgroundColor=%s]", id, name, width, height, backgroundColor);
+    }
+
 }

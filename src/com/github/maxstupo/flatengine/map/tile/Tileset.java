@@ -31,10 +31,12 @@ public class Tileset {
      *            the width in pixels for each tile.
      * @param tileHeight
      *            the height in pixels for each tile.
+     * @param tileSpacing
+     * @param tileMargin
      * @param tileset
      *            the tileset image.
      */
-    public Tileset(int firstGid, String name, int tileWidth, int tileHeight, BufferedImage tileset) {
+    public Tileset(int firstGid, String name, int tileWidth, int tileHeight, int tileSpacing, int tileMargin, BufferedImage tileset) {
         this.firstGid = firstGid;
         this.name = name;
         this.tileWidth = tileWidth;
@@ -45,7 +47,7 @@ public class Tileset {
         for (int j = 0; j < tileset.getHeight() / tileHeight; j++) {
             for (int i = 0; i < tileset.getWidth() / tileWidth; i++) {
 
-                BufferedImage tileImage = tileset.getSubimage(i * tileWidth, j * tileHeight, tileWidth, tileHeight);
+                BufferedImage tileImage = tileset.getSubimage(i * (tileWidth + tileSpacing), j * (tileHeight + tileSpacing), tileWidth, tileHeight);
 
                 tiles[index++] = new Sprite(tileImage, name + "_" + (firstGid + index));
             }

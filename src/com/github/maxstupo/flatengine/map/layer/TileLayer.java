@@ -27,12 +27,6 @@ public class TileLayer {
     /** The transparency of this layer. */
     protected final float alpha;
 
-    /**
-     * If true the {@link ITileRenderer} that is set for this tile layer will render the actual size of the tile, instead of the tile size of the
-     * camera.
-     */
-    protected final boolean isFringe;
-
     /** If this layer will be rendered. */
     protected boolean isVisible;
 
@@ -54,15 +48,12 @@ public class TileLayer {
      *            the id of this layer.
      * @param alpha
      *            a value between 0.0 and 1.0, representing the transparency of this layer.
-     * @param isFringe
-     *            true the {@link ITileRenderer} that is set for this tile layer will render the actual size of the tile, instead of the tile size of
-     *            the camera.
+     * 
      */
-    public TileLayer(TiledMap map, String id, float alpha, boolean isFringe) {
+    public TileLayer(TiledMap map, String id, float alpha) {
         this.map = map;
         this.id = id;
         this.alpha = UtilMath.clampF(alpha, 0, 1);
-        this.isFringe = isFringe;
         this.isVisible = true;
         this.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, UtilMath.clampF(alpha, 0, 1));
 
@@ -86,7 +77,7 @@ public class TileLayer {
             g.setComposite(composite);
 
             int[][] points = camera.getGridPoints(map.getWidth(), map.getHeight());
-
+            // System.out.println(points[0][1] - points[0][0]);
             for (int x = points[0][0]; x < points[0][1]; x++) {
                 for (int y = points[1][0]; y < points[1][1]; y++) {
 
@@ -94,7 +85,7 @@ public class TileLayer {
                     if (camera.isOutOfBounds(pos))
                         continue;
 
-                    tileRenderer.renderTile(g, this, camera, pos, tiles[x][y], x, y, isFringe());
+                    tileRenderer.renderTile(g, this, camera, pos, tiles[x][y], x, y, false);
                 }
             }
         }
@@ -109,16 +100,6 @@ public class TileLayer {
      */
     public void setTileRenderer(ITileRenderer tileRenderer) {
         this.tileRenderer = (tileRenderer != null) ? tileRenderer : new TileRenderer();
-    }
-
-    /**
-     * Returns true if the {@link ITileRenderer} that is set for this tile layer will render the actual size of the tile, or false if the tile size of
-     * the camera is used instead.
-     * 
-     * @return true if this layer is a fringe layer.
-     */
-    public boolean isFringe() {
-        return isFringe;
     }
 
     /**
@@ -214,6 +195,11 @@ public class TileLayer {
     @SuppressWarnings("javadoc")
     public void fill(int gid) {
         fillRandom(gid, gid);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("TileLayer [map=%s, id=%s, alpha=%s, isVisible=%s, tileRenderer=%s]", map, id, alpha, isVisible, tileRenderer.getClass().getSimpleName());
     }
 
 }

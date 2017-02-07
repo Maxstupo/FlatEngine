@@ -7,11 +7,9 @@ import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
 import com.github.maxstupo.flatengine.map.Camera;
 import com.github.maxstupo.flatengine.map.TiledMap;
-import com.github.maxstupo.flatengine.map.layer.TileLayer;
-import com.github.maxstupo.flatengine.map.tile.Tileset;
+import com.github.maxstupo.flatengine.map.reader.TiledMapReader;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.screen.ScreenManager;
-import com.github.maxstupo.flatengine.util.Util;
 import com.github.maxstupo.jflatlog.JFlatLog;
 
 /**
@@ -27,21 +25,23 @@ public class Main extends AbstractScreen {
         super(screenManager);
         guiRoot.setBackgroundColor(Color.LIGHT_GRAY);
 
-        map = new TiledMap("apple", "Test map", 50, 50);
+        // map = new TiledMap("apple", "Test map", 50, 50);
 
         try {
-            Tileset ts = new Tileset(0, "ts1", 32, 32, Util.createImage("/Tileset_Woodland.png"));
-            map.getTilesetStore().addTileset(ts, false);
+            map = TiledMapReader.get().load("asiod", "010-1.tmx");
 
-            Tileset ts1 = new Tileset(42, "apple", 32, 32, Util.createImage("/Tileset_Woodland.png"));
-            map.getTilesetStore().addTileset(ts1, false);
+            //// Tileset ts = new Tileset(0, "ts1", 32, 32, Util.createImage("/Tileset_Woodland.png"));
+            // map.getTilesetStore().addTileset(ts, false);
+
+            // Tileset ts1 = new Tileset(42, "apple", 32, 32, Util.createImage("/Tileset_Woodland.png"));
+            // map.getTilesetStore().addTileset(ts1, false);
 
             // map.getTilesetStore().recacheTiles();
 
-            TileLayer layer = new TileLayer(map, "Background", 1, false);
-            layer.fillRandom(32, 32, 32, 32, 6, 32, 13, 32, 32, 32, 32, 32, 32, 32, 20);
+            // TileLayer layer = new TileLayer(map, "Background", 1);
+            // layer.fillRandom(32, 32, 32, 32, 6, 32, 13, 32, 32, 32, 32, 32, 32, 32, 20);
 
-            map.addBackgroundLayer(layer);
+            // map.addBackgroundLayer(layer);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,12 +68,16 @@ public class Main extends AbstractScreen {
     @Override
     public void update(double delta) {
 
+        camera.setViewport(screenManager.getEngine());
+
+        camera.updatePosition(20, 90);
+        camera.setTileSize(32);
+
     }
 
     @Override
     public void render(Graphics2D g) {
-        camera.setViewport(screenManager.getEngine());
-
+        // System.out.println("D");
         map.render(g, camera);
     }
 
