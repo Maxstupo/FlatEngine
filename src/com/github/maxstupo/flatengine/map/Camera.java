@@ -41,7 +41,7 @@ public class Camera {
      * @param tileSize
      *            the size of each tile in pixels.
      */
-    public Camera(float tileSize) {
+    public Camera(int tileSize) {
         this.tileSize = tileSize;
     }
 
@@ -98,10 +98,7 @@ public class Camera {
             targetPosition(x, y);
 
         } else {
-
-            // float n = 1f - (float) Math.pow(smoothing, 1f - deltaTime);
-
-            float n = smoothing;
+            float n = (float) (1f - Math.pow(smoothing, deltaTime));
 
             targetPosition(UtilMath.lerpF(oldTargetPosition.x, x, n), UtilMath.lerpF(oldTargetPosition.y, y, n));
         }
@@ -156,7 +153,7 @@ public class Camera {
      * @param height
      *            the height in pixels.
      */
-    public void setViewport(float width, float height) {
+    public void setViewport(int width, int height) {
         this.viewportWidth = width;
         this.viewportHeight = height;
     }
@@ -280,8 +277,8 @@ public class Camera {
      * 
      * @return the width of the viewport in pixels.
      */
-    public float getViewportWidth() {
-        return viewportWidth;
+    public int getViewportWidth() {
+        return (int) viewportWidth;
     }
 
     /**
@@ -290,7 +287,7 @@ public class Camera {
      * @param viewportWidth
      *            the width in pixels.
      */
-    public void setViewportWidth(float viewportWidth) {
+    public void setViewportWidth(int viewportWidth) {
         this.viewportWidth = viewportWidth;
     }
 
@@ -299,8 +296,8 @@ public class Camera {
      * 
      * @return the height of the viewport in pixels.
      */
-    public float getViewportHeight() {
-        return viewportHeight;
+    public int getViewportHeight() {
+        return (int) viewportHeight;
     }
 
     /**
@@ -309,7 +306,7 @@ public class Camera {
      * @param viewportHeight
      *            the height in pixels.
      */
-    public void setViewportHeight(float viewportHeight) {
+    public void setViewportHeight(int viewportHeight) {
         this.viewportHeight = viewportHeight;
     }
 
@@ -318,8 +315,8 @@ public class Camera {
      * 
      * @return the tile size in pixels.
      */
-    public float getTileSize() {
-        return tileSize;
+    public int getTileSize() {
+        return (int) tileSize;
     }
 
     /**
@@ -328,7 +325,7 @@ public class Camera {
      * @param tileSize
      *            the tile size in pixels.
      */
-    public void setTileSize(float tileSize) {
+    public void setTileSize(int tileSize) {
         this.tileSize = tileSize;
     }
 

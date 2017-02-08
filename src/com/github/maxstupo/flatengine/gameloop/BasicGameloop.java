@@ -27,13 +27,13 @@ public class BasicGameloop extends AbstractGameloop {
     public void run() {
         long lastLoopTime = System.nanoTime();
         while (isRunning()) {
-            long now = System.nanoTime();
-            long updateLength = now - lastLoopTime;
-            lastLoopTime = now;
-            float delta = updateLength / ((float) optimalTime);
+            long elapsedTime = System.nanoTime() - lastLoopTime;
+            lastLoopTime = System.nanoTime();
+
+            float delta = elapsedTime / 1000000000f;
 
             // update the frame counter
-            lastFpsTime += updateLength;
+            lastFpsTime += elapsedTime;
             fps++;
 
             // update our FPS counter if a second has passed since
@@ -43,7 +43,7 @@ public class BasicGameloop extends AbstractGameloop {
                 lastFpsTime = 0;
                 fps = 0;
             }
-
+            // System.out.println(delta);
             engine.update(delta);
 
             engine.render();

@@ -11,6 +11,8 @@ import com.github.maxstupo.flatengine.map.TiledMap;
 import com.github.maxstupo.flatengine.map.reader.TiledMapReader;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.screen.ScreenManager;
+import com.github.maxstupo.flatengine.util.math.UtilMath;
+import com.github.maxstupo.flatengine.util.math.Vector2i;
 import com.github.maxstupo.jflatlog.JFlatLog;
 
 /**
@@ -66,6 +68,9 @@ public class Main extends AbstractScreen {
 
     }
 
+    float v;
+    float oldx = 0;
+
     @Override
     public void update(float delta) {
 
@@ -77,12 +82,18 @@ public class Main extends AbstractScreen {
         x += vx * delta;
         y += vy * delta;
 
+        x = UtilMath.clampF(x, 0, map.getWidth());
+        y = UtilMath.clampF(y, 0, map.getHeight());
+
+        System.out.println(y);
+
         // System.out.println(camera.getLocation().x + " -> " + x);
         camera.targetPositionUsingLerp(x, y, delta);
         camera.clamp(map.getWidth(), map.getHeight());
-        camera.setSmoothing(0.1f);
 
-        float speed = 0.1f;
+        camera.setSmoothing(0.05f);
+
+        float speed = 10;
         if (getKeyboard().isKeyHeld(Keyboard.KEY_W)) {
             vy = -speed;
         } else if (getKeyboard().isKeyHeld(Keyboard.KEY_S)) {
@@ -107,6 +118,10 @@ public class Main extends AbstractScreen {
     public void render(Graphics2D g) {
         // System.out.println("D");
         map.render(g, camera);
+
+        Vector2i pos = camera.getRenderLocation(x, y);
+        g.setColor(Color.darkGray);
+        g.fillRect(pos.x, pos.y, camera.getTileSize(), camera.getTileSize());
     }
 
 }
