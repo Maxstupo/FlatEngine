@@ -2,6 +2,7 @@ package com.github.maxstupo.flatengine.map.reader;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
@@ -132,6 +133,8 @@ public class TiledMapReader {
                 try {
 
                     Document tilesetDoc = UtilXML.loadDocument(source);
+
+                    System.out.println(new File(source).getCanonicalPath());
 
                     readTileset(map, firstgid, UtilXML.xpathGetNode(tilesetDoc, "tileset"));
 

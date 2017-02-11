@@ -5,6 +5,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import com.github.maxstupo.flatengine.map.Camera;
+import com.github.maxstupo.flatengine.util.math.BasicShape;
+import com.github.maxstupo.flatengine.util.math.Circle;
+import com.github.maxstupo.flatengine.util.math.Rectangle;
+import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
  *
@@ -15,6 +22,39 @@ public final class UtilGraphics {
     private static final Dimension dimension = new Dimension(0, 0);
 
     private UtilGraphics() {
+    }
+
+    public static void drawShape(Graphics2D g, Camera camera, BasicShape shape, Color fillColor) {
+        if (fillColor != null)
+            g.setColor(fillColor);
+
+        if (shape instanceof Rectangle) {
+            Rectangle rect = (Rectangle) shape;
+
+            if (camera != null) {
+                Vector2i pos = camera.getRenderLocation(rect.getX(), rect.getY());
+
+                g.fillRect(pos.x, pos.y, (int) (rect.getWidth() * camera.getTileSize()), (int) (rect.getHeight() * camera.getTileSize()));
+            } else {
+
+                g.fillRect((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
+            }
+
+        } else if (shape instanceof Circle) {
+
+            Circle circle = (Circle) shape;
+
+            if (camera != null) {
+                Vector2i pos = camera.getRenderLocation(circle.getX() - circle.getRadius(), circle.getY() - circle.getRadius());
+
+                g.fillOval(pos.x, pos.y, (int) (circle.getDiameter() * camera.getTileSize()), (int) (circle.getDiameter() * camera.getTileSize()));
+            } else {
+
+                g.fillOval((int) (circle.getX() - circle.getRadius()), (int) (circle.getY() - circle.getRadius()), (int) circle.getDiameter(), (int) circle.getDiameter());
+            }
+
+        }
+
     }
 
     /**

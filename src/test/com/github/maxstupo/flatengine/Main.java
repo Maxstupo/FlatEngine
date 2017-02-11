@@ -11,8 +11,10 @@ import com.github.maxstupo.flatengine.map.TiledMap;
 import com.github.maxstupo.flatengine.map.reader.TiledMapReader;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.screen.ScreenManager;
+import com.github.maxstupo.flatengine.util.UtilGraphics;
+import com.github.maxstupo.flatengine.util.math.BasicShape;
+import com.github.maxstupo.flatengine.util.math.Circle;
 import com.github.maxstupo.flatengine.util.math.UtilMath;
-import com.github.maxstupo.flatengine.util.math.Vector2i;
 import com.github.maxstupo.jflatlog.JFlatLog;
 
 /**
@@ -68,15 +70,9 @@ public class Main extends AbstractScreen {
 
     }
 
-    float v;
-    float oldx = 0;
-
     @Override
     public void update(float delta) {
-
         camera.setViewport(screenManager.getEngine());
-
-        // camera.updatePosition(20, 90);
         camera.setTileSize(32);
 
         x += vx * delta;
@@ -85,15 +81,12 @@ public class Main extends AbstractScreen {
         x = UtilMath.clampF(x, 0, map.getWidth());
         y = UtilMath.clampF(y, 0, map.getHeight());
 
-        System.out.println(y);
-
-        // System.out.println(camera.getLocation().x + " -> " + x);
         camera.targetPositionUsingLerp(x, y, delta);
         camera.clamp(map.getWidth(), map.getHeight());
 
-        camera.setSmoothing(0.05f);
+        camera.setSmoothing(0.01f);
 
-        float speed = 10;
+        float speed = 2;
         if (getKeyboard().isKeyHeld(Keyboard.KEY_W)) {
             vy = -speed;
         } else if (getKeyboard().isKeyHeld(Keyboard.KEY_S)) {
@@ -111,17 +104,21 @@ public class Main extends AbstractScreen {
         }
     }
 
-    float x = 36, y = 90;
+    float x = 38, y = 90;
     float vx, vy;
 
     @Override
     public void render(Graphics2D g) {
-        // System.out.println("D");
         map.render(g, camera);
 
-        Vector2i pos = camera.getRenderLocation(x, y);
-        g.setColor(Color.darkGray);
-        g.fillRect(pos.x, pos.y, camera.getTileSize(), camera.getTileSize());
+        BasicShape r = new Circle(45, 92, 1f);
+        BasicShape playerShape = new Circle(x, y, 0.5f);
+
+        boolean c = r.contains(playerShape);
+
+        UtilGraphics.drawShape(g, camera, r, c ? Color.RED : Color.BLUE);
+        UtilGraphics.drawShape(g, camera, playerShape, Color.cyan);
+
     }
 
 }
