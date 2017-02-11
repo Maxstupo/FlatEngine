@@ -77,7 +77,7 @@ public abstract class AbstractScreen {
     }
 
     /**
-     * This method calls {@link #update(double)} and also updates the GUI. It's called by the {@link ScreenManager} that owns this screen.
+     * This method calls {@link #update(float)} and also updates the GUI. It's called by the {@link ScreenManager} that owns this screen.
      * <p>
      * Note: Don't override this unless you know what you are doing.
      * 

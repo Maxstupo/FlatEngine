@@ -8,7 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import com.github.maxstupo.flatengine.map.Camera;
-import com.github.maxstupo.flatengine.util.math.BasicShape;
+import com.github.maxstupo.flatengine.util.math.AbstractBasicShape;
 import com.github.maxstupo.flatengine.util.math.Circle;
 import com.github.maxstupo.flatengine.util.math.Rectangle;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
@@ -24,7 +24,19 @@ public final class UtilGraphics {
     private UtilGraphics() {
     }
 
-    public static void drawShape(Graphics2D g, Camera camera, BasicShape shape, Color fillColor) {
+    /**
+     * Renders the given shape filled with the given color.
+     * 
+     * @param g
+     *            the graphics context to draw to.
+     * @param camera
+     *            render to camera scale and location. Set to null to use pixels.
+     * @param shape
+     *            the shape to render.
+     * @param fillColor
+     *            the color the shape will be filled with.
+     */
+    public static void drawShape(Graphics2D g, Camera camera, AbstractBasicShape shape, Color fillColor) {
         if (fillColor != null)
             g.setColor(fillColor);
 

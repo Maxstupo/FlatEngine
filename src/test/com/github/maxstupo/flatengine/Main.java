@@ -13,7 +13,7 @@ import com.github.maxstupo.flatengine.map.reader.TiledMapReader;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.screen.ScreenManager;
 import com.github.maxstupo.flatengine.util.UtilGraphics;
-import com.github.maxstupo.flatengine.util.math.BasicShape;
+import com.github.maxstupo.flatengine.util.math.AbstractBasicShape;
 import com.github.maxstupo.flatengine.util.math.Circle;
 import com.github.maxstupo.flatengine.util.math.UtilMath;
 import com.github.maxstupo.jflatlog.JFlatLog;
@@ -92,8 +92,8 @@ public class Main extends AbstractScreen {
     public void render(Graphics2D g) {
         map.render(g, camera);
 
-        BasicShape r = new Circle(45 * 32, 92 * 32, 1f);
-        BasicShape playerShape = new Circle(x, y, 0.5f);
+        AbstractBasicShape r = new Circle(45 * 32, 92 * 32, 1f);
+        AbstractBasicShape playerShape = new Circle(x, y, 0.5f);
 
         boolean c = r.contains(playerShape);
 

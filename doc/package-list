@@ -4,6 +4,10 @@ com.github.maxstupo.flatengine.hgui
 com.github.maxstupo.flatengine.input
 com.github.maxstupo.flatengine.input.filter
 com.github.maxstupo.flatengine.item
+com.github.maxstupo.flatengine.map
+com.github.maxstupo.flatengine.map.layer
+com.github.maxstupo.flatengine.map.reader
+com.github.maxstupo.flatengine.map.tile
 com.github.maxstupo.flatengine.screen
 com.github.maxstupo.flatengine.util
 com.github.maxstupo.flatengine.util.math
