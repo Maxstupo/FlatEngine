@@ -22,8 +22,10 @@ import com.github.maxstupo.flatengine.util.UtilXML;
 /**
  * This class handles all assets within the game engine.
  * 
+ * @deprecated Needs rewrite.
  * @author Maxstupo
  */
+@Deprecated
 public class AssetManager {
 
     private final FlatEngine engine;
@@ -69,7 +71,7 @@ public class AssetManager {
                 String key = UtilXML.xpathGetString(node, "@key", null);
                 String spritePath = UtilXML.xpathGetString(node, "@path", null);
 
-                BufferedImage sprite = Util.createImage(spritePath, null);
+                BufferedImage sprite = Util.createImage(new File(spritePath), null);
                 registerSprite(key, sprite);
             }
 

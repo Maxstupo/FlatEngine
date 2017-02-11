@@ -38,20 +38,20 @@ public class TiledMapReader {
      * 
      * @param id
      *            the id of the map.
-     * @param path
+     * @param file
      *            the path to the map file.
      * @return a new map object loaded with the given map file.
      */
-    public TiledMap load(String id, String path) {
+    public TiledMap load(String id, File file) {
         try {
-            Document doc = UtilXML.loadDocument(path);
+            Document doc = UtilXML.loadDocument(file);
 
             if (!isTmxMap(doc))
                 throw new RuntimeException("XML file isn't formatted as a TMX map!");
 
             TiledMap map = createBlankMap(id, doc);
 
-            readTilesets(map, doc);
+            readTilesets(map, file, doc);
 
             readMapLayers(map, doc);
 
@@ -82,17 +82,19 @@ public class TiledMapReader {
             final String tileCsv = UtilXML.xpathGetString(node, "data", "").trim();
             loadTileDataCSV(layer, tileCsv);
 
-            if (layerName.toLowerCase().startsWith("over")) {
+            String layerId = layerName.toLowerCase();
+            if (layerId.startsWith("over") || layerId.startsWith("foreground")) {
                 map.addForegroundLayer(layer);
 
-            } else if (layerName.toLowerCase().startsWith("ground")) {
+            } else if (layerId.startsWith("ground") || layerId.startsWith("background")) {
                 map.addBackgroundLayer(layer);
 
+            } else if (layerId.startsWith("fringe")) {
+                System.err.println("Fringe layer hasn't been implemented yet! " + layer);
             } else {
-                System.out.println(layer);
+                System.out.println("Unknown layer: " + layer);
             }
         }
-
     }
 
     private void loadTileDataCSV(TileLayer layer, String tileCsv) {
@@ -121,7 +123,7 @@ public class TiledMapReader {
         return encoding.equalsIgnoreCase("csv");
     }
 
-    private void readTilesets(TiledMap map, Document doc) {
+    private void readTilesets(TiledMap map, File mapFile, Document doc) {
         Node node;
         NodeList nList = UtilXML.xpathGetNodeList(doc, "map/tileset");
 
@@ -131,25 +133,23 @@ public class TiledMapReader {
 
             if (source != null && !source.isEmpty()) { // Load a tsx file.
                 try {
+                    File tilesetFile = new File(mapFile.getParentFile(), source);
+                    Document tilesetDoc = UtilXML.loadDocument(tilesetFile);
 
-                    Document tilesetDoc = UtilXML.loadDocument(source);
-
-                    System.out.println(new File(source).getCanonicalPath());
-
-                    readTileset(map, firstgid, UtilXML.xpathGetNode(tilesetDoc, "tileset"));
+                    readTileset(map, firstgid, tilesetFile, UtilXML.xpathGetNode(tilesetDoc, "tileset"));
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             } else { // Load embedded tileset.
-                readTileset(map, firstgid, node);
+                readTileset(map, firstgid, mapFile.getParentFile(), node);
             }
 
         }
     }
 
-    private void readTileset(TiledMap map, int firstgid, Node node) {
+    private void readTileset(TiledMap map, int firstgid, File tilesetFile, Node node) {
 
         final int tileWidth = (int) UtilXML.xpathGetNumber(node, "@tilewidth", 0);
         final int tileHeight = (int) UtilXML.xpathGetNumber(node, "@tileheight", 0);
@@ -163,7 +163,10 @@ public class TiledMapReader {
         final Color color = Util.hexToColor(trans);
 
         try {
-            BufferedImage image = Util.createImage(src, color);
+
+            File imageFile = new File(tilesetFile.getParentFile(), src).getCanonicalFile();
+
+            BufferedImage image = Util.createImage(imageFile, color);
             Tileset tileset = new Tileset(firstgid, name, tileWidth, tileHeight, tileSpacing, tileMargin, image);
 
             map.getTilesetStore().addTileset(tileset, true);

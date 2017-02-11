@@ -2,6 +2,7 @@ package test.com.github.maxstupo.flatengine;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.File;
 
 import com.github.maxstupo.flatengine.FlatEngine;
 import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
@@ -23,34 +24,14 @@ import com.github.maxstupo.jflatlog.JFlatLog;
  */
 public class Main extends AbstractScreen {
 
-    Camera camera = new Camera(32);
-    TiledMap map;
+    private final Camera camera = new Camera(32);
+    private final TiledMap map;
 
     public Main(ScreenManager screenManager) {
         super(screenManager);
         guiRoot.setBackgroundColor(Color.LIGHT_GRAY);
 
-        // map = new TiledMap("apple", "Test map", 50, 50);
-
-        try {
-            map = TiledMapReader.get().load("asiod", "010-1.tmx");
-
-            //// Tileset ts = new Tileset(0, "ts1", 32, 32, Util.createImage("/Tileset_Woodland.png"));
-            // map.getTilesetStore().addTileset(ts, false);
-
-            // Tileset ts1 = new Tileset(42, "apple", 32, 32, Util.createImage("/Tileset_Woodland.png"));
-            // map.getTilesetStore().addTileset(ts1, false);
-
-            // map.getTilesetStore().recacheTiles();
-
-            // TileLayer layer = new TileLayer(map, "Background", 1);
-            // layer.fillRandom(32, 32, 32, 32, 6, 32, 13, 32, 32, 32, 32, 32, 32, 32, 20);
-
-            // map.addBackgroundLayer(layer);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        map = TiledMapReader.get().load("testmap", new File("testmap/010-1.tmx"));
 
     }
 

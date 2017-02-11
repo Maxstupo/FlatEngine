@@ -3,9 +3,8 @@ package com.github.maxstupo.flatengine.util;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -24,7 +23,7 @@ public final class Util {
     /**
      * Returns a {@link BufferedImage} using {@link Class#getResourceAsStream(String)}
      * 
-     * @param path
+     * @param file
      *            the path to the image.
      * @param transparentColor
      *            the color that will be transparent.
@@ -32,14 +31,10 @@ public final class Util {
      * @throws IOException
      *             if an error occurs.
      */
-    public static BufferedImage createImage(String path, Color transparentColor) throws IOException {
-        Image img = null;
-        try (InputStream file = Util.class.getResourceAsStream(path)) {
-            if (file == null)
-                throw new FileNotFoundException("Failed to find image:" + path);
+    public static BufferedImage createImage(File file, Color transparentColor) throws IOException {
 
-            img = ImageIO.read(file);
-        }
+        Image img = ImageIO.read(file);
+
         // TODO: Implement transparent color.
 
         BufferedImage bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
