@@ -86,7 +86,7 @@ public class Main extends AbstractScreen {
 
         camera.setSmoothing(0.01f);
 
-        float speed = 2;
+        float speed = 20;
         if (getKeyboard().isKeyHeld(Keyboard.KEY_W)) {
             vy = -speed;
         } else if (getKeyboard().isKeyHeld(Keyboard.KEY_S)) {
@@ -111,7 +111,7 @@ public class Main extends AbstractScreen {
     public void render(Graphics2D g) {
         map.render(g, camera);
 
-        BasicShape r = new Circle(45, 92, 1f);
+        BasicShape r = new Circle(45 * 32, 92 * 32, 1f);
         BasicShape playerShape = new Circle(x, y, 0.5f);
 
         boolean c = r.contains(playerShape);

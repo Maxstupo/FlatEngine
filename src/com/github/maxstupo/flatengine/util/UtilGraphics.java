@@ -45,12 +45,12 @@ public final class UtilGraphics {
             Circle circle = (Circle) shape;
 
             if (camera != null) {
-                Vector2i pos = camera.getRenderLocation(circle.getX() - circle.getRadius(), circle.getY() - circle.getRadius());
+                Vector2i pos = camera.getRenderLocation(circle.getX(), circle.getY());
 
                 g.fillOval(pos.x, pos.y, (int) (circle.getDiameter() * camera.getTileSize()), (int) (circle.getDiameter() * camera.getTileSize()));
             } else {
 
-                g.fillOval((int) (circle.getX() - circle.getRadius()), (int) (circle.getY() - circle.getRadius()), (int) circle.getDiameter(), (int) circle.getDiameter());
+                g.fillOval((int) circle.getX(), (int) circle.getY(), (int) circle.getDiameter(), (int) circle.getDiameter());
             }
 
         }
