@@ -3,8 +3,10 @@ package com.github.maxstupo.flatengine.map;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import com.github.maxstupo.flatengine.map.layer.AbstractMapLayer;
 import com.github.maxstupo.flatengine.map.layer.TileLayer;
 import com.github.maxstupo.flatengine.map.tile.TilesetStore;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
@@ -29,9 +31,16 @@ public class TiledMap {
     /** The height of this map in tiles. */
     protected final int height;
 
+    /** The width of each tile in pixels. */
+    protected final int tileWidth;
+
+    /** The height of each tile in pixels. */
+    protected final int tileHeight;
+
     /** The background color of this map, rendered before all map layers. */
     protected Color backgroundColor;
 
+    private final List<AbstractMapLayer> layers = new ArrayList<>();
     private final List<TileLayer> backgroundLayers = new ArrayList<>();
     private final List<TileLayer> foregroundLayers = new ArrayList<>();
 
@@ -50,14 +59,20 @@ public class TiledMap {
      *            the width of this map in tiles.
      * @param height
      *            the height of this map in tiles.
+     * @param tileWidth
+     *            the width of each tile in pixels.
+     * @param tileHeight
+     *            the height of each tile in pixels.
      * @param properties
      *            the properties of this map.
      */
-    public TiledMap(String id, String name, int width, int height, MapProperties properties) {
+    public TiledMap(String id, String name, int width, int height, int tileWidth, int tileHeight, MapProperties properties) {
         this.id = id;
         this.name = name;
         this.width = width;
         this.height = height;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
         this.properties = properties;
     }
 
@@ -90,6 +105,41 @@ public class TiledMap {
     }
 
     /**
+     * Calculates what {@link TileLayer}s should be rendered in the background and foreground, and caches them.
+     * <p>
+     * All tile layers starting with 'foreground' or 'over' will be rendered in the foreground (in front of all entities). <br>
+     * All tile layers starting with 'background' or 'ground' will be rendered in the background (behind all entities).<br>
+     * 
+     * <p>
+     * Note: Should be called after adding new {@link TileLayer}s.
+     */
+    public void calculateRenderableLayers() {
+        foregroundLayers.clear();
+        backgroundLayers.clear();
+
+        for (AbstractMapLayer layer : layers) {
+
+            if (!(layer instanceof TileLayer))
+                continue;
+            String id = layer.getId().toLowerCase();
+
+            if (id.startsWith("over") || id.startsWith("foreground")) {
+                foregroundLayers.add((TileLayer) layer);
+
+            } else if (id.startsWith("ground") || id.startsWith("background")) {
+                backgroundLayers.add((TileLayer) layer);
+
+            } else if (id.startsWith("fringe")) {
+                System.err.println("Fringe layer hasn't been implemented yet! " + layer);
+
+            } else {
+                System.out.println("Unknown layer: " + layer);
+
+            }
+        }
+    }
+
+    /**
      * Set the background color of this tiled map, set to null to disable.
      * 
      * @param backgroundColor
@@ -100,52 +150,17 @@ public class TiledMap {
     }
 
     /**
-     * Adds a background tile layer to this map. If null is given this method does nothing.
+     * Adds a map layer to this map. If null is given this method does nothing.
+     * <p>
+     * After adding a {@link TileLayer} object, calling {@link #calculateRenderableLayers()} is needed.
      * 
      * @param layer
      *            the layer.
      * @return this object for chaining.
      */
-    public TiledMap addBackgroundLayer(TileLayer layer) {
+    public TiledMap addLayer(AbstractMapLayer layer) {
         if (layer != null)
-            backgroundLayers.add(layer);
-        return this;
-    }
-
-    /**
-     * Adds a foreground tile layer to this map. If null is given this method does nothing.
-     * 
-     * @param layer
-     *            the layer.
-     * @return this object for chaining.
-     */
-    public TiledMap addForegroundLayer(TileLayer layer) {
-        if (layer != null)
-            foregroundLayers.add(layer);
-        return this;
-    }
-
-    /**
-     * Removes the given tile layer.
-     * 
-     * @param layer
-     *            the layer.
-     * @return this object for chaining.
-     */
-    public TiledMap removeBackgroundLayer(TileLayer layer) {
-        backgroundLayers.remove(layer);
-        return this;
-    }
-
-    /**
-     * Removes the given tile layer.
-     * 
-     * @param layer
-     *            the layer.
-     * @return this object for chaining.
-     */
-    public TiledMap removeForegroundLayer(TileLayer layer) {
-        foregroundLayers.remove(layer);
+            layers.add(layer);
         return this;
     }
 
@@ -208,4 +223,48 @@ public class TiledMap {
         return String.format("TiledMap [id=%s, name=%s, width=%s, height=%s, backgroundColor=%s]", id, name, width, height, backgroundColor);
     }
 
+    /**
+     * Returns the first layer that matches the given id, will be cast to the given type.
+     * 
+     * @param id
+     *            the id of the layer.
+     * @param clazz
+     *            the type of the layer.
+     * @return the first layer that matches the given id.
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends AbstractMapLayer> T getLayer(String id, Class<T> clazz) {
+        for (AbstractMapLayer layer : layers) {
+            if (layer.getId().equals(id))
+                return (T) layer;
+        }
+        return null;
+    }
+
+    /**
+     * Returns all layers within this map.
+     * 
+     * @return all layers within this map.
+     */
+    public List<AbstractMapLayer> getLayers() {
+        return Collections.unmodifiableList(layers);
+    }
+
+    /**
+     * Returns the height of each tile in pixels.
+     * 
+     * @return the height of each tile in pixels.
+     */
+    public int getTileHeight() {
+        return tileHeight;
+    }
+
+    /**
+     * Returns the width of each tile in pixels.
+     * 
+     * @return the width of each tile in pixels.
+     */
+    public int getTileWidth() {
+        return tileWidth;
+    }
 }

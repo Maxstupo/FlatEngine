@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="150" height="120" tilewidth="32" tileheight="32" nextobjectid="19">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="150" height="120" tilewidth="32" tileheight="32" nextobjectid="22">
  <properties>
   <property name="music" value="dimonds_cove"/>
   <property name="name" value="Woodland"/>
@@ -812,34 +812,6 @@
     <property name="monster_id" value="12"/>
    </properties>
   </object>
-  <object id="9" name="Snail" type="spawn" x="0" y="0">
-   <properties>
-    <property name="eA_spawn" value="50"/>
-    <property name="max_beings" value="20"/>
-    <property name="monster_id" value="39"/>
-   </properties>
-  </object>
-  <object id="10" name="SpikyMushroom" type="spawn" x="0" y="0">
-   <properties>
-    <property name="eA_spawn" value="50"/>
-    <property name="max_beings" value="45"/>
-    <property name="monster_id" value="17"/>
-   </properties>
-  </object>
-  <object id="11" name="LogHead" type="spawn" x="0" y="0">
-   <properties>
-    <property name="eA_spawn" value="100"/>
-    <property name="max_beings" value="40"/>
-    <property name="monster_id" value="23"/>
-   </properties>
-  </object>
-  <object id="12" name="Mouboo" type="spawn" x="0" y="0">
-   <properties>
-    <property name="eA_death" value="10"/>
-    <property name="max_beings" value="15"/>
-    <property name="monster_id" value="26"/>
-   </properties>
-  </object>
   <object id="13" name="MauvePlant" type="spawn" x="0" y="0">
    <properties>
     <property name="eA_death" value="180000"/>
@@ -848,44 +820,12 @@
     <property name="monster_id" value="27"/>
    </properties>
   </object>
-  <object id="14" name="CobaltPlant" type="spawn" x="0" y="0">
-   <properties>
-    <property name="eA_death" value="1800000"/>
-    <property name="eA_spawn" value="2700000"/>
-    <property name="max_beings" value="1"/>
-    <property name="monster_id" value="28"/>
-   </properties>
+  <object id="19" name="d" type="as" x="144" y="552" width="176" height="176">
+   <ellipse/>
   </object>
-  <object id="15" name="Silkworm" type="spawn" x="0" y="0">
-   <properties>
-    <property name="eA_death" value="30000"/>
-    <property name="eA_spawn" value="60000"/>
-    <property name="max_beings" value="2"/>
-    <property name="monster_id" value="33"/>
-   </properties>
+  <object id="20" x="200" y="456">
+   <polygon points="0,0 -168,96 8,-168 -56,-24"/>
   </object>
-  <object id="16" name="CloverPatch" type="spawn" x="0" y="0">
-   <properties>
-    <property name="eA_death" value="1000"/>
-    <property name="max_beings" value="2"/>
-    <property name="monster_id" value="35"/>
-   </properties>
-  </object>
-  <object id="17" name="Squirrel" type="spawn" x="0" y="0">
-   <properties>
-    <property name="eA_death" value="20"/>
-    <property name="eA_spawn" value="30"/>
-    <property name="max_beings" value="25"/>
-    <property name="monster_id" value="36"/>
-   </properties>
-  </object>
-  <object id="18" name="Butterfly" type="spawn" x="0" y="0">
-   <properties>
-    <property name="eA_death" value="20"/>
-    <property name="eA_spawn" value="30"/>
-    <property name="max_beings" value="10"/>
-    <property name="monster_id" value="53"/>
-   </properties>
-  </object>
+  <object id="21" x="144" y="96" width="16" height="8"/>
  </objectgroup>
 </map>

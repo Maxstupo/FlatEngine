@@ -31,7 +31,7 @@ public class Main extends AbstractScreen {
         super(screenManager);
         guiRoot.setBackgroundColor(Color.LIGHT_GRAY);
 
-        map = TiledMapReader.get().load("testmap", new File("testmap/010-1.tmx"));
+        map = TiledMapReader.get().load("testmap", new File("testmap/demo0.tmx"));
 
     }
 

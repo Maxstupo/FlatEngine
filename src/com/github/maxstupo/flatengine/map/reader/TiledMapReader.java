@@ -15,7 +15,9 @@ import org.xml.sax.SAXException;
 
 import com.github.maxstupo.flatengine.map.MapProperties;
 import com.github.maxstupo.flatengine.map.TiledMap;
+import com.github.maxstupo.flatengine.map.layer.ObjectLayer;
 import com.github.maxstupo.flatengine.map.layer.TileLayer;
+import com.github.maxstupo.flatengine.map.objects.MapObject;
 import com.github.maxstupo.flatengine.map.tile.Tileset;
 import com.github.maxstupo.flatengine.util.Util;
 import com.github.maxstupo.flatengine.util.UtilXML;
@@ -54,7 +56,7 @@ public class TiledMapReader {
             readTilesets(map, file, doc);
 
             readMapLayers(map, doc);
-
+            readMapObjects(map, doc);
             return map;
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
@@ -64,6 +66,38 @@ public class TiledMapReader {
 
     }
 
+    private void readMapObjects(TiledMap map, Document doc) {
+        Node node;
+        NodeList nList = UtilXML.xpathGetNodeList(doc, "map/objectgroup");
+        for (int i = 0; (node = nList.item(i)) != null; i++) {
+            String layerName = UtilXML.xpathGetString(node, "@name", "");
+            float alpha = (float) UtilXML.xpathGetNumber(node, "@opacity", 1f);
+
+            ObjectLayer layer = new ObjectLayer(map, layerName, alpha, true, readProperties(node, null));
+
+            Node n;
+            NodeList list = UtilXML.xpathGetNodeList(node, "object");
+            for (int j = 0; (n = list.item(j)) != null; j++) {
+
+                int id = (int) UtilXML.xpathGetNumber(n, "@id", 0);
+                String name = UtilXML.xpathGetString(n, "@name", "");
+                String type = UtilXML.xpathGetString(n, "@type", "");
+                float x = (float) (UtilXML.xpathGetNumber(n, "@x", 0) / map.getTileWidth());
+                float y = (float) (UtilXML.xpathGetNumber(n, "@y", 0) / map.getTileWidth());
+                float width = (float) (UtilXML.xpathGetNumber(n, "@width", 0) / map.getTileWidth());
+                float height = (float) (UtilXML.xpathGetNumber(n, "@height", 0) / map.getTileWidth());
+
+                MapProperties properties = readProperties(n, null);
+
+                MapObject object = new MapObject(id, name, type, x, y, properties);
+                layer.addObject(object);
+            }
+
+            map.addLayer(layer);
+
+        }
+    }
+
     private void readMapLayers(TiledMap map, Document doc) {
         Node node;
         NodeList nList = UtilXML.xpathGetNodeList(doc, "map/layer");
@@ -71,30 +105,21 @@ public class TiledMapReader {
             final String layerName = UtilXML.xpathGetString(node, "@name", null);
             final float layerAlpha = (float) UtilXML.xpathGetNumber(node, "@opacity", 1f);
 
-            TileLayer layer = new TileLayer(map, layerName, layerAlpha);
+            TileLayer layer = new TileLayer(map, layerName, layerAlpha, true, readProperties(node, null));
 
-            if (!isDataEncodingCsv(node)) {
-                System.err.println("Map layer not encoded with CSV! Ignoring! (LayerName: " + layerName + ")");
+            if (!isDataEncoding(node, "csv")) {
+                System.err.println("Ignoring layer '" + layerName + "' as it doesn't use CSV encoding!");
                 continue;
             }
 
             // TODO: Use gzip format.
-            final String tileCsv = UtilXML.xpathGetString(node, "data", "").trim();
-            loadTileDataCSV(layer, tileCsv);
+            final String tileData = UtilXML.xpathGetString(node, "data", "").trim();
 
-            String layerId = layerName.toLowerCase();
-            if (layerId.startsWith("over") || layerId.startsWith("foreground")) {
-                map.addForegroundLayer(layer);
-
-            } else if (layerId.startsWith("ground") || layerId.startsWith("background")) {
-                map.addBackgroundLayer(layer);
-
-            } else if (layerId.startsWith("fringe")) {
-                System.err.println("Fringe layer hasn't been implemented yet! " + layer);
-            } else {
-                System.out.println("Unknown layer: " + layer);
-            }
+            loadTileDataCSV(layer, tileData);
+            map.addLayer(layer);
         }
+
+        map.calculateRenderableLayers();
     }
 
     private void loadTileDataCSV(TileLayer layer, String tileCsv) {
@@ -116,11 +141,11 @@ public class TiledMapReader {
         }
     }
 
-    private boolean isDataEncodingCsv(Node node) {
+    private boolean isDataEncoding(Node node, String type) {
         final String encoding = UtilXML.xpathGetString(node, "data/@encoding", null);
         if (encoding == null)
             return false;
-        return encoding.equalsIgnoreCase("csv");
+        return encoding.equalsIgnoreCase(type.toLowerCase());
     }
 
     private void readTilesets(TiledMap map, File mapFile, Document doc) {
@@ -143,7 +168,8 @@ public class TiledMapReader {
                 }
 
             } else { // Load embedded tileset.
-                readTileset(map, firstgid, mapFile.getParentFile(), node);
+
+                readTileset(map, firstgid, mapFile, node);
             }
 
         }
@@ -163,7 +189,6 @@ public class TiledMapReader {
         final Color color = Util.hexToColor(trans);
 
         try {
-
             File imageFile = new File(tilesetFile.getParentFile(), src).getCanonicalFile();
 
             BufferedImage image = Util.createImage(imageFile, color);
@@ -180,6 +205,8 @@ public class TiledMapReader {
     private TiledMap createBlankMap(String id, Document doc) throws RuntimeException {
         int width = (int) UtilXML.xpathGetNumber(doc, "map/@width", -1);
         int height = (int) UtilXML.xpathGetNumber(doc, "map/@height", -1);
+        int tileWidth = (int) UtilXML.xpathGetNumber(doc, "map/@tilewidth", -1);
+        int tileHeight = (int) UtilXML.xpathGetNumber(doc, "map/@tileheight", -1);
         String color = UtilXML.xpathGetString(doc, "map/@backgroundColor", "#ffffff");
         Color backgroundColor = Util.hexToColor(color);
 
@@ -191,17 +218,19 @@ public class TiledMapReader {
 
         properties.remove("name");
 
-        TiledMap map = new TiledMap(id, name, width, height, properties);
+        TiledMap map = new TiledMap(id, name, width, height, tileWidth, tileHeight, properties);
         map.setBackgroundColor(backgroundColor);
 
         return map;
     }
 
-    private MapProperties readProperties(Document doc, String xpath) {
+    private MapProperties readProperties(Object doc, String xpath) {
+        String path = (xpath == null) ? "properties/property" : (xpath + "/properties/property");
+
         MapProperties properties = new MapProperties();
 
         Node node;
-        NodeList nList = UtilXML.xpathGetNodeList(doc, xpath + "/properties/property");
+        NodeList nList = UtilXML.xpathGetNodeList(doc, path);
         for (int i = 0; (node = nList.item(i)) != null; i++) {
             String name = UtilXML.xpathGetString(node, "@name", null);
             String value = UtilXML.xpathGetString(node, "@value", null);

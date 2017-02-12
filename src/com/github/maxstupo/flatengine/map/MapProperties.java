@@ -211,4 +211,9 @@ public class MapProperties implements Iterable<Entry<String, Object>> {
         properties.remove(id);
     }
 
+    @Override
+    public String toString() {
+        return String.format("MapProperties [properties=%s]", properties);
+    }
+
 }
