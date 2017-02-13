@@ -41,7 +41,7 @@ public class FlatEngine implements IEngine {
 
     private final ScreenManager gsm;
     private final AbstractGameloop loop;
-    private final AssetManager am;
+    // private final AssetManager am;
 
     private final Keyboard keyboard;
     private final Mouse mouse;
@@ -79,7 +79,7 @@ public class FlatEngine implements IEngine {
         this.gsm = new ScreenManager(this);
         this.keyboard = new Keyboard(canvas);
         this.mouse = new Mouse(canvas);
-        this.am = new AssetManager(this);
+        // this.am = new AssetManager(this);
 
         System.setProperty("sun.awt.noerasebackground", "true");
     }
@@ -358,13 +358,11 @@ public class FlatEngine implements IEngine {
         return loop;
     }
 
-    /**
+    /*
      * Returns the {@link AssetManager} of this engine.
      * 
      * @return the asset manager of this engine.
+     * 
+     * public AssetManager getAssetManager() { return am; }
      */
-    public AssetManager getAssetManager() {
-        return am;
-    }
-
 }

@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 
 import com.github.maxstupo.flatengine.Sprite;
 import com.github.maxstupo.flatengine.map.Camera;
+import com.github.maxstupo.flatengine.map.tile.Tile;
 import com.github.maxstupo.flatengine.util.math.Vector2i;
 
 /**
@@ -14,15 +15,15 @@ import com.github.maxstupo.flatengine.util.math.Vector2i;
 public class TileRenderer implements ITileRenderer {
 
     @Override
-    public void renderTile(Graphics2D g, TileLayer layer, Camera camera, Vector2i pos, int gid, int i, int j, boolean isFringe) {
-        Sprite spr = layer.getMap().getTilesetStore().getTileByGlobalId(gid);
+    public void renderTile(Graphics2D g, TileLayer layer, Camera camera, Vector2i pos, int gid, int i, int j) {
+        Tile tile = layer.getMap().getTilesetStore().getTileByGlobalId(gid);
 
-        if (spr != null) {
-            if (isFringe) {
-                spr.draw(g, pos.x, pos.y);
-            } else {
-                spr.draw(g, pos.x, pos.y, camera.getTileSize(), camera.getTileSize());
-            }
+        if (tile != null) {
+
+            Sprite tileSprite = tile.getSprite();
+            if (tileSprite != null)
+                tileSprite.draw(g, pos.x, pos.y);
+
         }
     }
 

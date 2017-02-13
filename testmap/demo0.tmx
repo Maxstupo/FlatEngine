@@ -7,8 +7,22 @@
   <property name="spawnpoint_x" type="float" value="14"/>
   <property name="spawnpoint_y" type="float" value="14"/>
  </properties>
- <tileset firstgid="1" name="Tileset_Woodland" tilewidth="32" tileheight="32" tilecount="42" columns="7">
-  <image source="tileset/Tileset_Woodland.png" width="224" height="192"/>
+ <tileset firstgid="1" name="Tileset_Woodland" tilewidth="32" tileheight="32" margin="5" tilecount="42" columns="7">
+  <properties>
+   <property name="iu" type="bool" value="false"/>
+  </properties>
+  <image source="tileset/Tileset_Woodland.png" width="234" height="202"/>
+  <tile id="1">
+   <properties>
+    <property name="s" type="bool" value="false"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="fffff" type="color" value="#ff55aa7f"/>
+    <property name="gas" type="float" value="0"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="43" name="Procket_Tileset_Trees" tilewidth="96" tileheight="96" tilecount="1" columns="1">
   <image source="tileset/Procket_Tileset_Trees.png" width="96" height="96"/>
@@ -23,6 +37,9 @@
   </tile>
  </tileset>
  <layer name="Background" width="30" height="30">
+  <properties>
+   <property name="f" type="color" value="#ffffaa00"/>
+  </properties>
   <data encoding="csv">
 33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,
 33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,
@@ -139,4 +156,5 @@
    <ellipse/>
   </object>
  </objectgroup>
+ <objectgroup name="Object Layer 3"/>
 </map>

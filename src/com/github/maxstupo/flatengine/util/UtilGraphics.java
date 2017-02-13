@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 import com.github.maxstupo.flatengine.map.Camera;
 import com.github.maxstupo.flatengine.util.math.AbstractBasicShape;
@@ -22,6 +23,42 @@ public final class UtilGraphics {
     private static final Dimension dimension = new Dimension(0, 0);
 
     private UtilGraphics() {
+    }
+
+    /**
+     * Returns a list of sub-images from the given image arranged as a grid.
+     * 
+     * @param tileset
+     *            the image.
+     * @param tileWidth
+     *            the width of each tile in pixels.
+     * @param tileHeight
+     *            the height of each tile in pixels.
+     * @param tileSpacing
+     *            the spacing between each tile in pixels.
+     * @param tileMargin
+     *            the spacing around the outside of all the tiles in pixels.
+     * @return a new array of images.
+     */
+    public static BufferedImage[] getTileImages(BufferedImage tileset, int tileWidth, int tileHeight, int tileSpacing, int tileMargin) {
+        int columns = tileset.getWidth() / tileWidth;
+        int rows = tileset.getHeight() / tileHeight;
+
+        BufferedImage[] tiles = new BufferedImage[columns * rows];
+
+        for (int j = 0; j < rows; j++) {
+            for (int i = 0; i < columns; i++) {
+
+                int x = tileMargin + (i * (tileWidth + tileSpacing));
+                int y = tileMargin + (j * (tileHeight + tileSpacing));
+
+                BufferedImage tileImage = tileset.getSubimage(x, y, tileWidth, tileHeight);
+                tiles[i + j * columns] = tileImage;
+
+            }
+        }
+
+        return tiles;
     }
 
     /**

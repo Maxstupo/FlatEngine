@@ -3,12 +3,8 @@ package com.github.maxstupo.flatengine.util;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.zip.GZIPInputStream;
 
 import javax.imageio.ImageIO;
 
@@ -25,54 +21,6 @@ public final class Util {
     }
 
     /**
-     * Decompresses the given byte array and returns a string.
-     * 
-     * @param compressed
-     *            the compressed byte array.
-     * @return a string representing the decompressed byte array, or null if the given array is null or zero length.
-     * @throws IOException
-     *             if an I/O error occurs.
-     */
-    public static String decompress(String string) throws IOException {
-        byte[] compressed = Base64.getDecoder().decode(string);
-
-        if (compressed == null || compressed.length == 0)
-            return null;
-
-        final int BUFFER_SIZE = 32;
-        if (isCompressed(compressed)) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            try (GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(compressed))) {
-
-                byte[] data = new byte[BUFFER_SIZE];
-
-                int bytesRead;
-                while ((bytesRead = gis.read(data)) != -1)
-                    baos.write(data, 0, bytesRead);
-
-            }
-            return baos.toString("UTF-8");
-
-        } else {
-            return new String(compressed);
-
-        }
-
-    }
-
-    /**
-     * Returns true if the given byte array is compressed using GZIP.
-     * 
-     * @param compressed
-     *            the array to check.
-     * @return true if the given byte array is compressed using GZIP.
-     * @see GZIPInputStream#GZIP_MAGIC
-     */
-    public static boolean isCompressed(byte[] compressed) {
-        return compressed[0] == (byte) GZIPInputStream.GZIP_MAGIC && compressed[1] == (byte) (GZIPInputStream.GZIP_MAGIC >> 8);
-    }
-
-    /**
      * Returns a {@link BufferedImage} using {@link Class#getResourceAsStream(String)}
      * 
      * @param file
@@ -83,23 +31,19 @@ public final class Util {
      * @throws IOException
      *             if an error occurs.
      */
-    public static BufferedImage createImage(File file, Color transparentColor) {
+    public static BufferedImage loadImage(File file, Color transparentColor) throws IOException {
 
         BufferedImage bufferedImage;
-        try {
-            Image img = ImageIO.read(file);
 
-            // TODO: Implement transparent color.
+        Image img = ImageIO.read(file);
 
-            bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-            bufferedImage.getGraphics().drawImage(img, 0, 0, null);
+        // TODO: Implement transparent color.
 
-            return bufferedImage;
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Failed to read image file: " + file.getAbsolutePath());
-        }
-        return null;
+        bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        bufferedImage.getGraphics().drawImage(img, 0, 0, null);
+
+        return bufferedImage;
+
     }
 
     /**

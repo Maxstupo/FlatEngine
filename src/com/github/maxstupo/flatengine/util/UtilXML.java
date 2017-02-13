@@ -157,10 +157,7 @@ public final class UtilXML {
         XPathExpression expr = createXPathExpression(xpath);
         try {
             double value = (double) expr.evaluate(doc, XPathConstants.NUMBER);
-            if (Double.isNaN(value)) {
-                return defaultValue;
-            }
-            return value;
+            return Double.isNaN(value) ? defaultValue : value;
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
@@ -168,24 +165,21 @@ public final class UtilXML {
     }
 
     /**
-     * Returns a boolean value from the given xpath or the defaultValue if the xpath is invalid.
+     * Returns a boolean value from the given xpath or false if not exists or invalid.
      * 
      * @param doc
      *            the object to evaluate.
      * @param xpath
      *            the xpath.
-     * @param defaultValue
-     *            the defaultValue returned if xpath is invalid.
-     * @return a boolean value from the given xpath or the defaultValue if the xpath is invalid.
+     * @return a boolean value from the given xpath or false if not exists or invalid.
      */
-    public static boolean xpathGetBoolean(Object doc, String xpath, boolean defaultValue) {
+    public static boolean xpathGetBoolean(Object doc, String xpath) {
         XPathExpression expr = createXPathExpression(xpath);
         try {
-            boolean value = (boolean) expr.evaluate(doc, XPathConstants.BOOLEAN);
-            return value;
+            return (boolean) expr.evaluate(doc, XPathConstants.BOOLEAN);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
-        return defaultValue;
+        return false;
     }
 }

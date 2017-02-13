@@ -9,7 +9,7 @@ import com.github.maxstupo.flatengine.gameloop.BasicGameloop;
 import com.github.maxstupo.flatengine.input.Keyboard;
 import com.github.maxstupo.flatengine.map.Camera;
 import com.github.maxstupo.flatengine.map.TiledMap;
-import com.github.maxstupo.flatengine.map.reader.TiledMapReader;
+import com.github.maxstupo.flatengine.map.reader.TmxMapReader;
 import com.github.maxstupo.flatengine.screen.AbstractScreen;
 import com.github.maxstupo.flatengine.screen.ScreenManager;
 import com.github.maxstupo.flatengine.util.UtilGraphics;
@@ -25,14 +25,18 @@ import com.github.maxstupo.jflatlog.JFlatLog;
 public class Main extends AbstractScreen {
 
     private final Camera camera = new Camera(32);
-    private final TiledMap map;
+    private TiledMap map;
 
     public Main(ScreenManager screenManager) {
         super(screenManager);
         guiRoot.setBackgroundColor(Color.LIGHT_GRAY);
 
-        map = TiledMapReader.get().load("testmap", new File("testmap/demo0.tmx"));
+        try {
+            map = TmxMapReader.get().load("test_map", new File("testmap/010-1.tmx"));
+        } catch (Exception e) {
+            e.printStackTrace();
 
+        }
     }
 
     public static void main(String[] args) {

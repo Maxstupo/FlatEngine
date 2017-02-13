@@ -1,10 +1,12 @@
 package com.github.maxstupo.flatengine.map.tile;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.github.maxstupo.flatengine.Sprite;
 import com.github.maxstupo.flatengine.util.Util;
 
 /**
@@ -18,7 +20,7 @@ public class TilesetStore {
 
     private final Map<Integer, Tileset> tilesets = new HashMap<>();
 
-    private Sprite[] tiles;
+    private Tile[] tiles;
 
     /**
      * Adds a given tileset to this store.
@@ -54,23 +56,51 @@ public class TilesetStore {
         for (Entry<Integer, Tileset> entry : tilesets.entrySet())
             totalTiles = Math.max(totalTiles, entry.getKey() + entry.getValue().getTotalTiles());
 
-        tiles = new Sprite[totalTiles];
+        tiles = new Tile[totalTiles];
         for (Entry<Integer, Tileset> entry : tilesets.entrySet()) {
 
             Tileset tileset = entry.getValue();
 
             for (int gid = entry.getKey(); gid < entry.getKey() + tileset.getTotalTiles(); gid++) {
-
-                if (tiles[gid] != null) {
-                    System.err.println("Warn: " + gid + " not null!"); // TODO: Use logger.
-                } else {
-                    tiles[gid] = tileset.getTileByGid(gid);
-                    // System.out.println("Tile[" + gid + "] = Tileset(\"" + tileset.getName() + "\"," + tileset.getTotalTiles() + ")"); // TODO: Use
-                    // logger.
-                }
+                tiles[gid] = tileset.getTileByGid(gid);
             }
         }
         return this;
+    }
+
+    /**
+     * Returns the tileset that has the given first global id.
+     * 
+     * @param firstgid
+     *            the first global id of the tileset.
+     * @return the tileset that has the given first global id.
+     */
+    public Tileset getTilesetByFirstGid(int firstgid) {
+        return tilesets.get(firstgid);
+    }
+
+    /**
+     * Returns the first tileset that has a name that matches the given name.
+     * 
+     * @param name
+     *            the name of the tileset.
+     * @return the first tileset that has a name that matches the given name.
+     */
+    public Tileset getTilesetByName(String name) {
+        for (Tileset tileset : tilesets.values()) {
+            if (tileset.getName().equals(name))
+                return tileset;
+        }
+        return null;
+    }
+
+    /**
+     * Returns an unmodifiable collection of all tilesets within this store.
+     * 
+     * @return an unmodifiable collection of all tilesets within this store.
+     */
+    public Collection<Tileset> getTilesets() {
+        return Collections.unmodifiableCollection(tilesets.values());
     }
 
     /**
@@ -82,7 +112,7 @@ public class TilesetStore {
      *            the global id of the tile.
      * @return the sprite representing the tile, or null if the given id is out of bounds.
      */
-    public Sprite getTileByGlobalId(int gid) {
+    public Tile getTileByGlobalId(int gid) {
         if (tiles == null)
             recacheTiles();
 
@@ -90,6 +120,42 @@ public class TilesetStore {
             return null;
 
         return tiles[gid];
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s [currentFirstGid=%s, tilesets=%s]", getClass().getSimpleName(), currentFirstGid, tilesets);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + currentFirstGid;
+        result = prime * result + Arrays.hashCode(tiles);
+        result = prime * result + ((tilesets == null) ? 0 : tilesets.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        TilesetStore other = (TilesetStore) obj;
+        if (currentFirstGid != other.currentFirstGid)
+            return false;
+        if (!Arrays.equals(tiles, other.tiles))
+            return false;
+        if (tilesets == null) {
+            if (other.tilesets != null)
+                return false;
+        } else if (!tilesets.equals(other.tilesets))
+            return false;
+        return true;
     }
 
 }
