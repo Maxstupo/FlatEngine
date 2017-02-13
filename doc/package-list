@@ -6,6 +6,7 @@ com.github.maxstupo.flatengine.input.filter
 com.github.maxstupo.flatengine.item
 com.github.maxstupo.flatengine.map
 com.github.maxstupo.flatengine.map.layer
+com.github.maxstupo.flatengine.map.object
 com.github.maxstupo.flatengine.map.reader
 com.github.maxstupo.flatengine.map.tile
 com.github.maxstupo.flatengine.screen
