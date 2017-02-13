@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" nextobjectid="7">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" nextobjectid="9">
  <properties>
   <property name="atlas" value="tileset/demo0.atlas"/>
   <property name="chunk_size" type="int" value="16"/>
@@ -150,11 +150,11 @@
   <object id="3" x="40" y="640" width="104" height="96"/>
   <object id="4" x="200" y="424" width="80" height="88"/>
   <object id="5" x="368" y="80" width="72" height="80"/>
- </objectgroup>
- <objectgroup name="Object Layer 2" visible="0" opacity="0.9">
-  <object id="6" x="208" y="56" width="104" height="136">
+  <object id="7" x="464" y="296" width="120" height="120">
    <ellipse/>
   </object>
+  <object id="8" x="312" y="208">
+   <polygon points="0,0 104,176 8,192 -72,72 -88,-40"/>
+  </object>
  </objectgroup>
- <objectgroup name="Object Layer 3"/>
 </map>

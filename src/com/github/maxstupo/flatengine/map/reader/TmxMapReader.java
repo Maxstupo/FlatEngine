@@ -24,6 +24,7 @@ import com.github.maxstupo.flatengine.map.tile.Tileset;
 import com.github.maxstupo.flatengine.util.Util;
 import com.github.maxstupo.flatengine.util.UtilXML;
 import com.github.maxstupo.flatengine.util.math.AbstractBasicShape;
+import com.github.maxstupo.flatengine.util.math.Circle;
 import com.github.maxstupo.flatengine.util.math.Rectangle;
 import com.github.maxstupo.flatengine.util.math.UtilMath;
 
@@ -95,9 +96,17 @@ public class TmxMapReader {
                 float width = (float) (UtilXML.xpathGetNumber(n, "@width", 0) / map.getTileWidth());
                 float height = (float) (UtilXML.xpathGetNumber(n, "@height", 0) / map.getTileWidth());
 
-                // TODO: Detect if shape isn't rectangle.
-                AbstractBasicShape shape = new Rectangle(x, y, width, height);
-
+                AbstractBasicShape shape = null;
+                if (UtilXML.xpathGetNode(n, "ellipse") != null) {
+                    if (width == height) {
+                        float radius = width / 2f;
+                        shape = new Circle(x - radius, y - radius, radius);
+                    } else {
+                        throw new RuntimeException("Ellipse shapes are not supported for map objects: " + mapFile.getAbsolutePath() + ", id: " + id + ", name: " + objectName);
+                    }
+                } else {
+                    shape = new Rectangle(x, y, width, height);
+                }
                 MapObject object = new MapObject(layer, id, objectName, type, shape);
                 layer.addObject(object);
             }
