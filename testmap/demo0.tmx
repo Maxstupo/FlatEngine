@@ -12,9 +12,15 @@
    <property name="iu" type="bool" value="false"/>
   </properties>
   <image source="tileset/Tileset_Woodland.png" width="234" height="202"/>
+  <tile id="0">
+   <objectgroup draworder="index">
+    <object id="1" x="8" y="8" width="8" height="16"/>
+    <object id="2" x="16" y="16" width="8" height="8"/>
+   </objectgroup>
+  </tile>
   <tile id="1">
    <properties>
-    <property name="s" type="bool" value="false"/>
+    <property name="s" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="22">

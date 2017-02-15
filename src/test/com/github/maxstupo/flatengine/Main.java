@@ -32,7 +32,7 @@ public class Main extends AbstractScreen {
         guiRoot.setBackgroundColor(Color.LIGHT_GRAY);
 
         try {
-            map = TmxMapReader.get().load("test_map", new File("testmap/010-1.tmx"));
+            map = TmxMapReader.get().load("test_map", new File("testmap/demo0.tmx"));
         } catch (Exception e) {
             e.printStackTrace();
 

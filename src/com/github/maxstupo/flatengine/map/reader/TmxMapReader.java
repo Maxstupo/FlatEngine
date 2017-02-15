@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -72,15 +74,16 @@ public class TmxMapReader {
 
     }
 
-    private static void readMapObjects(TiledMap map, Document doc, File mapFile) {
+    private static List<ObjectLayer> readObjects(TiledMap map, Object doc, File mapFile, String xpath, boolean nameCheck) {
         Node node;
-        NodeList nList = UtilXML.xpathGetNodeList(doc, "map/objectgroup");
+        List<ObjectLayer> ll = new ArrayList<>();
+        NodeList nList = UtilXML.xpathGetNodeList(doc, (xpath != null) ? (xpath + "/objectgroup") : "objectgroup");
         for (int i = 0; (node = nList.item(i)) != null; i++) {
             String name = UtilXML.xpathGetString(node, "@name", null);
             float alpha = (float) UtilXML.xpathGetNumber(node, "@opacity", 1f);
             MapProperties properties = readProperties(node, null);
 
-            if (name == null)
+            if (name == null && nameCheck)
                 throw new RuntimeException("An object group doesn't have a name set for map: '" + mapFile.getAbsolutePath() + "'");
 
             ObjectLayer layer = new ObjectLayer(map, name, alpha, false, properties);
@@ -109,10 +112,17 @@ public class TmxMapReader {
                 }
                 MapObject object = new MapObject(layer, id, objectName, type, shape);
                 layer.addObject(object);
-            }
 
-            map.addLayer(layer);
+            }
+            ll.add(layer);
         }
+        return ll;
+    }
+
+    private static void readMapObjects(TiledMap map, Document doc, File mapFile) {
+        for (ObjectLayer layer : readObjects(map, doc, mapFile, "map", true))
+            map.addLayer(layer);
+
     }
 
     private static void readMapTileLayers(TiledMap map, Document doc, File mapFile) throws RuntimeException {
@@ -185,17 +195,17 @@ public class TmxMapReader {
                 File tilesetFile = new File(mapFile.getParentFile(), source);
                 Document tilesetDoc = UtilXML.loadDocument(tilesetFile);
 
-                readTileset(map, firstGid, tilesetFile, UtilXML.xpathGetNode(tilesetDoc, "tileset"));
+                readTileset(map, firstGid, tilesetFile, mapFile, UtilXML.xpathGetNode(tilesetDoc, "tileset"));
 
             } else { // Load embedded tileset.
-                readTileset(map, firstGid, mapFile, node);
+                readTileset(map, firstGid, mapFile, mapFile, node);
 
             }
         }
 
     }
 
-    private static void readTileset(TiledMap map, int firstGid, File tilesetFile, Node node) throws RuntimeException, IOException {
+    private static void readTileset(TiledMap map, int firstGid, File tilesetFile, File mapFile, Node node) throws RuntimeException, IOException {
         String name = UtilXML.xpathGetString(node, "@name", null);
         int tileWidth = (int) UtilXML.xpathGetNumber(node, "@tilewidth", -1);
         int tileHeight = (int) UtilXML.xpathGetNumber(node, "@tileheight", -1);
@@ -220,18 +230,30 @@ public class TmxMapReader {
         BufferedImage tilesetImage = Util.loadImage(imageFile, transparentColor);
 
         Map<Integer, MapProperties> tileProperties = new HashMap<>();
+        Map<Integer, List<MapObject>> tileCollisions = new HashMap<>();
 
         Node tileNode;
         NodeList nList = UtilXML.xpathGetNodeList(node, "tile");
+
         for (int i = 0; (tileNode = nList.item(i)) != null; i++) {
             int tileId = (int) UtilXML.xpathGetNumber(tileNode, "@id", -1);
+
             if (tileId == -1)
                 continue;
+
+            List<MapObject> collisions = new ArrayList<>();
+
+            for (ObjectLayer layer : readObjects(map, tileNode, mapFile, null, false))
+                collisions.addAll(layer.getObjects());
+
+            tileCollisions.put(tileId, collisions);
+
             MapProperties properties = readProperties(tileNode, null);
             tileProperties.put(tileId, properties);
+
         }
 
-        Tileset tileset = new Tileset(firstGid, name, tileWidth, tileHeight, tileSpacing, tileMargin, tilesetImage, tileProperties);
+        Tileset tileset = new Tileset(firstGid, name, tileWidth, tileHeight, tileSpacing, tileMargin, tilesetImage, tileProperties, tileCollisions);
         map.getTilesetStore().addTileset(tileset, true);
     }
 

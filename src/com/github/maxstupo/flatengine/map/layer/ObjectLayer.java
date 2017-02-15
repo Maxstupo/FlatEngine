@@ -115,7 +115,7 @@ public class ObjectLayer extends AbstractMapLayer {
 
     @Override
     public String toString() {
-        return String.format("%s [objects=%s, map=%s, id=%s, isVisible=%s, properties=%s]", getClass().getSimpleName(), objects, map, id, isVisible, properties);
+        return String.format("%s [map=%s, id=%s, isVisible=%s, properties=%s]", getClass().getSimpleName(), map, id, isVisible, properties);
     }
 
     @Override

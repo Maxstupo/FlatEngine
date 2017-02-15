@@ -1,11 +1,14 @@
 package com.github.maxstupo.flatengine.map.tile;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.github.maxstupo.flatengine.Sprite;
 import com.github.maxstupo.flatengine.map.MapProperties;
+import com.github.maxstupo.flatengine.map.object.MapObject;
 import com.github.maxstupo.flatengine.util.Util;
 import com.github.maxstupo.flatengine.util.UtilGraphics;
 
@@ -49,8 +52,10 @@ public class Tileset {
      *            the tileset image.
      * @param tileProperties
      *            properties for each tile, set to null to ignore. Note: The array length can be less than the total tiles within the tileset.
+     * @param tileCollisions
+     *            map objects representing collision areas of the given tile id.
      */
-    public Tileset(int firstGid, String name, int tileWidth, int tileHeight, int tileSpacing, int tileMargin, BufferedImage tilesetImage, Map<Integer, MapProperties> tileProperties) {
+    public Tileset(int firstGid, String name, int tileWidth, int tileHeight, int tileSpacing, int tileMargin, BufferedImage tilesetImage, Map<Integer, MapProperties> tileProperties, Map<Integer, List<MapObject>> tileCollisions) {
         this.firstGid = firstGid;
         this.name = name;
         this.tileWidth = tileWidth;
@@ -65,8 +70,9 @@ public class Tileset {
             Sprite sprite = new Sprite(tileImages[i], name + "_" + firstGid + "_" + i);
 
             MapProperties properties = (tileProperties != null) ? tileProperties.get(i) : null;
+            List<MapObject> collisions = (tileCollisions != null) ? tileCollisions.get(i) : new ArrayList<>();
 
-            this.tiles[i] = new Tile(sprite, properties);
+            this.tiles[i] = new Tile(sprite, properties, collisions);
         }
 
     }
