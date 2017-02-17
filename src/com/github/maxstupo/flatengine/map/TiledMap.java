@@ -82,21 +82,27 @@ public class TiledMap {
     }
 
     /**
-     * Render this tile map.
+     * Renders all background layers.
      * 
      * @param g
      *            the graphics context to render to.
      * @param camera
      *            the camera.
      */
-    public void render(Graphics2D g, Camera camera) {
-        renderBackground(g, camera);
-
+    public void renderBackgroundLayers(Graphics2D g, Camera camera) {
         for (TileLayer layer : backgroundLayers)
             layer.render(g, camera);
+    }
 
-        // TODO: Render entities and fringe tiles.
-
+    /**
+     * Renders all foreground layers.
+     * 
+     * @param g
+     *            the graphics context to render to.
+     * @param camera
+     *            the camera.
+     */
+    public void renderForegroundLayers(Graphics2D g, Camera camera) {
         for (TileLayer layer : foregroundLayers)
             layer.render(g, camera);
     }
@@ -109,7 +115,7 @@ public class TiledMap {
      * @param camera
      *            the camera.
      */
-    protected void renderBackground(Graphics2D g, Camera camera) {
+    public void renderBackground(Graphics2D g, Camera camera) {
         if (backgroundColor == null)
             return;
 
@@ -145,12 +151,6 @@ public class TiledMap {
 
             } else if (id.startsWith("ground") || id.startsWith("background")) {
                 backgroundLayers.add((TileLayer) layer);
-
-            } else if (id.startsWith("fringe")) {
-                System.err.println("Fringe layer hasn't been implemented yet! " + layer);
-
-            } else {
-                System.out.println("Unknown layer: " + layer);
 
             }
         }

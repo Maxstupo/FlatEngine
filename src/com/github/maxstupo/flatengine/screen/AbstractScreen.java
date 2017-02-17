@@ -30,7 +30,7 @@ public abstract class AbstractScreen {
      * @param screenManager
      *            the screen manager this screen is registered with.
      */
-    protected AbstractScreen(ScreenManager screenManager) {
+    public AbstractScreen(ScreenManager screenManager) {
         this.screenManager = screenManager;
         this.guiRoot.setOutlineColor(null);
         this.guiRoot.setSize(getWidth(), getHeight());
