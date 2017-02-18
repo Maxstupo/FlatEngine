@@ -505,4 +505,74 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
         return this;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + calculatedItemHeight;
+        result = prime * result + ((defaultItem == null) ? 0 : defaultItem.hashCode());
+        result = prime * result + (isItemNodesDirty ? 1231 : 1237);
+        result = prime * result + (isScrollBarDirty ? 1231 : 1237);
+        result = prime * result + (isScrollDirty ? 1231 : 1237);
+        result = prime * result + itemHeight;
+        result = prime * result + ((itemNodes == null) ? 0 : itemNodes.hashCode());
+        result = prime * result + ((items == null) ? 0 : items.hashCode());
+        result = prime * result + ((listeners == null) ? 0 : listeners.hashCode());
+        result = prime * result + scroll;
+        result = prime * result + ((scrollbar == null) ? 0 : scrollbar.hashCode());
+        result = prime * result + spacing;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GuiList<?> other = (GuiList<?>) obj;
+        if (calculatedItemHeight != other.calculatedItemHeight)
+            return false;
+        if (defaultItem == null) {
+            if (other.defaultItem != null)
+                return false;
+        } else if (!defaultItem.equals(other.defaultItem))
+            return false;
+        if (isItemNodesDirty != other.isItemNodesDirty)
+            return false;
+        if (isScrollBarDirty != other.isScrollBarDirty)
+            return false;
+        if (isScrollDirty != other.isScrollDirty)
+            return false;
+        if (itemHeight != other.itemHeight)
+            return false;
+        if (itemNodes == null) {
+            if (other.itemNodes != null)
+                return false;
+        } else if (!itemNodes.equals(other.itemNodes))
+            return false;
+        if (items == null) {
+            if (other.items != null)
+                return false;
+        } else if (!items.equals(other.items))
+            return false;
+        if (listeners == null) {
+            if (other.listeners != null)
+                return false;
+        } else if (!listeners.equals(other.listeners))
+            return false;
+        if (scroll != other.scroll)
+            return false;
+        if (scrollbar == null) {
+            if (other.scrollbar != null)
+                return false;
+        } else if (!scrollbar.equals(other.scrollbar))
+            return false;
+        if (spacing != other.spacing)
+            return false;
+        return true;
+    }
+
 }

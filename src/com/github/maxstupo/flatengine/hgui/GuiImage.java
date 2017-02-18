@@ -158,4 +158,38 @@ public class GuiImage extends GuiContainer {
         this.iconSpacing = iconSpacing;
         return this;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((icon == null) ? 0 : icon.hashCode());
+        result = prime * result + iconSpacing;
+        result = prime * result + (isAspectRatioKept ? 1231 : 1237);
+        result = prime * result + (isIconResized ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GuiImage other = (GuiImage) obj;
+        if (icon == null) {
+            if (other.icon != null)
+                return false;
+        } else if (!icon.equals(other.icon))
+            return false;
+        if (iconSpacing != other.iconSpacing)
+            return false;
+        if (isAspectRatioKept != other.isAspectRatioKept)
+            return false;
+        if (isIconResized != other.isIconResized)
+            return false;
+        return true;
+    }
 }

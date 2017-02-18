@@ -136,4 +136,32 @@ public class GuiSelectionList<T> extends GuiList<T> {
         return selected;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + selected;
+        result = prime * result + ((selectedColor == null) ? 0 : selectedColor.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GuiSelectionList<?> other = (GuiSelectionList<?>) obj;
+        if (selected != other.selected)
+            return false;
+        if (selectedColor == null) {
+            if (other.selectedColor != null)
+                return false;
+        } else if (!selectedColor.equals(other.selectedColor))
+            return false;
+        return true;
+    }
+
 }

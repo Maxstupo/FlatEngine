@@ -2,6 +2,7 @@ package com.github.maxstupo.flatengine.hgui;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -529,6 +530,115 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
      */
     public Vector2i getHoldingOffset() {
         return holdingOffset;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + Arrays.deepHashCode(contents);
+        result = prime * result + ((defaultSlot == null) ? 0 : defaultSlot.hashCode());
+        result = prime * result + ((holding == null) ? 0 : holding.hashCode());
+        result = prime * result + ((holdingItemSlot == null) ? 0 : holdingItemSlot.hashCode());
+        result = prime * result + ((holdingOffset == null) ? 0 : holdingOffset.hashCode());
+        result = prime * result + hoverI;
+        result = prime * result + hoverJ;
+        result = prime * result + (isAutoSize ? 1231 : 1237);
+        result = prime * result + (isItemSlotsDirty ? 1231 : 1237);
+        result = prime * result + (isNameplateDirty ? 1231 : 1237);
+        result = prime * result + (isTakeOnly ? 1231 : 1237);
+        result = prime * result + ((listeners == null) ? 0 : listeners.hashCode());
+        result = prime * result + ((nameplate == null) ? 0 : nameplate.hashCode());
+        result = prime * result + ((nameplateOffset == null) ? 0 : nameplateOffset.hashCode());
+        result = prime * result + oldHoverI;
+        result = prime * result + oldHoverJ;
+        result = prime * result + ((oldSelectedSlot == null) ? 0 : oldSelectedSlot.hashCode());
+        result = prime * result + ((slotHovered == null) ? 0 : slotHovered.hashCode());
+        result = prime * result + slotSize;
+        result = prime * result + Arrays.deepHashCode(slots);
+        result = prime * result + spacing;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GuiItemContainer<?> other = (GuiItemContainer<?>) obj;
+        if (!Arrays.deepEquals(contents, other.contents))
+            return false;
+        if (defaultSlot == null) {
+            if (other.defaultSlot != null)
+                return false;
+        } else if (!defaultSlot.equals(other.defaultSlot))
+            return false;
+        if (holding == null) {
+            if (other.holding != null)
+                return false;
+        } else if (!holding.equals(other.holding))
+            return false;
+        if (holdingItemSlot == null) {
+            if (other.holdingItemSlot != null)
+                return false;
+        } else if (!holdingItemSlot.equals(other.holdingItemSlot))
+            return false;
+        if (holdingOffset == null) {
+            if (other.holdingOffset != null)
+                return false;
+        } else if (!holdingOffset.equals(other.holdingOffset))
+            return false;
+        if (hoverI != other.hoverI)
+            return false;
+        if (hoverJ != other.hoverJ)
+            return false;
+        if (isAutoSize != other.isAutoSize)
+            return false;
+        if (isItemSlotsDirty != other.isItemSlotsDirty)
+            return false;
+        if (isNameplateDirty != other.isNameplateDirty)
+            return false;
+        if (isTakeOnly != other.isTakeOnly)
+            return false;
+        if (listeners == null) {
+            if (other.listeners != null)
+                return false;
+        } else if (!listeners.equals(other.listeners))
+            return false;
+        if (nameplate == null) {
+            if (other.nameplate != null)
+                return false;
+        } else if (!nameplate.equals(other.nameplate))
+            return false;
+        if (nameplateOffset == null) {
+            if (other.nameplateOffset != null)
+                return false;
+        } else if (!nameplateOffset.equals(other.nameplateOffset))
+            return false;
+        if (oldHoverI != other.oldHoverI)
+            return false;
+        if (oldHoverJ != other.oldHoverJ)
+            return false;
+        if (oldSelectedSlot == null) {
+            if (other.oldSelectedSlot != null)
+                return false;
+        } else if (!oldSelectedSlot.equals(other.oldSelectedSlot))
+            return false;
+        if (slotHovered == null) {
+            if (other.slotHovered != null)
+                return false;
+        } else if (!slotHovered.equals(other.slotHovered))
+            return false;
+        if (slotSize != other.slotSize)
+            return false;
+        if (!Arrays.deepEquals(slots, other.slots))
+            return false;
+        if (spacing != other.spacing)
+            return false;
+        return true;
     }
 
 }

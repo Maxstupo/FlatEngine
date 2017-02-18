@@ -191,4 +191,41 @@ public class GuiText extends AbstractAlignableGuiNode {
         return String.format("%s [text=%s, color=%s, font=%s, isVisible=%s, getAlignment()=%s, getLocalPositionX()=%s, getLocalPositionY()=%s, getWidth()=%s, getHeight()=%s, isEnabled()=%s]", getClass().getSimpleName(), text, textColor, textFont, isVisible, getAlignment(), getLocalPositionX(), getLocalPositionY(), getWidth(), getHeight(), isEnabled());
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((text == null) ? 0 : text.hashCode());
+        result = prime * result + ((textColor == null) ? 0 : textColor.hashCode());
+        result = prime * result + ((textFont == null) ? 0 : textFont.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GuiText other = (GuiText) obj;
+        if (text == null) {
+            if (other.text != null)
+                return false;
+        } else if (!text.equals(other.text))
+            return false;
+        if (textColor == null) {
+            if (other.textColor != null)
+                return false;
+        } else if (!textColor.equals(other.textColor))
+            return false;
+        if (textFont == null) {
+            if (other.textFont != null)
+                return false;
+        } else if (!textFont.equals(other.textFont))
+            return false;
+        return true;
+    }
+
 }

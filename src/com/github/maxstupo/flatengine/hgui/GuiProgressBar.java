@@ -263,4 +263,47 @@ public class GuiProgressBar extends GuiContainer {
         return this;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (isVertical ? 1231 : 1237);
+        result = prime * result + Float.floatToIntBits(maxValue);
+        result = prime * result + ((progressColor == null) ? 0 : progressColor.hashCode());
+        result = prime * result + ((progressOutlineColor == null) ? 0 : progressOutlineColor.hashCode());
+        result = prime * result + spacing;
+        result = prime * result + Float.floatToIntBits(value);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GuiProgressBar other = (GuiProgressBar) obj;
+        if (isVertical != other.isVertical)
+            return false;
+        if (Float.floatToIntBits(maxValue) != Float.floatToIntBits(other.maxValue))
+            return false;
+        if (progressColor == null) {
+            if (other.progressColor != null)
+                return false;
+        } else if (!progressColor.equals(other.progressColor))
+            return false;
+        if (progressOutlineColor == null) {
+            if (other.progressOutlineColor != null)
+                return false;
+        } else if (!progressOutlineColor.equals(other.progressOutlineColor))
+            return false;
+        if (spacing != other.spacing)
+            return false;
+        if (Float.floatToIntBits(value) != Float.floatToIntBits(other.value))
+            return false;
+        return true;
+    }
+
 }

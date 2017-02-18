@@ -803,12 +803,15 @@ public abstract class AbstractNode {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((children == null) ? 0 : children.hashCode());
+        result = prime * result + ((bounds == null) ? 0 : bounds.hashCode());
+        result = prime * result + ((globalPosition == null) ? 0 : globalPosition.hashCode());
         result = prime * result + height;
         result = prime * result + (isEnabled ? 1231 : 1237);
+        result = prime * result + (isGraphicsCalculationsDirty ? 1231 : 1237);
         result = prime * result + (isPositionDirty ? 1231 : 1237);
         result = prime * result + (isVisible ? 1231 : 1237);
         result = prime * result + (keepWithinParent ? 1231 : 1237);
+        result = prime * result + ((localMousePosition == null) ? 0 : localMousePosition.hashCode());
         result = prime * result + Float.floatToIntBits(localPositionX);
         result = prime * result + Float.floatToIntBits(localPositionY);
         result = prime * result + ((parent == null) ? 0 : parent.hashCode());
@@ -826,20 +829,32 @@ public abstract class AbstractNode {
         if (getClass() != obj.getClass())
             return false;
         AbstractNode other = (AbstractNode) obj;
-        if (children == null) {
-            if (other.children != null)
+        if (bounds == null) {
+            if (other.bounds != null)
                 return false;
-        } else if (!children.equals(other.children))
+        } else if (!bounds.equals(other.bounds))
+            return false;
+        if (globalPosition == null) {
+            if (other.globalPosition != null)
+                return false;
+        } else if (!globalPosition.equals(other.globalPosition))
             return false;
         if (height != other.height)
             return false;
         if (isEnabled != other.isEnabled)
+            return false;
+        if (isGraphicsCalculationsDirty != other.isGraphicsCalculationsDirty)
             return false;
         if (isPositionDirty != other.isPositionDirty)
             return false;
         if (isVisible != other.isVisible)
             return false;
         if (keepWithinParent != other.keepWithinParent)
+            return false;
+        if (localMousePosition == null) {
+            if (other.localMousePosition != null)
+                return false;
+        } else if (!localMousePosition.equals(other.localMousePosition))
             return false;
         if (Float.floatToIntBits(localPositionX) != Float.floatToIntBits(other.localPositionX))
             return false;

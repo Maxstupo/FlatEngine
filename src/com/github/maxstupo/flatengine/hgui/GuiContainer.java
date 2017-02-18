@@ -135,4 +135,35 @@ public class GuiContainer extends AbstractNode {
     public String toString() {
         return String.format("%s [backgroundColor=%s, outlineColor=%s, isVisible=%s, getLocalPositionX()=%s, getLocalPositionY()=%s, getWidth()=%s, getHeight()=%s, isEnabled()=%s]", getClass().getSimpleName(), backgroundColor, outlineColor, isVisible, getLocalPositionX(), getLocalPositionY(), getWidth(), getHeight(), isEnabled());
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((backgroundColor == null) ? 0 : backgroundColor.hashCode());
+        result = prime * result + ((outlineColor == null) ? 0 : outlineColor.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GuiContainer other = (GuiContainer) obj;
+        if (backgroundColor == null) {
+            if (other.backgroundColor != null)
+                return false;
+        } else if (!backgroundColor.equals(other.backgroundColor))
+            return false;
+        if (outlineColor == null) {
+            if (other.outlineColor != null)
+                return false;
+        } else if (!outlineColor.equals(other.outlineColor))
+            return false;
+        return true;
+    }
 }

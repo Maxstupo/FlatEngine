@@ -244,4 +244,56 @@ public class GuiItemSlot<T extends AbstractItemStack> extends GuiImage {
         return this;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((contents == null) ? 0 : contents.hashCode());
+        result = prime * result + ((holding == null) ? 0 : holding.hashCode());
+        result = prime * result + (isTakeOnly ? 1231 : 1237);
+        result = prime * result + (isTextAmountDirty ? 1231 : 1237);
+        result = prime * result + ((listeners == null) ? 0 : listeners.hashCode());
+        result = prime * result + oldAmount;
+        result = prime * result + ((textAmount == null) ? 0 : textAmount.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GuiItemSlot<?> other = (GuiItemSlot<?>) obj;
+        if (contents == null) {
+            if (other.contents != null)
+                return false;
+        } else if (!contents.equals(other.contents))
+            return false;
+        if (holding == null) {
+            if (other.holding != null)
+                return false;
+        } else if (!holding.equals(other.holding))
+            return false;
+        if (isTakeOnly != other.isTakeOnly)
+            return false;
+        if (isTextAmountDirty != other.isTextAmountDirty)
+            return false;
+        if (listeners == null) {
+            if (other.listeners != null)
+                return false;
+        } else if (!listeners.equals(other.listeners))
+            return false;
+        if (oldAmount != other.oldAmount)
+            return false;
+        if (textAmount == null) {
+            if (other.textAmount != null)
+                return false;
+        } else if (!textAmount.equals(other.textAmount))
+            return false;
+        return true;
+    }
+
 }

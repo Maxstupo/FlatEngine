@@ -353,4 +353,74 @@ public class GuiSlider extends GuiContainer implements IEventListener<GuiButton,
         return isDragging;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((backgroundColorUnselected == null) ? 0 : backgroundColorUnselected.hashCode());
+        result = prime * result + clickOrigin;
+        result = prime * result + (isDragging ? 1231 : 1237);
+        result = prime * result + (isDraggingDisabled ? 1231 : 1237);
+        result = prime * result + (isSliderDirty ? 1231 : 1237);
+        result = prime * result + (isVertical ? 1231 : 1237);
+        result = prime * result + ((knob == null) ? 0 : knob.hashCode());
+        result = prime * result + ((listeners == null) ? 0 : listeners.hashCode());
+        result = prime * result + Float.floatToIntBits(maxValue);
+        result = prime * result + Float.floatToIntBits(oldValue);
+        result = prime * result + ((outlineColorUnselected == null) ? 0 : outlineColorUnselected.hashCode());
+        result = prime * result + spacing;
+        result = prime * result + Float.floatToIntBits(value);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GuiSlider other = (GuiSlider) obj;
+        if (backgroundColorUnselected == null) {
+            if (other.backgroundColorUnselected != null)
+                return false;
+        } else if (!backgroundColorUnselected.equals(other.backgroundColorUnselected))
+            return false;
+        if (clickOrigin != other.clickOrigin)
+            return false;
+        if (isDragging != other.isDragging)
+            return false;
+        if (isDraggingDisabled != other.isDraggingDisabled)
+            return false;
+        if (isSliderDirty != other.isSliderDirty)
+            return false;
+        if (isVertical != other.isVertical)
+            return false;
+        if (knob == null) {
+            if (other.knob != null)
+                return false;
+        } else if (!knob.equals(other.knob))
+            return false;
+        if (listeners == null) {
+            if (other.listeners != null)
+                return false;
+        } else if (!listeners.equals(other.listeners))
+            return false;
+        if (Float.floatToIntBits(maxValue) != Float.floatToIntBits(other.maxValue))
+            return false;
+        if (Float.floatToIntBits(oldValue) != Float.floatToIntBits(other.oldValue))
+            return false;
+        if (outlineColorUnselected == null) {
+            if (other.outlineColorUnselected != null)
+                return false;
+        } else if (!outlineColorUnselected.equals(other.outlineColorUnselected))
+            return false;
+        if (spacing != other.spacing)
+            return false;
+        if (Float.floatToIntBits(value) != Float.floatToIntBits(other.value))
+            return false;
+        return true;
+    }
+
 }

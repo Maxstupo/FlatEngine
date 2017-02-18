@@ -183,4 +183,53 @@ public class GuiWindow extends GuiContainer implements IEventListener<GuiButton,
         return String.format("%s [titleNode=%s, btnClose=%s, clickOrigin=%s, isDragging=%s, backgroundColor=%s, outlineColor=%s, outlineStroke=%s, isVisible=%s, getGlobalPosition()=%s, isEnabled()=%s, getLocalPositionX()=%s, getLocalPositionY()=%s, isKeepWithinParent()=%s, getWidth()=%s, getHeight()=%s, usePercentagePositions()=%s]", titleNode, btnClose, clickOrigin, isDragging, backgroundColor, outlineColor, outlineStroke, isVisible, getClass().getSimpleName(), getGlobalPosition(), isEnabled(), getLocalPositionX(), getLocalPositionY(), isKeepWithinParent(), getWidth(), getHeight(), usePercentagePositions());
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (addToContents ? 1231 : 1237);
+        result = prime * result + ((btnClose == null) ? 0 : btnClose.hashCode());
+        result = prime * result + ((clickOrigin == null) ? 0 : clickOrigin.hashCode());
+        result = prime * result + ((contents == null) ? 0 : contents.hashCode());
+        result = prime * result + (isDragging ? 1231 : 1237);
+        result = prime * result + ((titleNode == null) ? 0 : titleNode.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GuiWindow other = (GuiWindow) obj;
+        if (addToContents != other.addToContents)
+            return false;
+        if (btnClose == null) {
+            if (other.btnClose != null)
+                return false;
+        } else if (!btnClose.equals(other.btnClose))
+            return false;
+        if (clickOrigin == null) {
+            if (other.clickOrigin != null)
+                return false;
+        } else if (!clickOrigin.equals(other.clickOrigin))
+            return false;
+        if (contents == null) {
+            if (other.contents != null)
+                return false;
+        } else if (!contents.equals(other.contents))
+            return false;
+        if (isDragging != other.isDragging)
+            return false;
+        if (titleNode == null) {
+            if (other.titleNode != null)
+                return false;
+        } else if (!titleNode.equals(other.titleNode))
+            return false;
+        return true;
+    }
+
 }

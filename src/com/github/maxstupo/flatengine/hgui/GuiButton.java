@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -344,6 +345,88 @@ public class GuiButton extends GuiContainer {
      */
     public GuiText getTextNode() {
         return text;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((backgroundColorSelected == null) ? 0 : backgroundColorSelected.hashCode());
+        result = prime * result + ((backgroundColorUnselected == null) ? 0 : backgroundColorUnselected.hashCode());
+        result = prime * result + (boxLess ? 1231 : 1237);
+        result = prime * result + Arrays.hashCode(buttonsMonitored);
+        result = prime * result + (isMouseOver ? 1231 : 1237);
+        result = prime * result + ((listeners == null) ? 0 : listeners.hashCode());
+        result = prime * result + ((outlineColorSelected == null) ? 0 : outlineColorSelected.hashCode());
+        result = prime * result + ((outlineColorUnselected == null) ? 0 : outlineColorUnselected.hashCode());
+        result = prime * result + ((text == null) ? 0 : text.hashCode());
+        result = prime * result + ((textColorSelected == null) ? 0 : textColorSelected.hashCode());
+        result = prime * result + ((textColorUnselected == null) ? 0 : textColorUnselected.hashCode());
+        result = prime * result + ((userdata == null) ? 0 : userdata.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GuiButton other = (GuiButton) obj;
+        if (backgroundColorSelected == null) {
+            if (other.backgroundColorSelected != null)
+                return false;
+        } else if (!backgroundColorSelected.equals(other.backgroundColorSelected))
+            return false;
+        if (backgroundColorUnselected == null) {
+            if (other.backgroundColorUnselected != null)
+                return false;
+        } else if (!backgroundColorUnselected.equals(other.backgroundColorUnselected))
+            return false;
+        if (boxLess != other.boxLess)
+            return false;
+        if (!Arrays.equals(buttonsMonitored, other.buttonsMonitored))
+            return false;
+        if (isMouseOver != other.isMouseOver)
+            return false;
+        if (listeners == null) {
+            if (other.listeners != null)
+                return false;
+        } else if (!listeners.equals(other.listeners))
+            return false;
+        if (outlineColorSelected == null) {
+            if (other.outlineColorSelected != null)
+                return false;
+        } else if (!outlineColorSelected.equals(other.outlineColorSelected))
+            return false;
+        if (outlineColorUnselected == null) {
+            if (other.outlineColorUnselected != null)
+                return false;
+        } else if (!outlineColorUnselected.equals(other.outlineColorUnselected))
+            return false;
+        if (text == null) {
+            if (other.text != null)
+                return false;
+        } else if (!text.equals(other.text))
+            return false;
+        if (textColorSelected == null) {
+            if (other.textColorSelected != null)
+                return false;
+        } else if (!textColorSelected.equals(other.textColorSelected))
+            return false;
+        if (textColorUnselected == null) {
+            if (other.textColorUnselected != null)
+                return false;
+        } else if (!textColorUnselected.equals(other.textColorUnselected))
+            return false;
+        if (userdata == null) {
+            if (other.userdata != null)
+                return false;
+        } else if (!userdata.equals(other.userdata))
+            return false;
+        return true;
     }
 
 }
