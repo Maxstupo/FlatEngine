@@ -3,8 +3,9 @@ package com.github.maxstupo.flatengine;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,11 +48,11 @@ public class AssetManager {
      * @throws Exception
      *             if an error occurred.
      */
-    public void loadFromXml(File file) throws IllegalArgumentException, Exception {
-        if (file == null || !file.exists())
+    public void loadFromXml(String file) throws IllegalArgumentException, Exception {
+        if (file == null)
             throw new IllegalArgumentException("File is null or doesn't exist: " + file);
 
-        log.debug(getClass().getSimpleName(), "Loading assets from xml file: '{0}'", file.getAbsolutePath());
+        log.debug(getClass().getSimpleName(), "Loading assets from xml file: '{0}'", file);
 
         Document doc = UtilXML.loadDocument(file);
 
@@ -66,8 +67,9 @@ public class AssetManager {
 
             if (key == null || path == null)
                 continue;
-            File spriteFile = new File(path);
-            registerSprite(key, spriteFile);
+
+            Path p = Util.path(file, path);
+            registerSprite(key, p.toString());
         }
 
         /* Load fonts */
@@ -79,8 +81,8 @@ public class AssetManager {
             if (key == null || path == null)
                 continue;
 
-            File fontFile = new File(path);
-            registerFont(key, fontFile);
+            Path p = Util.path(file, path);
+            registerFont(key, p.toString());
         }
     }
 
@@ -104,11 +106,9 @@ public class AssetManager {
      * @throws IllegalArgumentException
      *             if the given key or file are null or the file doesn't exist.
      */
-    public boolean registerSprite(String key, File file) throws IllegalArgumentException {
+    public boolean registerSprite(String key, String file) throws IllegalArgumentException {
         if (key == null || file == null)
             throw new IllegalArgumentException("The key or file is null!");
-        if (!file.exists())
-            throw new IllegalArgumentException("The file '" + file.getAbsolutePath() + "' doesn't exist for the sprite: " + key);
 
         if (sprites.containsKey(key))
             return false;
@@ -136,21 +136,20 @@ public class AssetManager {
      * @throws Exception
      *             if the font file format is incorrect, or an I/O error occurred.
      */
-    public boolean registerFont(String key, File file) throws IllegalArgumentException, Exception {
+    public boolean registerFont(String key, String file) throws IllegalArgumentException, Exception {
         if (file == null)
             throw new IllegalArgumentException("The file is null!");
-        if (!file.exists())
-            throw new IllegalArgumentException("The file '" + file.getAbsolutePath() + "' doesn't exist!");
 
         if (fonts.containsKey(key))
             return false;
+        System.out.println(file);
+        try (InputStream is = AssetManager.class.getClassLoader().getResourceAsStream(file)) {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.PLAIN, 18);
 
-        Font font = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(Font.PLAIN, 18);
-
-        fonts.put(key, font);
-        log.fine(getClass().getSimpleName(), "Registered font: '{0}'", key);
-        return true;
-
+            fonts.put(key, font);
+            log.fine(getClass().getSimpleName(), "Registered font: '{0}'", key);
+            return true;
+        }
     }
 
     /**

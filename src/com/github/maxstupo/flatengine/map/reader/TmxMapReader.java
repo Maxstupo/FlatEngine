@@ -2,8 +2,8 @@ package com.github.maxstupo.flatengine.map.reader;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +59,7 @@ public class TmxMapReader {
      * @throws ParserConfigurationException
      *             if a error occurs.
      */
-    public TiledMap load(String id, File file) throws RuntimeException, SAXException, IOException, ParserConfigurationException {
+    public TiledMap load(String id, String file) throws RuntimeException, SAXException, IOException, ParserConfigurationException {
         Document doc = UtilXML.loadDocument(file);
 
         if (!isTmxMap(doc))
@@ -74,7 +74,7 @@ public class TmxMapReader {
 
     }
 
-    private static List<ObjectLayer> readObjects(TiledMap map, Object doc, File mapFile, String xpath, boolean nameCheck) {
+    private static List<ObjectLayer> readObjects(TiledMap map, Object doc, String mapFile, String xpath, boolean nameCheck) {
         Node node;
         List<ObjectLayer> ll = new ArrayList<>();
         NodeList nList = UtilXML.xpathGetNodeList(doc, (xpath != null) ? (xpath + "/objectgroup") : "objectgroup");
@@ -84,7 +84,7 @@ public class TmxMapReader {
             MapProperties properties = readProperties(node, null);
 
             if (name == null && nameCheck)
-                throw new RuntimeException("An object group doesn't have a name set for map: '" + mapFile.getAbsolutePath() + "'");
+                throw new RuntimeException("An object group doesn't have a name set for map: '" + mapFile + "'");
 
             ObjectLayer layer = new ObjectLayer(map, name, alpha, false, properties);
 
@@ -105,7 +105,7 @@ public class TmxMapReader {
                         float radius = width / 2f;
                         shape = new Circle(x - radius, y - radius, radius);
                     } else {
-                        throw new RuntimeException("Ellipse shapes are not supported for map objects: " + mapFile.getAbsolutePath() + ", id: " + id + ", name: " + objectName);
+                        throw new RuntimeException("Ellipse shapes are not supported for map objects: " + mapFile + ", id: " + id + ", name: " + objectName);
                     }
                 } else {
                     shape = new Rectangle(x, y, width, height);
@@ -119,13 +119,13 @@ public class TmxMapReader {
         return ll;
     }
 
-    private static void readMapObjects(TiledMap map, Document doc, File mapFile) {
+    private static void readMapObjects(TiledMap map, Document doc, String mapFile) {
         for (ObjectLayer layer : readObjects(map, doc, mapFile, "map", true))
             map.addLayer(layer);
 
     }
 
-    private static void readMapTileLayers(TiledMap map, Document doc, File mapFile) throws RuntimeException {
+    private static void readMapTileLayers(TiledMap map, Document doc, String mapFile) throws RuntimeException {
         Node node;
         NodeList nList = UtilXML.xpathGetNodeList(doc, "map/layer");
         for (int i = 0; (node = nList.item(i)) != null; i++) {
@@ -135,7 +135,7 @@ public class TmxMapReader {
             MapProperties properties = readProperties(node, null);
 
             if (name == null)
-                throw new RuntimeException("Layer name not set for: " + mapFile.getAbsolutePath());
+                throw new RuntimeException("Layer name not set for: " + mapFile);
 
             TileLayer layer = new TileLayer(map, name, alpha, isVisible, properties);
             loadTileData(layer, node);
@@ -180,7 +180,7 @@ public class TmxMapReader {
         }
     }
 
-    private static void readTilesets(TiledMap map, Document doc, File mapFile) throws RuntimeException, SAXException, IOException, ParserConfigurationException {
+    private static void readTilesets(TiledMap map, Document doc, String mapFile) throws RuntimeException, SAXException, IOException, ParserConfigurationException {
         Node node;
         NodeList nList = UtilXML.xpathGetNodeList(doc, "map/tileset");
 
@@ -192,10 +192,12 @@ public class TmxMapReader {
             String source = UtilXML.xpathGetString(node, "@source", null);
 
             if (source != null) { // Load .tsx file.
-                File tilesetFile = new File(mapFile.getParentFile(), source);
-                Document tilesetDoc = UtilXML.loadDocument(tilesetFile);
 
-                readTileset(map, firstGid, tilesetFile, mapFile, UtilXML.xpathGetNode(tilesetDoc, "tileset"));
+                Path path = Util.path(mapFile, source);
+
+                Document tilesetDoc = UtilXML.loadDocument(path.toString());
+
+                readTileset(map, firstGid, source, mapFile, UtilXML.xpathGetNode(tilesetDoc, "tileset"));
 
             } else { // Load embedded tileset.
                 readTileset(map, firstGid, mapFile, mapFile, node);
@@ -205,7 +207,7 @@ public class TmxMapReader {
 
     }
 
-    private static void readTileset(TiledMap map, int firstGid, File tilesetFile, File mapFile, Node node) throws RuntimeException, IOException {
+    private static void readTileset(TiledMap map, int firstGid, String tilesetFile, String mapFile, Node node) throws RuntimeException, IOException {
         String name = UtilXML.xpathGetString(node, "@name", null);
         int tileWidth = (int) UtilXML.xpathGetNumber(node, "@tilewidth", -1);
         int tileHeight = (int) UtilXML.xpathGetNumber(node, "@tileheight", -1);
@@ -213,21 +215,21 @@ public class TmxMapReader {
         int tileMargin = (int) UtilXML.xpathGetNumber(node, "@margin", 0);
 
         if (name == null)
-            throw new RuntimeException("Tileset name not set for: " + tilesetFile.getAbsolutePath());
+            throw new RuntimeException("Tileset name not set for: " + tilesetFile);
         if (tileWidth == -1)
-            throw new RuntimeException("Tileset tilewidth not set for: " + tilesetFile.getAbsolutePath());
+            throw new RuntimeException("Tileset tilewidth not set for: " + tilesetFile);
         if (tileHeight == -1)
-            throw new RuntimeException("Tileset tileheight not set for: " + tilesetFile.getAbsolutePath());
+            throw new RuntimeException("Tileset tileheight not set for: " + tilesetFile);
 
         Node imageNode = UtilXML.xpathGetNode(node, "image");
         String src = UtilXML.xpathGetString(imageNode, "@source", null);
         Color transparentColor = Util.hexToColor(UtilXML.xpathGetString(imageNode, "@trans", "#ffffff"));
 
         if (src == null)
-            throw new RuntimeException("Tileset source not set for: " + tilesetFile.getAbsolutePath());
+            throw new RuntimeException("Tileset source not set for: " + tilesetFile);
 
-        File imageFile = new File(tilesetFile.getParentFile(), src).getCanonicalFile();
-        BufferedImage tilesetImage = Util.loadImage(imageFile, transparentColor);
+        Path path = Util.path(mapFile, src);
+        BufferedImage tilesetImage = Util.loadImage(path.toString(), transparentColor);
 
         Map<Integer, MapProperties> tileProperties = new HashMap<>();
         Map<Integer, List<MapObject>> tileCollisions = new HashMap<>();

@@ -3,8 +3,10 @@ package com.github.maxstupo.flatengine.util;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 
@@ -21,6 +23,20 @@ public final class Util {
     }
 
     /**
+     * Create a new path object.
+     * 
+     * @param parent
+     *            the parent path.
+     * @param src
+     *            the path.
+     * @return the new path.
+     */
+    public static Path path(String parent, String src) {
+        Path parentPath = Paths.get(parent).getParent().normalize();
+        return Paths.get(parentPath.toString(), src).normalize();
+    }
+
+    /**
      * Returns a {@link BufferedImage} using {@link Class#getResourceAsStream(String)}
      * 
      * @param file
@@ -31,19 +47,17 @@ public final class Util {
      * @throws IOException
      *             if an error occurs.
      */
-    public static BufferedImage loadImage(File file, Color transparentColor) throws IOException {
+    public static BufferedImage loadImage(String file, Color transparentColor) throws IOException {
 
-        BufferedImage bufferedImage;
+        try (InputStream is = Util.class.getClassLoader().getResourceAsStream(file)) {
+            Image img = ImageIO.read(is);
+            // TODO: Implement transparent color.
 
-        Image img = ImageIO.read(file);
+            BufferedImage bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+            bufferedImage.getGraphics().drawImage(img, 0, 0, null);
 
-        // TODO: Implement transparent color.
-
-        bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-        bufferedImage.getGraphics().drawImage(img, 0, 0, null);
-
-        return bufferedImage;
-
+            return bufferedImage;
+        }
     }
 
     /**
