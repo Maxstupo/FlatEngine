@@ -148,7 +148,7 @@ public abstract class AbstractAlignableGuiNode extends AbstractNode {
      * @return this object for chaining.
      */
     public AbstractAlignableGuiNode setAlignment(Alignment alignment) {
-        this.alignment = alignment;
+        this.alignment = alignment == null ? Alignment.OFF : alignment;
         setGraphicsCalculationsDirty();
         return this;
     }
