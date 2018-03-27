@@ -142,7 +142,7 @@ public class AssetManager {
 
         if (fonts.containsKey(key))
             return false;
-        System.out.println(file);
+        // System.out.println(file);
         try (InputStream is = AssetManager.class.getClassLoader().getResourceAsStream(file)) {
             Font font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.PLAIN, 18);
 
