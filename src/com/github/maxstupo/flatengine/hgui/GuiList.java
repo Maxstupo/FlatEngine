@@ -281,6 +281,7 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
     protected void onResize(int width, int height) {
         super.onResize(width, height);
         isItemNodesDirty = true;
+        isScrollBarDirty = true;
     }
 
     /**
