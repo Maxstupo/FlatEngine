@@ -31,9 +31,9 @@ public class GuiButton extends GuiContainer {
     /** The outline color when this button is unselected. */
     protected Color outlineColorUnselected = Color.BLACK;
     /** The background color when this button is selected. */
-    protected Color backgroundColorSelected = new Color(127, 127, 127);
+    protected Color backgroundColorSelected = Color.DARK_GRAY;
     /** The background color when this button is unselected. */
-    protected Color backgroundColorUnselected = Color.DARK_GRAY;
+    protected Color backgroundColorUnselected = Color.LIGHT_GRAY;
 
     /** If true no background or outline will be drawn. */
     protected boolean boxLess;

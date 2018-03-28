@@ -57,7 +57,7 @@ public class GuiTextBox extends GuiContainer implements IKeyListener {
 
         if (input.isMouseClicked(Mouse.LEFT_CLICK)) {
             if (!inputFocused)
-                cursor = cursorNext = getText().length();
+                cursor = cursorNext = getRawText().length();
             else
                 updateCursorAnimation(false);
             inputFocused = !inputFocused;
@@ -74,6 +74,7 @@ public class GuiTextBox extends GuiContainer implements IKeyListener {
             if (ticks > cursorSpeed) {
                 ticks = 0;
                 updateCursorAnimation(true);
+
             }
         }
 
@@ -81,12 +82,12 @@ public class GuiTextBox extends GuiContainer implements IKeyListener {
     }
 
     private void updateCursorAnimation(boolean allowAdd) {
-        String cursorStr = getText().substring(Math.min(getText().length(), cursor), Math.min(getText().length(), cursor + 1));
+        String cursorStr = getRawText().substring(Math.min(getRawText().length(), cursor), Math.min(getRawText().length(), cursor + 1));
         if (cursorStr.equalsIgnoreCase(Character.toString(cursorChar))) {
-            setText(getText().substring(0, cursor) + getText().substring(cursor + 1, getText().length()));
+            setText(getRawText().substring(0, cursor) + getRawText().substring(cursor + 1, getRawText().length()));
             cursor = cursorNext;
         } else if (allowAdd) {
-            setText(getText().substring(0, cursor) + Character.toString(cursorChar) + getText().substring(cursor, getText().length()));
+            setText(getRawText().substring(0, cursor) + Character.toString(cursorChar) + getRawText().substring(cursor, getRawText().length()));
         }
     }
 
@@ -140,12 +141,12 @@ public class GuiTextBox extends GuiContainer implements IKeyListener {
                 return this;
         }
 
-        String cursorStr = getText().substring(Math.min(getText().length(), this.cursor), Math.min(getText().length(), this.cursor + 1));
+        String cursorStr = getRawText().substring(Math.min(getRawText().length(), this.cursor), Math.min(getRawText().length(), this.cursor + 1));
         int offset = cursorStr.equalsIgnoreCase(Character.toString(cursorChar)) ? 1 : 0;
-        if (characterLimit > 0 && getText().length() - offset >= characterLimit)
+        if (characterLimit > 0 && getRawText().length() - offset >= characterLimit)
             return this;
 
-        setText(getText().substring(0, cursor) + c + getText().substring(cursor, getText().length()));
+        setText(getRawText().substring(0, cursor) + c + getRawText().substring(cursor, getRawText().length()));
 
         cursor++;
         cursorNext = cursor;
@@ -154,7 +155,7 @@ public class GuiTextBox extends GuiContainer implements IKeyListener {
 
     public GuiTextBox backspace() {
         if (cursor > 0)
-            setText(getText().substring(0, cursor - 1) + getText().substring(cursor, getText().length()));
+            setText(getRawText().substring(0, cursor - 1) + getRawText().substring(cursor, getRawText().length()));
         cursor--;
         if (cursor < 0)
             cursor = 0;
@@ -180,10 +181,10 @@ public class GuiTextBox extends GuiContainer implements IKeyListener {
         if (this.cursorNext < 0)
             this.cursorNext = 0;
 
-        String cursorStr = getText().substring(Math.min(getText().length(), this.cursor), Math.min(getText().length(), this.cursor + 1));
+        String cursorStr = getRawText().substring(Math.min(getRawText().length(), this.cursor), Math.min(getRawText().length(), this.cursor + 1));
         int offset = cursorStr.equalsIgnoreCase(Character.toString(cursorChar)) ? 1 : 0;
-        if (this.cursorNext >= getText().length() - offset)
-            this.cursorNext = getText().length() - offset;
+        if (this.cursorNext >= getRawText().length() - offset)
+            this.cursorNext = getRawText().length() - offset;
         return this;
     }
 
@@ -215,8 +216,15 @@ public class GuiTextBox extends GuiContainer implements IKeyListener {
         return cursorNext;
     }
 
-    public String getText() {
+    private String getRawText() {
         return input.getTextNode().getText();
+    }
+
+    public String getText() {
+        String cursorStr = getRawText().substring(Math.min(getRawText().length(), this.cursor), Math.min(getRawText().length(), this.cursor + 1));
+        if (!cursorStr.equalsIgnoreCase(Character.toString(cursorChar)))
+            return getRawText();
+        return getRawText().substring(0, cursor) + getRawText().substring(cursor + 1, getRawText().length());
     }
 
     public GuiLabel getLabel() {

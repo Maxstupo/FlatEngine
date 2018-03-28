@@ -33,6 +33,7 @@ public abstract class AbstractScreen {
     public AbstractScreen(ScreenManager screenManager) {
         this.screenManager = screenManager;
         this.guiRoot.setOutlineColor(null);
+        this.guiRoot.setBackgroundColor(null);
         this.guiRoot.setSize(getWidth(), getHeight());
     }
 
@@ -41,8 +42,10 @@ public abstract class AbstractScreen {
      * 
      * @param delta
      *            the delta time.
+     * @param onUI
+     *            if the mouse is over a UI element.
      */
-    protected abstract void update(float delta);
+    protected abstract void update(float delta, boolean onUI);
 
     /**
      * All rendering code for this screen goes within this method.
@@ -94,8 +97,9 @@ public abstract class AbstractScreen {
      *            the delta time.
      */
     protected void doUpdate(float delta) {
-        update(delta);
-        guiRoot.updateAll(delta, true);
+        boolean onUI = !guiRoot.updateAll(delta, true);
+        update(delta, onUI);
+
     }
 
     /**

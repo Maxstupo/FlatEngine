@@ -285,6 +285,8 @@ public class FlatEngine implements IEngine {
      * Start the game loop.
      */
     public void start() {
+        if (frame == null)
+            throw new RuntimeException("No window created! Call createWindow() first!");
         loop.start();
     }
 
