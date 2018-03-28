@@ -641,4 +641,13 @@ public class GuiItemContainer<T extends AbstractItemStack> extends GuiContainer 
         return true;
     }
 
+    /**
+     * Returns the {@link GuiItemSlot} used for holding the item stack.
+     * 
+     * @return the {@link GuiItemSlot} used for holding the item stack.
+     */
+    public GuiItemSlot<T> getHoldingItemSlot() {
+        return holdingItemSlot;
+    }
+
 }

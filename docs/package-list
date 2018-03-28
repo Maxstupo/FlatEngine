@@ -1,4 +1,5 @@
 com.github.maxstupo.flatengine
+com.github.maxstupo.flatengine.animation
 com.github.maxstupo.flatengine.gameloop
 com.github.maxstupo.flatengine.hgui
 com.github.maxstupo.flatengine.input

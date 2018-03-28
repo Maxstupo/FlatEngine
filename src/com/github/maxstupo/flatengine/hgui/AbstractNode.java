@@ -42,6 +42,8 @@ public abstract class AbstractNode {
 
     private boolean usePercentagePositions = false;
     private boolean keepWithinParent = false;
+    private boolean isFillParentWidth = false;
+    private boolean isFillParentHeight = false;
 
     private boolean isGraphicsCalculationsDirty;
 
@@ -156,6 +158,25 @@ public abstract class AbstractNode {
      *            the node that caused this event.
      */
     protected void onParentNodeChange(AbstractNode instigator) {
+        updateFill();
+    }
+
+    /**
+     * Updates this node dimensions to the dimensions of the parent, if {@link #isFillParent()} is true.
+     * 
+     */
+    protected void updateFill() {
+
+        if (isFillParentWidth()) {
+            setLocalPositionX(0);
+            setWidth(getParentWidth());
+        }
+
+        if (isFillParentHeight()) {
+            setLocalPositionY(0);
+            setHeight(getParentHeight());
+        }
+
     }
 
     /**
@@ -491,6 +512,74 @@ public abstract class AbstractNode {
     }
 
     /**
+     * If true this node will expand in width to the size of the parent node.
+     * 
+     * @param fillParentWidth
+     *            true this node will expand in width to the size of the parent node.
+     * @return this object for chaining.
+     */
+    public AbstractNode setFillParentWidth(boolean fillParentWidth) {
+        this.isFillParentWidth = fillParentWidth;
+        updateFill();
+        return this;
+    }
+
+    /**
+     * If true this node will expand in height to the size of the parent node.
+     * 
+     * @param fillParentHeight
+     *            true this node will expand in height to the size of the parent node.
+     * @return this object for chaining.
+     */
+    public AbstractNode setFillParentHeight(boolean fillParentHeight) {
+        this.isFillParentHeight = fillParentHeight;
+        updateFill();
+        return this;
+    }
+
+    /**
+     * If true this node will expand to the size of the parent node. <br>
+     * Sets {@link #isFillParentWidth()} and {@link #isFillParentHeight()}.
+     * 
+     * @param fillParent
+     *            true to expand to the size of the parent node.
+     * @return this object for chaining.
+     */
+    public AbstractNode setFillParent(boolean fillParent) {
+        this.isFillParentWidth = fillParent;
+        this.isFillParentHeight = fillParent;
+        updateFill();
+        return this;
+    }
+
+    /**
+     * Returns true if this node will expand to the size of the parent node.
+     * 
+     * @return true if this node will expand to the size of the parent node.
+     */
+    public boolean isFillParent() {
+        return this.isFillParentWidth() && this.isFillParentHeight();
+    }
+
+    /**
+     * Returns true if this node will expand in width to the size of the parent node.
+     * 
+     * @return true if this node will expand in width to the size of the parent node.
+     */
+    public boolean isFillParentWidth() {
+        return this.isFillParentWidth;
+    }
+
+    /**
+     * Returns true if this node will expand in height to the size of the parent node.
+     * 
+     * @return true if this node will expand in height to the size of the parent node.
+     */
+    public boolean isFillParentHeight() {
+        return this.isFillParentHeight;
+    }
+
+    /**
      * Returns true if the mouse is over this node.
      * 
      * @return true if the mouse is over this node.
@@ -621,7 +710,7 @@ public abstract class AbstractNode {
      * 
      * @return the width of the parent node or the width of the screen if the parent node is null.
      */
-    public float getParentWidth() {
+    public int getParentWidth() {
         return (getParent() != null) ? getParent().getWidth() : screen.getWidth();
     }
 
@@ -630,7 +719,7 @@ public abstract class AbstractNode {
      * 
      * @return the height of the parent node or the height of the screen if the parent node is null.
      */
-    public float getParentHeight() {
+    public int getParentHeight() {
         return (getParent() != null) ? getParent().getHeight() : screen.getHeight();
     }
 

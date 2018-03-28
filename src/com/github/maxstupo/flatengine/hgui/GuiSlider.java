@@ -281,7 +281,7 @@ public class GuiSlider extends GuiContainer implements IEventListener<GuiButton,
      * @return this object for chaining.
      */
     public GuiSlider setMaxValue(float maxValue) {
-        this.maxValue = UtilMath.clampF(maxValue, 0, Float.MAX_VALUE);
+        this.maxValue = UtilMath.clampF(maxValue, 0.000001f, Float.MAX_VALUE);
         this.value = UtilMath.clampF(getValue(), 0, maxValue);
         isSliderDirty = true;
         return this;

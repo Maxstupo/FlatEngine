@@ -107,6 +107,7 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
      * Updates the x position of the scroll bar, and requests that the item nodes be updated also.
      */
     protected void updateScrollBar() {
+        scrollbar.setHeight(getHeight());
         scrollbar.setLocalPositionX(getWidth() - scrollbar.getWidth());
         isItemNodesDirty = true;
         isScrollBarDirty = false;
@@ -177,6 +178,9 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
      * Updates the {@link GuiButton} list items with the correct names.
      */
     protected void updateScroll() {
+        if (items.size() - scroll < getItemsVisible())
+            scrollUp();
+
         for (int i = 0; i < Math.min(items.size(), getItemsVisible()); i++) {
             GuiButton btn = itemNodes.get(i);
 
@@ -282,6 +286,7 @@ public class GuiList<T> extends GuiContainer implements IEventListener<GuiButton
         super.onResize(width, height);
         isItemNodesDirty = true;
         isScrollBarDirty = true;
+        isScrollDirty = true;
     }
 
     /**

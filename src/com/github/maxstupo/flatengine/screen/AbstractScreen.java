@@ -53,6 +53,15 @@ public abstract class AbstractScreen {
     protected abstract void render(Graphics2D g);
 
     /**
+     * Called before GUI is rendered for this screen.
+     * 
+     * @param g
+     *            the graphics context to draw to.
+     */
+    protected void renderFirst(Graphics2D g) {
+    }
+
+    /**
      * Called when the window is resized.
      * 
      * @param width
@@ -98,6 +107,7 @@ public abstract class AbstractScreen {
      *            the graphics context to draw to.
      */
     protected void doRender(Graphics2D g) {
+        renderFirst(g);
         guiRoot.renderAll(g);
         render(g);
     }
